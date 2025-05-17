@@ -85,10 +85,10 @@ Tile Titans is a nostalgic twist on the classic grid puzzle experience. Built in
 
 # iOS (iPad)
 <p float="left">
-  <img src="assets/screenshots/ipad_1.png" width="250"/>
-  <img src="assets/screenshots/ipad_2.png" width="250"/>
-  <img src="assets/screenshots/ipad_3.png" width="250"/>
-  <img src="assets/screenshots/ipad_4.png" width="250"/>
+  <img src="assets/screenshots/ios_ipad/ipad_1.png" width="250"/>
+  <img src="assets/screenshots/ios_ipad/ipad_2.png" width="250"/>
+  <img src="assets/screenshots/ios_ipad/ipad_3.png" width="250"/>
+  <img src="assets/screenshots/ios_ipad/ipad_4.png" width="250"/>
 </p>
 
 ---
