@@ -257,7 +257,7 @@ class GameController extends ChangeNotifier {
     final db = FirebaseDatabase.instance.ref();
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final device = await getDeviceInfo();
-
+    print("saveHighScoreToFirebase: userId: $userId, $device");
     if (userId != null) {
       await db.child('leaderboard/$userId').set({
         'high_score': score,

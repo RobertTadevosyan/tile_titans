@@ -1,9 +1,11 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/domain/locale_manager.dart';
 import 'package:flutter_2048/domain/prefs.dart';
+import 'package:flutter_2048/firebase_options.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/presentation/screens/game_screen.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
@@ -15,7 +17,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+  } else {
+    await Firebase.initializeApp();
+  }
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   final localeManager = LocaleManager();
   await localeManager.loadLocale();
@@ -23,7 +29,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) =>localeManager ),
+        ChangeNotifierProvider(create: (_) => localeManager),
         ChangeNotifierProvider(
           create: (_) => GameController(),
         ), // 👈 GameController added here
@@ -50,7 +56,10 @@ class _GameAppState extends State<GameApp> {
   @override
   void initState() {
     super.initState();
-    MobileAds.initialize();
+    if (!kIsWeb) {
+      // Initialize Yandex Ads only on mobile
+      MobileAds.initialize();
+    }
   }
 
   @override

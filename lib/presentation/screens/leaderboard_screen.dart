@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/presentation/models/leaderboard_entry.dart';
+import 'package:flutter_2048/utils/helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 
@@ -61,6 +62,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   _showIntestitialAd() async {
+    if (!isMobile()) return;
     _ad?.setAdEventListener(
       eventListener: InterstitialAdEventListener(
         onAdShown: () {
@@ -97,18 +99,24 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   void _scrollToUser() {
-    if (currentUserUid.isNotEmpty) {
-      final index = leaderboardEntries.indexWhere(
-        (entry) => entry.userId == currentUserUid,
-      );
-      if (index != -1) {
+    print("_scrollToUser");
+    if (!_scrollController.hasClients) return;
+    print("hasClients");
+    final index = leaderboardEntries.indexWhere(
+      (entry) => entry.userId == currentUserUid,
+    );
+    print("index: $index");
+    if (index != -1) {
+      print("scrolling: $index");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        print("addPostFrameCallback: $index");
         _scrollController.animateTo(
-          index * itemHeight, // itemHeight: height of each leaderboard tile
+          index * itemHeight,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
         _showIntestitialAd();
-      }
+      });
     }
   }
 
@@ -121,7 +129,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     final enabled = adsEnabledConfig == true || adsEnabledConfig == 'true';
 
     print("CONFIG: main_page_ads_enabled: $adsEnabledConfig");
-    if (enabled) {
+    if (enabled && isMobile()) {
       adRequest = const AdRequest(
         contextQuery: 'puzzle, games, mobile apps, games',
       );
@@ -203,7 +211,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       children: [
         // This will stretch to fill space *above the banner*
         Positioned.fill(
-          bottom: bannerHeight.toDouble(),
+          bottom: isMobile() ? bannerHeight.toDouble() : 0,
           child: createContent(context, isTablet),
         ),
         SafeArea(
@@ -230,10 +238,17 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         actions: [
           TextButton.icon(
             onPressed: () => _scrollToUser(),
-            icon: Icon(Icons.search, color: Colors.white, size: isTablet ? 40 : 30),
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+              size: isTablet ? 40 : 30,
+            ),
             label: Text(
               appLocales.findMe,
-              style: TextStyle(color: Colors.white, fontSize: isTablet ? 30 : 18),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: isTablet ? 30 : 18,
+              ),
             ),
           ),
         ],
@@ -242,7 +257,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         future: fetchLeaderboard(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text(appLocales.noScore, style: TextStyle(fontSize: isTablet ? 32 : 16)));
+            return Center(
+              child: Text(
+                appLocales.noScore,
+                style: TextStyle(fontSize: isTablet ? 32 : 16),
+              ),
+            );
           }
 
           final entries = snapshot.data!;
@@ -258,11 +278,21 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               child: DataTable(
                 columnSpacing: 54,
                 columns: [
-                  DataColumn(label: Text(appLocales.rank, style: columnTextStyle)),
-                  DataColumn(label: Text(appLocales.scoreTitle,  style: columnTextStyle)),
-                  DataColumn(label: Text(appLocales.platform,  style: columnTextStyle)),
-                  DataColumn(label: Text(appLocales.device,  style: columnTextStyle)),
-                  DataColumn(label: Text(appLocales.user,  style: columnTextStyle)),
+                  DataColumn(
+                    label: Text(appLocales.rank, style: columnTextStyle),
+                  ),
+                  DataColumn(
+                    label: Text(appLocales.scoreTitle, style: columnTextStyle),
+                  ),
+                  DataColumn(
+                    label: Text(appLocales.platform, style: columnTextStyle),
+                  ),
+                  DataColumn(
+                    label: Text(appLocales.device, style: columnTextStyle),
+                  ),
+                  DataColumn(
+                    label: Text(appLocales.user, style: columnTextStyle),
+                  ),
                 ],
                 rows: List.generate(entries.length, (index) {
                   final entry = entries[index];
@@ -281,7 +311,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       DataCell(Text('${entry.score}', style: cellTextStyle)),
                       DataCell(Text(entry.platform, style: cellTextStyle)),
                       DataCell(Text(entry.device, style: cellTextStyle)),
-                      DataCell(Text(entry.userId.substring(0, 6), style: cellTextStyle)),
+                      DataCell(
+                        Text(
+                          entry.userId.substring(0, 6),
+                          style: cellTextStyle,
+                        ),
+                      ),
                     ],
                   );
                 }),

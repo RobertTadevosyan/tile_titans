@@ -82,6 +82,8 @@ unlinked.ds
 unlinked_spec.ds
 lib/config/ads_config.dart
 **/lib/config/ads_config.dart
+lib/firebase_options.dart
+**/lib/firebase_options.dart
 
 # Android related
 **/android/**/gradle-wrapper.jar
@@ -137,6 +139,7 @@ local.properties
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/ios/Runner/GoogleService-Info.plist
 **/ios/GoogleService-Info.plist
+
 
 # iOS
 ios/Pods/
@@ -205,6 +208,8 @@ app.*.symbols
 # Web
 web/.dart_tool/
 web/build/
+web/firebase_config.js
+**/web/firebase_config.js
 
 # Firebase configs
 firebase.json

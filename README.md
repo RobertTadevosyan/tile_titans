@@ -104,14 +104,16 @@ flutter run
 
 ---
 
-## 🌐 Web Build (Vercel)
+## 🌐 Web Build (Firebase Hosting)
 
-Tile Titans can be deployed to Vercel:
+Tile Titans can be deployed to Firebase Hosting:
+
+Current Version [Tile Titans Web](https://project-4144876482581473230.web.app/)
 
 ```bash
 flutter build web
-# Push `build/web/` to Vercel or host - NOT READY YET
 ```
+
 
 ---
 

@@ -9,6 +9,7 @@ import 'package:flutter_2048/domain/ai_difficultt.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/widgets/language_selector.dart';
+import 'package:flutter_2048/utils/helper.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 import '../controllers/game_controller.dart';
@@ -43,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final enabled = adsEnabledConfig == true || adsEnabledConfig == 'true';
 
     print("CONFIG: main_page_ads_enabled: $adsEnabledConfig");
-    if (enabled) {
+    if (enabled && isMobile()) {
       adRequest = const AdRequest(
         contextQuery: 'puzzle, games, mobile apps, games',
       );
@@ -138,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         // This will stretch to fill space *above the banner*
         Positioned.fill(
-          bottom: bannerHeight.toDouble(),
+          bottom: isMobile() ? bannerHeight.toDouble() : 0,
           child: createContent(appLocales, controller, themeProvider, isTablet),
         ),
         SafeArea(
@@ -379,7 +380,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     // ✅ Wrap for max width on tablets
     return Scaffold(
-      appBar: AppBar(title: Text(appLocales.settings, style: TextStyle(fontSize: isTablet ? 28 : 18))),
+      appBar: AppBar(
+        title: Text(
+          appLocales.settings,
+          style: TextStyle(fontSize: isTablet ? 28 : 18),
+        ),
+      ),
       body:
           isTablet
               ? Center(

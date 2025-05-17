@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_2048/config/ads_config.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_2048/domain/direction.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
 import 'package:flutter_2048/presentation/screens/settings_screen.dart';
+import 'package:flutter_2048/utils/helper.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 import '../controllers/game_controller.dart';
@@ -121,7 +123,7 @@ class _GameScreenState extends State<GameScreen> {
     final enabled = adsEnabledConfig == true || adsEnabledConfig == 'true';
 
     print("CONFIG: main_page_ads_enabled: $adsEnabledConfig");
-    if (enabled) {
+    if (enabled && isMobile()) {
       adRequest = const AdRequest(
         contextQuery: 'puzzle, games, mobile apps, games',
       );
@@ -215,7 +217,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
-    final isTablet = shortestSide > 600;
+    final isTablet = shortestSide > 600 && isMobile();
     final appLocales = AppLocalizations.of(context)!;
     return Consumer<GameController>(
       builder: (context, controller, _) {
@@ -238,7 +240,7 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               // This will stretch to fill space *above the banner*
               Positioned.fill(
-                bottom: bannerHeight.toDouble(),
+                bottom: isMobile() ? bannerHeight.toDouble() : 0,
                 child: screenContent(
                   appLocales,
                   controller,
@@ -374,6 +376,9 @@ class _GameScreenState extends State<GameScreen> {
     GameController controller,
     BuildContext context,
   ) {
+    if (kIsWeb) {
+      return buildWebActionButtons(appLocales, controller, context);
+    }
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -413,6 +418,66 @@ class _GameScreenState extends State<GameScreen> {
               ),
           ],
         ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.primaryColor,
+            foregroundColor: theme.colorScheme.onPrimary,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: () {
+            final hint = controller.getHint();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(appLocales.hintMessage(hint ?? ''))),
+            );
+          },
+          child: Text(appLocales.hint),
+        ),
+      ],
+    );
+  }
+
+  Widget buildWebActionButtons(
+    AppLocalizations appLocales,
+    GameController controller,
+    BuildContext context,
+  ) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.primaryColor,
+            foregroundColor: theme.colorScheme.onPrimary,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: controller.resetGame,
+          child: Text(appLocales.restart),
+        ),
+        const SizedBox(width: 16),
+        if (controller.mode != GameMode.hardcore)
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.primaryColor,
+              foregroundColor: theme.colorScheme.onPrimary,
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: controller.canUndo ? controller.undo : null,
+            child: Text(appLocales.undo),
+          ),
+        const SizedBox(width: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.primaryColor,
@@ -476,7 +541,10 @@ class _GameScreenState extends State<GameScreen> {
                 isTablet: false,
               ),
               SwitchListTile(
-                title: Text(appLocales.autoPlay, style: TextStyle(fontSize: 14)),
+                title: Text(
+                  appLocales.autoPlay,
+                  style: TextStyle(fontSize: 14),
+                ),
                 value: controller.autoPlay,
                 onChanged:
                     (_) => controller.toggleAutoPlay(context, appLocales),
@@ -520,6 +588,7 @@ class _GameScreenState extends State<GameScreen> {
                           false,
                         ),
                       ),
+                      if (kIsWeb) SizedBox(height: 100),
                       if (controller.mode != GameMode.zen)
                         ScoreBoard(
                           score: controller.score,
@@ -535,8 +604,12 @@ class _GameScreenState extends State<GameScreen> {
                         controller,
                         context,
                       ),
+                      if (kIsWeb) SizedBox(height: 100),
                       SwitchListTile(
-                        title: Text(appLocales.autoPlay, style: TextStyle(fontSize: 18)),
+                        title: Text(
+                          appLocales.autoPlay,
+                          style: TextStyle(fontSize: 18),
+                        ),
                         value: controller.autoPlay,
                         onChanged:
                             (_) =>
@@ -574,7 +647,7 @@ class _GameScreenState extends State<GameScreen> {
     return [
       IconButton(
         icon: const Icon(Icons.auto_graph),
-        iconSize: isTablet ? 40 : 25,
+        iconSize: isTablet || kIsWeb ? 40 : 25,
         tooltip: appLocales.statistics,
         onPressed: () {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -584,7 +657,7 @@ class _GameScreenState extends State<GameScreen> {
       ),
       IconButton(
         icon: const Icon(Icons.leaderboard),
-        iconSize: isTablet ? 40 : 25,
+        iconSize: isTablet || kIsWeb ? 40 : 25,
         tooltip: appLocales.leaderboard,
         onPressed: () {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -598,7 +671,7 @@ class _GameScreenState extends State<GameScreen> {
       IconButton(
         icon: const Icon(Icons.settings),
         tooltip: appLocales.settings,
-        iconSize: isTablet ? 35 : 25,
+        iconSize: isTablet || kIsWeb ? 40 : 25,
         onPressed: () {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.push(
@@ -657,7 +730,10 @@ class _GameScreenState extends State<GameScreen> {
                     isTablet: true,
                   ),
                   SwitchListTile(
-                    title: Text(appLocales.autoPlay, style: TextStyle(fontSize: 24)),
+                    title: Text(
+                      appLocales.autoPlay,
+                      style: TextStyle(fontSize: 24),
+                    ),
                     value: controller.autoPlay,
                     onChanged:
                         (_) => controller.toggleAutoPlay(context, appLocales),
@@ -716,7 +792,8 @@ class _GameScreenState extends State<GameScreen> {
           title: Text(
             appLocales.statistics,
             style: theme.textTheme.titleLarge?.copyWith(
-              color: theme.appBarTheme.foregroundColor, fontSize: isTablet ? 32 : 22
+              color: theme.appBarTheme.foregroundColor,
+              fontSize: isTablet ? 32 : 22,
             ),
           ),
           content: Column(
@@ -725,11 +802,17 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               Text(
                 appLocales.moves(controller.totalMoves),
-                style: TextStyle(color: theme.appBarTheme.foregroundColor, fontSize: textSize),
+                style: TextStyle(
+                  color: theme.appBarTheme.foregroundColor,
+                  fontSize: textSize,
+                ),
               ),
               Text(
                 appLocales.merges(controller.totalMerges),
-                style: TextStyle(color: theme.appBarTheme.foregroundColor, fontSize: textSize),
+                style: TextStyle(
+                  color: theme.appBarTheme.foregroundColor,
+                  fontSize: textSize,
+                ),
               ),
               Text(
                 appLocales.avgMerge(
@@ -737,7 +820,10 @@ class _GameScreenState extends State<GameScreen> {
                       ? 0
                       : (controller.totalMergeValue ~/ controller.totalMerges),
                 ),
-                style: TextStyle(color: theme.appBarTheme.foregroundColor, fontSize: textSize),
+                style: TextStyle(
+                  color: theme.appBarTheme.foregroundColor,
+                  fontSize: textSize,
+                ),
               ),
               Text(
                 appLocales.mergeEfficiency(
@@ -745,7 +831,10 @@ class _GameScreenState extends State<GameScreen> {
                       ? 0
                       : (controller.totalMerges * 100 ~/ controller.totalMoves),
                 ),
-                style: TextStyle(color: theme.appBarTheme.foregroundColor, fontSize: textSize),
+                style: TextStyle(
+                  color: theme.appBarTheme.foregroundColor,
+                  fontSize: textSize,
+                ),
               ),
             ],
           ),
