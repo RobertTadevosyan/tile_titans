@@ -46,8 +46,10 @@ class _GameScreenState extends State<GameScreen> {
     if (isLandscape) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
-    _adLoader = _createInterstitialAdLoader();
-    _loadInterstitialAd();
+    if (isMobile()) {
+      _adLoader = _createInterstitialAdLoader();
+      _loadInterstitialAd();
+    }
   }
 
   Future<InterstitialAdLoader> _createInterstitialAdLoader() {
@@ -64,6 +66,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<void> _loadInterstitialAd() async {
+    if (!isMobile()) return;
     final adLoader = await _adLoader;
     await adLoader.loadAd(
       adRequestConfiguration: AdRequestConfiguration(
@@ -73,6 +76,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   _showIntestitialAd() async {
+    if (!isMobile()) return;
     _ad?.setAdEventListener(
       eventListener: InterstitialAdEventListener(
         onAdShown: () {
@@ -111,6 +115,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    final controller = context.read<GameController>();
+    controller.cancelTimers(); //
     super.dispose();
   }
 

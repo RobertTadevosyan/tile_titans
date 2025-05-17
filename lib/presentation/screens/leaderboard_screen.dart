@@ -35,8 +35,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   void initState() {
     super.initState();
     currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    _adLoader = _createInterstitialAdLoader();
-    _loadInterstitialAd();
+    if (isMobile()) {
+      _adLoader = _createInterstitialAdLoader();
+      _loadInterstitialAd();
+    }
   }
 
   Future<InterstitialAdLoader> _createInterstitialAdLoader() {
@@ -53,6 +55,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Future<void> _loadInterstitialAd() async {
+    if (!isMobile()) return;
     final adLoader = await _adLoader;
     await adLoader.loadAd(
       adRequestConfiguration: AdRequestConfiguration(
@@ -140,6 +143,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Future<void> _loadBanner() async {
+    if (!isMobile()) return;
     final windowSize = MediaQuery.of(context).size;
     setState(() => isLoading = true);
     if (isBannerAlreadyCreated) {

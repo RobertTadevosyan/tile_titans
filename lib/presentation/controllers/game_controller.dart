@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/domain/ai_difficultt.dart';
-import 'package:flutter_2048/domain/direction.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
 import 'package:flutter_2048/utils/deviceInfo.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameController extends ChangeNotifier {
@@ -253,19 +250,36 @@ class GameController extends ChangeNotifier {
     );
   }
 
+  void cancelTimers() {
+    print("cancelTimers");
+    setHighScoreInFirebaseDbActionPerformed();
+    _updateTimer?.cancel();
+    _timer?.cancel();
+    autoPlayTimer?.cancel();
+  }
+
+  Timer? _updateTimer;
   void saveHighScoreToFirebase(int score) async {
-    final db = FirebaseDatabase.instance.ref();
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    final device = await getDeviceInfo();
-    print("saveHighScoreToFirebase: userId: $userId, $device");
-    if (userId != null) {
-      await db.child('leaderboard/$userId').set({
-        'high_score': score,
-        'platform': getPlatform(),
-        'device': device['device'],
-        'os': device['os'],
-      });
-    }
+    _updateTimer?.cancel();
+    _updateTimer = Timer(Duration(seconds: 5), () async {
+      setHighScoreInFirebaseDbActionPerformed();
+    });
+  }
+
+  void setHighScoreInFirebaseDbActionPerformed() async{
+    print("setHighScoreInFirebaseDbActionPerformed");
+      final db = FirebaseDatabase.instance.ref();
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final device = await getDeviceInfoSafe();
+      print("saveHighScoreToFirebase: userId: $userId, $device");
+      if (userId != null) {
+        await db.child('leaderboard/$userId').set({
+          'high_score': score,
+          'platform': device['platform'],
+          'device': device['device'],
+          'os': device['os'],
+        });
+      }
   }
 
   void _lockRandomTile() {
@@ -300,7 +314,7 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void _applyModeRules(BuildContext context, AppLocalizations appLocales,) {
+  void _applyModeRules(BuildContext context, AppLocalizations appLocales) {
     if (mode == GameMode.timed) {
       _startTimer(context, appLocales);
     }
@@ -361,7 +375,7 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _startTimer(BuildContext context, AppLocalizations appLocales,) {
+  void _startTimer(BuildContext context, AppLocalizations appLocales) {
     if (_timer?.isActive == true) {
       return;
     }
@@ -414,7 +428,10 @@ class GameController extends ChangeNotifier {
               color: theme.appBarTheme.foregroundColor,
             ),
           ),
-          content: Text(appLocales.finalScore(score), style: theme.textTheme.bodyLarge),
+          content: Text(
+            appLocales.finalScore(score),
+            style: theme.textTheme.bodyLarge,
+          ),
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(

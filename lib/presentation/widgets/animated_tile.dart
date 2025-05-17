@@ -155,10 +155,10 @@ class _AnimatedTileState extends State<AnimatedTile>
     final isPhoneLandscape = widget.isLandscape && !widget.isTablet;
     final length = value.toString().length;
     if (length <= 2) return isPhoneLandscape ? 22 : 24;
-    if (length == 3) return isPhoneLandscape ? 20 : 24;
-    if (length == 4) return isPhoneLandscape ? 16 : 20;
-    if (length == 5) return isPhoneLandscape ? 14 : 18;
-    if (length == 6) return isPhoneLandscape ? 12 : 16;
+    if (length == 3) return isPhoneLandscape ? 20 : 22;
+    if (length == 4) return isPhoneLandscape ? 16 : 18;
+    if (length == 5) return isPhoneLandscape ? 14 : 16;
+    if (length == 6) return isPhoneLandscape ? 12 : 14;
     return isPhoneLandscape ? 10 : 14; // fallback for larger values
   }
 }
