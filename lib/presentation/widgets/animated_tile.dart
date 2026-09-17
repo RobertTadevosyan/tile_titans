@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
 import 'package:flutter_2048/core/theme/themes.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
@@ -85,6 +84,8 @@ class _AnimatedTileState extends State<AnimatedTile>
     final tileSize = widget.tileSize;
     final themeProvider = Provider.of<ThemeProvider>(context);
     final defaultColor = Theme.of(context).primaryColor.withOpacity(0.85);
+    final tileColor =
+        tileColors[themeProvider.currentTheme]?[tile.value] ?? defaultColor;
     final controller = Provider.of<GameController>(context);
     final lastMoveOffset = controller.lastMoveOffset ?? Offset(0, 0);
     final diffX = /*tile.isNew ? 0 : */ lastMoveOffset.dx;
@@ -116,16 +117,26 @@ class _AnimatedTileState extends State<AnimatedTile>
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
-              color:
-                  tileColors[themeProvider.currentTheme]?[tile.value] ??
-                  defaultColor,
-              borderRadius: BorderRadius.circular(8),
+              color: tileColor,
+              borderRadius: BorderRadius.circular(10),
+              // Bright inner edge so the tile reads as lit from within.
+              border: Border.all(
+                color: Colors.white.withOpacity(0.5),
+                width: 1.5,
+              ),
               boxShadow: [
+                // Glow picks up the tile's own colour, so it strengthens
+                // naturally as values climb and the palette deepens.
+                BoxShadow(
+                  color: tileColor.withOpacity(0.6),
+                  blurRadius: 14,
+                  spreadRadius: 0.5,
+                ),
+                // Keeps the tile grounded against the board.
                 BoxShadow(
                   color: Colors.black.withOpacity(0.15),
-                  blurRadius: 12,
-                  spreadRadius: 1,
-                  offset: const Offset(3, 3),
+                  blurRadius: 8,
+                  offset: const Offset(2, 3),
                 ),
               ],
             ),
@@ -136,7 +147,7 @@ class _AnimatedTileState extends State<AnimatedTile>
                 Text(
                   '${tile.value}',
                   style: TextStyle(
-                    fontSize: _getFontSize(tile.value),
+                    fontSize: _getFontSize(tile.value, tileSize),
                     fontWeight: FontWeight.bold,
                     color: tile.value <= 4 ? Colors.black : Colors.white,
                   ),
@@ -151,14 +162,30 @@ class _AnimatedTileState extends State<AnimatedTile>
     );
   }
 
-  double _getFontSize(int value) {
+  double _getFontSize(int value, double tileSize) {
     final isPhoneLandscape = widget.isLandscape && !widget.isTablet;
     final length = value.toString().length;
-    if (length <= 2) return isPhoneLandscape ? 22 : 24;
-    if (length == 3) return isPhoneLandscape ? 20 : 22;
-    if (length == 4) return isPhoneLandscape ? 16 : 18;
-    if (length == 5) return isPhoneLandscape ? 14 : 16;
-    if (length == 6) return isPhoneLandscape ? 12 : 14;
-    return isPhoneLandscape ? 10 : 14; // fallback for larger values
+    switch (length) {
+      case 1:
+        return isPhoneLandscape
+            ? 22
+            : widget.isTablet
+            ? 38
+            : 32;
+
+      case 2:
+        return isPhoneLandscape
+            ? 22
+            : widget.isTablet
+            ? 38
+            : 30;
+      case 3:
+        return isPhoneLandscape
+            ? 20
+            : widget.isTablet
+            ? 34
+            : 22;
+    }
+    return (tileSize.round() / length) + 2;
   }
 }

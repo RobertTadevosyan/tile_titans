@@ -6,9 +6,9 @@ class LanguageSelector extends StatelessWidget {
     final bool isTablet;
 
   const LanguageSelector({
-    Key? key,
+    super.key,
     required this.isTablet,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

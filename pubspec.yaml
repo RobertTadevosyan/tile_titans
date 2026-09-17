@@ -18,10 +18,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 
 # Android
-# version: 4.0.2+3007  
+version: 4.0.4+3009
 
 # iOS
-version: 1.0.1+2  
+# version: 1.0.2+3  
 
 environment:
   sdk: ^3.7.2
@@ -51,7 +51,7 @@ dependencies:
   device_info_plus: ^10.1.0
   flutter_localizations:
     sdk: flutter
-  intl: ^0.19.0
+  intl: ^0.20.2
 
 
 dev_dependencies:

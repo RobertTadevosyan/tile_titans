@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,7 @@ import 'package:flutter_2048/utils/helper.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 import '../controllers/game_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_2048/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/presentation/models/leaderboard_entry.dart';
 import 'package:flutter_2048/utils/helper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 
 class LeaderboardScreen extends StatefulWidget {
@@ -301,8 +301,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 rows: List.generate(entries.length, (index) {
                   final entry = entries[index];
                   return DataRow(
-                    color: MaterialStateProperty.resolveWith<Color?>((
-                      Set<MaterialState> states,
+                    color: WidgetStateProperty.resolveWith<Color?>((
+                      Set<WidgetState> states,
                     ) {
                       return entry.userId == currentUserUid
                           ? Theme.of(

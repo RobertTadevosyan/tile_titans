@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +14,7 @@ import 'package:yandex_mobileads/mobile_ads.dart';
 import '../controllers/game_controller.dart';
 import '../widgets/score_board.dart';
 import '../widgets/game_board.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_2048/l10n/app_localizations.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -546,14 +545,17 @@ class _GameScreenState extends State<GameScreen> {
                 context,
                 isTablet: false,
               ),
-              SwitchListTile(
-                title: Text(
-                  appLocales.autoPlay,
-                  style: TextStyle(fontSize: 14),
+              const SizedBox(height: 16),
+              Card(
+                child: SwitchListTile(
+                  title: Text(
+                    appLocales.autoPlay,
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  value: controller.autoPlay,
+                  onChanged:
+                      (_) => controller.toggleAutoPlay(context, appLocales),
                 ),
-                value: controller.autoPlay,
-                onChanged:
-                    (_) => controller.toggleAutoPlay(context, appLocales),
               ),
             ],
           ),
@@ -611,15 +613,20 @@ class _GameScreenState extends State<GameScreen> {
                         context,
                       ),
                       if (kIsWeb) SizedBox(height: 100),
-                      SwitchListTile(
-                        title: Text(
-                          appLocales.autoPlay,
-                          style: TextStyle(fontSize: 18),
+                      if(!kIsWeb) const SizedBox(height: 6),
+                      Card(
+                        child: SwitchListTile(
+                          title: Text(
+                            appLocales.autoPlay,
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          value: controller.autoPlay,
+                          onChanged:
+                              (_) => controller.toggleAutoPlay(
+                                context,
+                                appLocales,
+                              ),
                         ),
-                        value: controller.autoPlay,
-                        onChanged:
-                            (_) =>
-                                controller.toggleAutoPlay(context, appLocales),
                       ),
                     ],
                   ),
@@ -735,14 +742,17 @@ class _GameScreenState extends State<GameScreen> {
                     context,
                     isTablet: true,
                   ),
-                  SwitchListTile(
-                    title: Text(
-                      appLocales.autoPlay,
-                      style: TextStyle(fontSize: 24),
+                  const SizedBox(height: 16),
+                  Card(
+                    child: SwitchListTile(
+                      title: Text(
+                        appLocales.autoPlay,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      value: controller.autoPlay,
+                      onChanged:
+                          (_) => controller.toggleAutoPlay(context, appLocales),
                     ),
-                    value: controller.autoPlay,
-                    onChanged:
-                        (_) => controller.toggleAutoPlay(context, appLocales),
                   ),
                 ],
               ),

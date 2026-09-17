@@ -10,7 +10,7 @@ import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
 import 'package:flutter_2048/utils/deviceInfo.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_2048/l10n/app_localizations.dart';
 
 class GameController extends ChangeNotifier {
   final analytics = FirebaseAnalytics.instance;
@@ -182,21 +182,27 @@ class GameController extends ChangeNotifier {
           line = copy[i];
           line.removeWhere((x) => x == 0);
           simulateCollapse(line);
-          while (line.length < gridSize) line.add(0);
+          while (line.length < gridSize) {
+            line.add(0);
+          }
           copy[i] = line;
           break;
         case 'right':
           line = copy[i].reversed.toList();
           line.removeWhere((x) => x == 0);
           simulateCollapse(line);
-          while (line.length < gridSize) line.add(0);
+          while (line.length < gridSize) {
+            line.add(0);
+          }
           copy[i] = line.reversed.toList();
           break;
         case 'up':
           line = List.generate(gridSize, (j) => copy[j][i]);
           line.removeWhere((x) => x == 0);
           simulateCollapse(line);
-          while (line.length < gridSize) line.add(0);
+          while (line.length < gridSize) {
+            line.add(0);
+          }
           for (int j = 0; j < gridSize; j++) {
             copy[j][i] = line[j];
           }
@@ -205,7 +211,9 @@ class GameController extends ChangeNotifier {
           line = List.generate(gridSize, (j) => copy[j][i]).reversed.toList();
           line.removeWhere((x) => x == 0);
           simulateCollapse(line);
-          while (line.length < gridSize) line.add(0);
+          while (line.length < gridSize) {
+            line.add(0);
+          }
           for (int j = 0; j < gridSize; j++) {
             copy[gridSize - j - 1][i] = line[j];
           }
@@ -266,20 +274,20 @@ class GameController extends ChangeNotifier {
     });
   }
 
-  void setHighScoreInFirebaseDbActionPerformed() async{
+  void setHighScoreInFirebaseDbActionPerformed() async {
     print("setHighScoreInFirebaseDbActionPerformed");
-      final db = FirebaseDatabase.instance.ref();
-      final userId = FirebaseAuth.instance.currentUser?.uid;
-      final device = await getDeviceInfoSafe();
-      print("saveHighScoreToFirebase: userId: $userId, $device");
-      if (userId != null) {
-        await db.child('leaderboard/$userId').set({
-          'high_score': score,
-          'platform': device['platform'],
-          'device': device['device'],
-          'os': device['os'],
-        });
-      }
+    final db = FirebaseDatabase.instance.ref();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final device = await getDeviceInfoSafe();
+    print("saveHighScoreToFirebase: userId: $userId, $device");
+    if (userId != null) {
+      await db.child('leaderboard/$userId').set({
+        'high_score': score,
+        'platform': device['platform'],
+        'device': device['device'],
+        'os': device['os'],
+      });
+    }
   }
 
   void _lockRandomTile() {
