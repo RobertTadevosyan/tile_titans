@@ -48,7 +48,7 @@ const _chapterOne = TrialChapter(
     Trial(
       id: 'forge-1',
       name: 'Trial I',
-      summary: 'Reach 64 in 40 moves',
+      summary: 'Reach 64 in 70 moves',
       startBoard: [
         [2, 4, 0, 0],
         [0, 2, 0, 0],
@@ -56,12 +56,12 @@ const _chapterOne = TrialChapter(
         [0, 0, 0, 2],
       ],
       objective: Objective.reachTile(64),
-      constraints: Constraints(moveLimit: 40),
+      constraints: Constraints(moveLimit: 70),
     ),
     Trial(
       id: 'forge-2',
       name: 'Trial II',
-      summary: 'Reach 128 in 60 moves',
+      summary: 'Reach 128 in 95 moves',
       startBoard: [
         [8, 4, 2, 0],
         [4, 2, 0, 0],
@@ -69,12 +69,12 @@ const _chapterOne = TrialChapter(
         [0, 0, 0, 0],
       ],
       objective: Objective.reachTile(128),
-      constraints: Constraints(moveLimit: 60),
+      constraints: Constraints(moveLimit: 95),
     ),
     Trial(
       id: 'forge-3',
       name: 'Trial III',
-      summary: 'Score 1,500 in 50 moves',
+      summary: 'Score 1,500 in 190 moves',
       startBoard: [
         [0, 2, 2, 0],
         [0, 4, 4, 0],
@@ -82,7 +82,7 @@ const _chapterOne = TrialChapter(
         [0, 0, 0, 0],
       ],
       objective: Objective.reachScore(1500),
-      constraints: Constraints(moveLimit: 50),
+      constraints: Constraints(moveLimit: 190),
     ),
     Trial(
       id: 'forge-4',
@@ -112,7 +112,7 @@ const _chapterOne = TrialChapter(
     Trial(
       id: 'forge-6',
       name: 'Trial VI',
-      summary: 'Reach 256 in 90 moves',
+      summary: 'Reach 256 in 150 moves',
       startBoard: [
         [32, 16, 8, 4],
         [16, 8, 4, 2],
@@ -120,7 +120,7 @@ const _chapterOne = TrialChapter(
         [0, 0, 0, 0],
       ],
       objective: Objective.reachTile(256),
-      constraints: Constraints(moveLimit: 90),
+      constraints: Constraints(moveLimit: 150),
     ),
   ],
 );
@@ -138,12 +138,12 @@ const _chapterTwo = TrialChapter(
       summary: 'Reach 64 with the centre blocked',
       startBoard: [
         [2, 0, 0, 2],
-        [0, _x, _x, 0],
-        [0, _x, _x, 0],
+        [0, _x, 0, 0],
+        [0, 0, _x, 0],
         [4, 0, 0, 4],
       ],
       objective: Objective.reachTile(64),
-      constraints: Constraints(moveLimit: 60, allowUndo: false),
+      constraints: Constraints(moveLimit: 110, allowUndo: false),
     ),
     Trial(
       id: 'proving-2',
@@ -151,25 +151,25 @@ const _chapterTwo = TrialChapter(
       summary: 'Reach 128 through a split board',
       startBoard: [
         [2, 4, _x, 2],
-        [4, 2, _x, 4],
+        [4, 2, 0, 4],
         [0, 0, _x, 0],
-        [0, 0, _x, 0],
+        [0, 0, 0, 0],
       ],
       objective: Objective.reachTile(128),
-      constraints: Constraints(moveLimit: 80, allowUndo: false),
+      constraints: Constraints(moveLimit: 140, allowUndo: false),
     ),
     Trial(
       id: 'proving-3',
       name: 'Trial IX',
-      summary: 'Score 2,000 around the pillars',
+      summary: 'Score 1,200 around the pillars',
       startBoard: [
         [0, 2, 2, 0],
-        [_x, 4, 4, _x],
+        [_x, 4, 4, 0],
         [0, 8, 8, 0],
-        [_x, 2, 2, _x],
+        [0, 2, 2, _x],
       ],
-      objective: Objective.reachScore(2000),
-      constraints: Constraints(moveLimit: 70, allowUndo: false),
+      objective: Objective.reachScore(1200),
+      constraints: Constraints(moveLimit: 160, allowUndo: false),
     ),
     Trial(
       id: 'proving-4',
@@ -182,7 +182,7 @@ const _chapterTwo = TrialChapter(
         [8, 8, 0, 0],
       ],
       objective: Objective.createTiles(32, 3),
-      constraints: Constraints(moveLimit: 55, allowUndo: false),
+      constraints: Constraints(moveLimit: 180, allowUndo: false),
     ),
     Trial(
       id: 'proving-5',
@@ -196,7 +196,7 @@ const _chapterTwo = TrialChapter(
       ],
       objective: Objective.reachTile(256),
       constraints: Constraints(
-        moveLimit: 100,
+        moveLimit: 135,
         allowUndo: false,
         allowHints: false,
       ),
@@ -249,15 +249,15 @@ const _chapterThree = TrialChapter(
     Trial(
       id: 'summit-2',
       name: 'Trial XIV',
-      summary: 'Score 3,000 in two minutes',
+      summary: 'Score 2,000 before time runs out',
       startBoard: [
         [8, 4, 2, 0],
         [4, 2, 0, 0],
         [2, 0, 0, 0],
         [0, 0, 0, 0],
       ],
-      objective: Objective.reachScore(3000),
-      constraints: Constraints(timeLimit: 120, allowUndo: false),
+      objective: Objective.reachScore(2000),
+      constraints: Constraints(timeLimit: 200, allowUndo: false),
     ),
     Trial(
       id: 'summit-3',
@@ -271,7 +271,7 @@ const _chapterThree = TrialChapter(
         [0, 0, 0, 0, 0],
       ],
       objective: Objective.reachTile(512),
-      constraints: Constraints(moveLimit: 150, allowUndo: false),
+      constraints: Constraints(moveLimit: 270, allowUndo: false),
       rules: RuleSet(
         respectsPlayerGrid: false,
         gridSize: 5,
@@ -305,11 +305,11 @@ const _chapterThree = TrialChapter(
       startBoard: [
         [64, 0, 0, 64],
         [32, 0, 0, 32],
-        [16, _x, _x, 16],
+        [16, _x, 0, 16],
         [8, 0, 0, 8],
       ],
       objective: Objective.createTiles(128, 2),
-      constraints: Constraints(moveLimit: 70, allowUndo: false),
+      constraints: Constraints(moveLimit: 200, allowUndo: false),
     ),
     Trial(
       id: 'summit-6',
@@ -324,7 +324,7 @@ const _chapterThree = TrialChapter(
       ],
       objective: Objective.reachTile(1024),
       constraints: Constraints(
-        moveLimit: 200,
+        moveLimit: 500,
         allowUndo: false,
         allowHints: false,
       ),

@@ -114,23 +114,32 @@ Trial dailyTrialFor(DateTime date) {
   }
 
   final objectives = <({Objective objective, String summary})>[
+    // 512 was in this pool and made roughly half of all dailies unwinnable:
+    // it demands near-perfect play on a 4x4, which is too much to ask of a
+    // puzzle that resets every day.
+    (objective: const Objective.reachTile(128), summary: 'Forge a 128 tile'),
     (objective: const Objective.reachTile(256), summary: 'Forge a 256 tile'),
-    (objective: const Objective.reachTile(512), summary: 'Forge a 512 tile'),
-    (objective: const Objective.reachScore(3000), summary: 'Score 3,000'),
-    (
-      objective: const Objective.createTiles(64, 3),
-      summary: 'Hold three 64 tiles at once'
-    ),
-    (objective: const Objective.survive(80), summary: 'Survive 80 moves'),
+    (objective: const Objective.reachScore(1000), summary: 'Score 1,000'),
+    (objective: const Objective.reachScore(2500), summary: 'Score 2,500'),
+    (objective: const Objective.survive(60), summary: 'Survive 60 moves'),
+    // "Hold N tiles of X at once" is deliberately absent here. It fights the
+    // way people naturally play — anyone competent merges 32+32 on sight,
+    // which destroys the condition — so it belongs in an authored trial the
+    // player approaches knowingly, not in a daily that should be approachable.
+    // Trials IV, X and XVII still use it.
   ];
   final chosen = random.pick(objectives);
 
-  // Move budgets scale with how demanding the objective is.
+  // Move budgets are derived from the material the objective needs, not chosen
+  // by feel. Merging only redistributes value — spawns are the sole source — so
+  // a target tile of T requires roughly T total value on the board, and each
+  // move contributes about 2.2. The original budgets were under half of that
+  // and left most dailies mathematically unwinnable.
   final moveLimit = switch (chosen.objective.kind) {
     ObjectiveKind.reachTile =>
-      chosen.objective.target >= 512 ? 220 : 130,
-    ObjectiveKind.reachScore => 160,
-    ObjectiveKind.createTiles => 150,
+      chosen.objective.target >= 512 ? 450 : 230,
+    ObjectiveKind.reachScore => 400,
+    ObjectiveKind.createTiles => 200,
     ObjectiveKind.survive => null,
     ObjectiveKind.clearBoard => 120,
   };
