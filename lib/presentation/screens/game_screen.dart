@@ -325,7 +325,7 @@ class _GameScreenState extends State<GameScreen> {
           child: Text(appLocales.restart),
         ),
         const SizedBox(width: 16),
-        if (controller.mode != GameMode.hardcore)
+        if (controller.undoAllowed)
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primaryColor,
@@ -362,7 +362,7 @@ class _GameScreenState extends State<GameScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: () {
+          onPressed: !controller.hintsAllowed ? null : () {
             final hint = directionToEmoji(controller.getHint());
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -404,7 +404,7 @@ class _GameScreenState extends State<GameScreen> {
               child: Text(appLocales.restart),
             ),
             const SizedBox(width: 16),
-            if (controller.mode != GameMode.hardcore)
+            if (controller.undoAllowed)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.primaryColor,
@@ -433,7 +433,7 @@ class _GameScreenState extends State<GameScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: () {
+          onPressed: !controller.hintsAllowed ? null : () {
             final hint = controller.getHint();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(appLocales.hintMessage(hint ?? ''))),
@@ -468,7 +468,7 @@ class _GameScreenState extends State<GameScreen> {
           child: Text(appLocales.restart),
         ),
         const SizedBox(width: 16),
-        if (controller.mode != GameMode.hardcore)
+        if (controller.undoAllowed)
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primaryColor,
@@ -493,7 +493,7 @@ class _GameScreenState extends State<GameScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: () {
+          onPressed: !controller.hintsAllowed ? null : () {
             final hint = controller.getHint();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(appLocales.hintMessage(hint ?? ''))),
@@ -522,7 +522,7 @@ class _GameScreenState extends State<GameScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
           child: Column(
             children: [
-              if (controller.mode != GameMode.zen)
+              if (controller.scored)
                 ScoreBoard(
                   score: controller.score,
                   highestScore: controller.highScore,
@@ -597,7 +597,7 @@ class _GameScreenState extends State<GameScreen> {
                         ),
                       ),
                       if (kIsWeb) SizedBox(height: 100),
-                      if (controller.mode != GameMode.zen)
+                      if (controller.scored)
                         ScoreBoard(
                           score: controller.score,
                           highestScore: controller.highScore,
@@ -719,7 +719,7 @@ class _GameScreenState extends State<GameScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
               child: Column(
                 children: [
-                  if (controller.mode != GameMode.zen)
+                  if (controller.scored)
                     ScoreBoard(
                       isTablet: true,
                       isLandscape: isLandscape,
