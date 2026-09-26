@@ -42,6 +42,15 @@ class RuleSet {
   /// Seconds added per merge, for modes where chaining buys time.
   final int secondsPerMerge;
 
+  /// Whether the player's board-size preference applies.
+  ///
+  /// True for ordinary free play, so the Settings choice keeps working. False
+  /// where the size is part of the design: Hardcore's 5x5 is the mode, and an
+  /// authored trial's position only makes sense on the grid it was drawn for —
+  /// padding a 4x4 puzzle out to 6x6 hands the player 20 free cells and makes
+  /// its move budget meaningless.
+  final bool respectsPlayerGrid;
+
   const RuleSet({
     this.gridSize = 4,
     this.spawnWeights = const {2: 9, 4: 1},
@@ -52,6 +61,7 @@ class RuleSet {
     this.endBehaviour = EndBehaviour.gameOver,
     this.timeLimit,
     this.secondsPerMerge = 0,
+    this.respectsPlayerGrid = true,
   });
 
   /// The strategic baseline. Unchanged from the original game.
@@ -76,6 +86,7 @@ class RuleSet {
   /// Spawn pressure rather than a hidden button: a bigger board, two tiles per
   /// move, weighted toward 4s, with no assistance at all.
   static const hardcore = RuleSet(
+    respectsPlayerGrid: false,
     gridSize: 5,
     spawnWeights: {2: 3, 4: 7},
     spawnPerMove: 2,
@@ -85,6 +96,7 @@ class RuleSet {
 
   /// Objective play. Limits come from the trial's own constraints.
   static const trial = RuleSet(
+    respectsPlayerGrid: false,
     endBehaviour: EndBehaviour.objective,
   );
 
@@ -98,6 +110,7 @@ class RuleSet {
     EndBehaviour? endBehaviour,
     int? timeLimit,
     int? secondsPerMerge,
+    bool? respectsPlayerGrid,
   }) {
     return RuleSet(
       gridSize: gridSize ?? this.gridSize,
@@ -109,6 +122,7 @@ class RuleSet {
       endBehaviour: endBehaviour ?? this.endBehaviour,
       timeLimit: timeLimit ?? this.timeLimit,
       secondsPerMerge: secondsPerMerge ?? this.secondsPerMerge,
+      respectsPlayerGrid: respectsPlayerGrid ?? this.respectsPlayerGrid,
     );
   }
 

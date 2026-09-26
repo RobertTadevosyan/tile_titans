@@ -218,6 +218,7 @@ const _chapterTwo = TrialChapter(
       objective: Objective.clearBoard(2),
       constraints: Constraints(moveLimit: 12, allowUndo: false),
       rules: RuleSet(
+        respectsPlayerGrid: false,
         spawnPerMove: 0,
         endBehaviour: EndBehaviour.objective,
       ),
@@ -271,7 +272,11 @@ const _chapterThree = TrialChapter(
       ],
       objective: Objective.reachTile(512),
       constraints: Constraints(moveLimit: 150, allowUndo: false),
-      rules: RuleSet(gridSize: 5, endBehaviour: EndBehaviour.objective),
+      rules: RuleSet(
+        respectsPlayerGrid: false,
+        gridSize: 5,
+        endBehaviour: EndBehaviour.objective,
+      ),
     ),
     Trial(
       id: 'summit-4',
@@ -287,6 +292,7 @@ const _chapterThree = TrialChapter(
       objective: Objective.survive(100),
       constraints: Constraints(allowUndo: false),
       rules: RuleSet(
+        respectsPlayerGrid: false,
         gridSize: 5,
         spawnWeights: {2: 4, 4: 6},
         endBehaviour: EndBehaviour.objective,
@@ -322,7 +328,11 @@ const _chapterThree = TrialChapter(
         allowUndo: false,
         allowHints: false,
       ),
-      rules: RuleSet(gridSize: 5, endBehaviour: EndBehaviour.objective),
+      rules: RuleSet(
+        respectsPlayerGrid: false,
+        gridSize: 5,
+        endBehaviour: EndBehaviour.objective,
+      ),
     ),
   ],
 );

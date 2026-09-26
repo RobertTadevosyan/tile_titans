@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_2048/content/titan_ranks.dart';
 import 'package:flutter_2048/content/trials.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
+import 'package:flutter_2048/domain/engine/rules.dart';
 import 'package:flutter_2048/domain/engine/trial.dart';
+import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:flutter_2048/presentation/screens/game_screen.dart';
@@ -257,11 +259,36 @@ class _ModeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modes = <({String name, String description, IconData icon})>[
-      (name: l10n.modeClassic, description: l10n.modeClassicDesc, icon: Icons.grid_4x4_rounded),
-      (name: l10n.modeZen, description: l10n.modeZenDesc, icon: Icons.spa_rounded),
-      (name: l10n.modeTimeAttack, description: l10n.modeTimeAttackDesc, icon: Icons.timer_rounded),
-      (name: l10n.modeHardcore, description: l10n.modeHardcoreDesc, icon: Icons.whatshot_rounded),
+    final modes = <({
+      String name,
+      String description,
+      IconData icon,
+      RuleSet rules
+    })>[
+      (
+        name: l10n.modeClassic,
+        description: l10n.modeClassicDesc,
+        icon: Icons.grid_4x4_rounded,
+        rules: RuleSet.classic
+      ),
+      (
+        name: l10n.modeZen,
+        description: l10n.modeZenDesc,
+        icon: Icons.spa_rounded,
+        rules: RuleSet.zen
+      ),
+      (
+        name: l10n.modeTimeAttack,
+        description: l10n.modeTimeAttackDesc,
+        icon: Icons.timer_rounded,
+        rules: RuleSet.timeAttack
+      ),
+      (
+        name: l10n.modeHardcore,
+        description: l10n.modeHardcoreDesc,
+        icon: Icons.whatshot_rounded,
+        rules: RuleSet.hardcore
+      ),
     ];
 
     return LayoutBuilder(
@@ -280,7 +307,7 @@ class _ModeGrid extends StatelessWidget {
           children: [
             for (final mode in modes)
               TitanCard(
-                onTap: () => _notYetPlayable(context, mode.name),
+                onTap: () => _startMode(context, mode.rules),
                 padding: const EdgeInsets.all(TitanSpacing.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,6 +526,14 @@ class _Chip extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Starts free play under a rule set and opens the board.
+void _startMode(BuildContext context, RuleSet rules) {
+  context.read<GameController>().startMode(rules);
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(builder: (_) => const GameScreen()),
+  );
 }
 
 /// Placeholder for destinations whose runners are not built yet.

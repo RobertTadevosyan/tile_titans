@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_2048/domain/ai_difficultt.dart';
 import 'package:flutter_2048/domain/direction.dart';
 import 'package:flutter_2048/domain/engine/board.dart';
+import 'package:flutter_2048/domain/engine/objective.dart';
+import 'package:flutter_2048/domain/engine/rules.dart';
+import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
@@ -433,21 +436,200 @@ class GameController extends ChangeNotifier {
     });
   }
 
-  bool isGameOver() {
-    for (int y = 0; y < gridSize; y++) {
-      for (int x = 0; x < gridSize; x++) {
-        final current = board[y][x];
-        if (current == 0) return false; // Empty tile found
 
-        // Check right
-        if (x + 1 < gridSize && board[y][x + 1] == current) return false;
+  // ---------------------------------------------------------------------------
+  // Session
+  //
+  // A session is "what am I playing right now": a rule set, optionally an
+  // authored trial, and the counters those need. Before this the controller had
+  // only a `GameMode` enum that a handful of scattered `if`s consulted, which is
+  // why the six advertised modes all played identically.
+  // ---------------------------------------------------------------------------
 
-        // Check down
-        if (y + 1 < gridSize && board[y + 1][x] == current) return false;
+  /// The mechanics currently in force.
+  RuleSet rules = RuleSet.classic;
+
+  /// The trial being attempted, or null during free play.
+  Trial? activeTrial;
+
+  /// Moves spent in this session, for trial move budgets.
+  int movesUsed = 0;
+
+  /// Seconds spent, for trial time budgets and play-time statistics.
+  int secondsElapsed = 0;
+
+  /// Set once the trial's objective is satisfied.
+  bool objectiveMet = false;
+
+  /// True once a trial has been won or lost, so the result is reported once.
+  bool sessionResolved = false;
+
+  /// Whether undo was used this session, for the "Perfect Trial" achievement.
+  bool usedUndoThisSession = false;
+
+  /// The player's own board-size preference, restored when a trial ends.
+  int playerGridSize = 4;
+
+  bool get isTrial => activeTrial != null;
+
+  Constraints get constraints =>
+      activeTrial?.constraints ?? const Constraints();
+
+  bool get undoAllowed => rules.allowUndo && constraints.allowUndo;
+
+  bool get hintsAllowed => rules.allowHints && constraints.allowHints;
+
+  bool get scored => rules.scored;
+
+  /// Moves left in a budgeted trial, or null when unbudgeted.
+  int? get movesRemaining {
+    final limit = constraints.moveLimit;
+    if (limit == null) return null;
+    final left = limit - movesUsed;
+    return left < 0 ? 0 : left;
+  }
+
+  /// Progress toward the active trial's objective, or null in free play.
+  double? get objectiveProgress {
+    final trial = activeTrial;
+    if (trial == null) return null;
+    return trial.objective.progress(
+      board: board,
+      score: score,
+      movesUsed: movesUsed,
+    );
+  }
+
+  /// Starts free play under [ruleSet], honouring the player's board size unless
+  /// the rule set defines its own.
+  void startMode(RuleSet ruleSet) {
+    _stopTimers();
+    activeTrial = null;
+    rules = ruleSet;
+    gridSize =
+        ruleSet.respectsPlayerGrid ? playerGridSize : ruleSet.gridSize;
+    _resetSessionCounters();
+    resetGame();
+  }
+
+  /// Starts an authored trial from its fixed position.
+  void startTrial(Trial trial) {
+    _stopTimers();
+    activeTrial = trial;
+    rules = trial.rules;
+    gridSize = trial.gridSize;
+    _resetSessionCounters();
+
+    board = trial.freshBoard();
+    tiles.clear();
+    score = 0;
+    _tileIdCounter = 0;
+    _seedTilesFromBoard();
+    gameOver.value = false;
+    notifyListeners();
+  }
+
+  /// Leaves a trial and returns to free play on the player's own board size.
+  void exitTrial() {
+    _stopTimers();
+    activeTrial = null;
+    rules = RuleSet.classic;
+    gridSize = playerGridSize;
+    _resetSessionCounters();
+    resetGame();
+  }
+
+  void _resetSessionCounters() {
+    movesUsed = 0;
+    secondsElapsed = 0;
+    objectiveMet = false;
+    sessionResolved = false;
+    usedUndoThisSession = false;
+    _boardHistory.clear();
+    _tileHistory.clear();
+    _scoreHistory.clear();
+  }
+
+  void _stopTimers() {
+    _timer?.cancel();
+    autoPlayTimer?.cancel();
+    autoPlay = false;
+  }
+
+  /// Builds the tile list for a board that was set directly, such as a trial's
+  /// authored starting position.
+  void _seedTilesFromBoard() {
+    final seeded = <Tile>[];
+    for (var y = 0; y < gridSize; y++) {
+      for (var x = 0; x < gridSize; x++) {
+        final value = board[y][x];
+        if (value <= 0) continue; // 0 empty, -1 blocked: neither is a tile
+        seeded.add(
+          Tile(
+            id: 'tile_${_tileIdCounter++}',
+            value: value,
+            x: x,
+            y: y,
+            previousX: x,
+            previousY: y,
+          ),
+        );
       }
     }
-    return true;
+    tiles = seeded;
   }
+
+  /// Evaluates the active trial after a move. Returns a result once the attempt
+  /// is decided, and null while it is still in play.
+  TrialResult? evaluateTrial() {
+    final trial = activeTrial;
+    if (trial == null || sessionResolved) return null;
+
+    final won = trial.objective.isMet(
+      board: board,
+      score: score,
+      movesUsed: movesUsed,
+    );
+    if (won) {
+      objectiveMet = true;
+      sessionResolved = true;
+      return TrialResult(
+        trialId: trial.id,
+        outcome: TrialOutcome.won,
+        movesUsed: movesUsed,
+        score: score,
+        highestTile: maxTile(board),
+      );
+    }
+
+    final exhausted = constraints.isExhausted(
+      movesUsed: movesUsed,
+      secondsElapsed: secondsElapsed,
+    );
+    final jammed = !hasMoves(board);
+    if (!exhausted && !jammed) return null;
+
+    sessionResolved = true;
+    return TrialResult(
+      trialId: trial.id,
+      outcome: jammed
+          ? TrialOutcome.boardJammed
+          : (constraints.moveLimit != null && movesUsed >= constraints.moveLimit!
+              ? TrialOutcome.outOfMoves
+              : TrialOutcome.outOfTime),
+      movesUsed: movesUsed,
+      score: score,
+      highestTile: maxTile(board),
+    );
+  }
+
+  /// Delegates to the engine, which understands blocked cells.
+  ///
+  /// The previous hand-rolled scan compared neighbouring cells for equality, so
+  /// two adjacent blocked cells (-1 == -1) looked like an available merge and
+  /// the game would never end on a board containing them.
+  bool isGameOver() => !hasMoves(board);
+
 
   void _endTimedGame(BuildContext context, AppLocalizations appLocales) {
     if (dialogShown) return;
@@ -544,6 +726,7 @@ class GameController extends ChangeNotifier {
     // if (![3, 4, 5, 6].contains(size)) return; // ✅ prevent invalid values
     await prefs.saveGameBoardSize(size);
     gridSize = size;
+    playerGridSize = size;
     resetGame(size); // optional: or use preserveGameState() if continuing
     notifyListeners();
   }
@@ -570,6 +753,9 @@ class GameController extends ChangeNotifier {
     saveHighScoreToFirebase(highScore);
     soundEnabled = await prefs.getSoundEnabled();
     gridSize = await prefs.getGameBoardSize();
+    // Remember the player's own choice so a fixed-grid mode or trial can
+    // borrow the board temporarily and hand it back afterwards.
+    playerGridSize = gridSize;
 
     final gameSettings = await prefs.loadGame();
     if (gameSettings != null) {
@@ -684,7 +870,8 @@ class GameController extends ChangeNotifier {
   }
 
   void undo() {
-    if (mode == GameMode.hardcore) return;
+    if (!undoAllowed) return;
+    usedUndoThisSession = true;
     if (_boardHistory.isEmpty) return;
     board = _boardHistory.removeLast();
     tiles = _tileHistory.removeLast();
@@ -835,7 +1022,7 @@ class GameController extends ChangeNotifier {
     lastMoveOffset = _moveOffsets[direction];
 
     board = result.board;
-    if (mode != GameMode.zen) {
+    if (rules.scored) {
       score += result.gained;
     }
     totalMerges += result.merges.length;
@@ -848,8 +1035,15 @@ class GameController extends ChangeNotifier {
       _playMergeSound();
     }
 
+    movesUsed++;
     _rebuildTilesFrom(result);
     _spawnTile();
+
+    // Time Attack pays seconds for merges, so chaining is the strategy rather
+    // than raw speed.
+    if (rules.secondsPerMerge > 0 && result.merges.isNotEmpty) {
+      timeLeft += rules.secondsPerMerge * result.merges.length;
+    }
 
     unawaited(prefs.saveGame(score, gridSize, board));
     _applyModeRules(context, appLocales);
@@ -940,10 +1134,16 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  /// Hardcore applies real spawn pressure rather than just hiding undo.
-  int get _spawnCount => mode == GameMode.hardcore ? 2 : 1;
+  int get _spawnCount => rules.spawnPerMove;
 
-  double get _fourSpawnChance => mode == GameMode.hardcore ? 0.7 : 0.1;
+  /// Derived from the rule set's spawn weights, so Hardcore's flood of 4s is a
+  /// property of the mode's data rather than a conditional here.
+  double get _fourSpawnChance {
+    final weights = rules.spawnWeights;
+    final total = weights.values.fold<int>(0, (a, b) => a + b);
+    if (total == 0) return 0.1;
+    return (weights[4] ?? 0) / total;
+  }
 
   void _syncHighScore() {
     if (score > highScore) {
@@ -954,7 +1154,19 @@ class GameController extends ChangeNotifier {
   }
 
   void _checkGameOver(BuildContext context, AppLocalizations appLocales) {
-    if (mode == GameMode.zen) return; // Zen never ends.
+    // Zen never ends: a jammed board dissolves its lowest tiles instead, which
+    // is what makes it genuinely relaxed rather than "normal with the score
+    // hidden".
+    if (rules.endBehaviour == EndBehaviour.dissolveLowest) {
+      if (!hasMoves(board)) {
+        final dissolved = dissolveLowestTiles(board);
+        board = dissolved.board;
+        _seedTilesFromBoard();
+        notifyListeners();
+      }
+      return;
+    }
+    if (rules.endBehaviour == EndBehaviour.objective) return;
     if (gameOver.value) return; // Already handled; do not re-fire.
     if (!isGameOver()) return;
 
