@@ -181,4 +181,132 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get timeIsUp => 'Время вышло!';
+
+  @override
+  String get homeContinue => 'Продолжить';
+
+  @override
+  String get homeNewGame => 'Новая игра';
+
+  @override
+  String get homePlay => 'Играть';
+
+  @override
+  String get homeChooseChallenge => 'Выберите испытание';
+
+  @override
+  String get homeDailyTrial => 'Ежедневное испытание';
+
+  @override
+  String get homeTodaysChallenge => 'Задача дня';
+
+  @override
+  String get homeTitanTrials => 'Испытания титанов';
+
+  @override
+  String get homeHallOfTitans => 'Зал титанов';
+
+  @override
+  String get homeGameModes => 'Режимы игры';
+
+  @override
+  String get homeBest => 'Лучший';
+
+  @override
+  String homeStreakDays(int days) {
+    return 'Серия: $days дн.';
+  }
+
+  @override
+  String get homeRank => 'Ранг';
+
+  @override
+  String homeCompleted(int done, int total) {
+    return '$done из $total пройдено';
+  }
+
+  @override
+  String get homePlayed => 'Продолжить партию';
+
+  @override
+  String get modeClassic => 'Классика';
+
+  @override
+  String get modeZen => 'Дзен';
+
+  @override
+  String get modeTimeAttack => 'На время';
+
+  @override
+  String get modeHardcore => 'Хардкор';
+
+  @override
+  String get modeClassicDesc => 'Основа стратегии';
+
+  @override
+  String get modeZenDesc => 'Без очков и проигрыша';
+
+  @override
+  String get modeTimeAttackDesc => 'Слияния дают секунды';
+
+  @override
+  String get modeHardcoreDesc => '5x5, частые фишки, без помощи';
+
+  @override
+  String trialMoveLimit(int moves) {
+    return '$moves ходов';
+  }
+
+  @override
+  String trialTimeLimit(int seconds) {
+    return '$seconds с';
+  }
+
+  @override
+  String get trialNoUndo => 'Без отмены';
+
+  @override
+  String get trialNoHints => 'Без подсказок';
+
+  @override
+  String get trialLocked => 'Закрыто';
+
+  @override
+  String get trialObjective => 'Цель';
+
+  @override
+  String get trialComplete => 'Испытание пройдено';
+
+  @override
+  String get trialFailed => 'Испытание провалено';
+
+  @override
+  String get achievements => 'Достижения';
+
+  @override
+  String get pathOfTitans => 'Путь титанов';
+
+  @override
+  String get statGamesPlayed => 'Сыграно игр';
+
+  @override
+  String get statBestScore => 'Лучший счёт';
+
+  @override
+  String get statHighestTile => 'Лучшая плитка';
+
+  @override
+  String get statTotalMerges => 'Всего слияний';
+
+  @override
+  String get statAverageScore => 'Средний счёт';
+
+  @override
+  String get statFavouriteMode => 'Любимый режим';
+
+  @override
+  String get statPlayTime => 'Время игры';
+
+  @override
+  String get statLongestGame => 'Самая длинная партия';
 }

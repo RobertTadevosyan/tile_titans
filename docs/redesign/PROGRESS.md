@@ -45,6 +45,9 @@ Three systems were chosen over many small features:
 | Movement animation | ✅ real paths (was: always exactly one cell) |
 | Leaderboard overwrite bug | ✅ fixed with a guarded transaction |
 | Contrast bug | ✅ numeral colour now derived from measured luminance |
+| Design system (`titan_design.dart`) | ✅ spacing, radius, motion, text roles, cards, metrics |
+| Home screen | ✅ every feature one tap from launch |
+| Localisation | ✅ 39 new strings across en/ru/es/hy (non-English needs native review) |
 
 ### Bugs found and fixed along the way
 
@@ -94,9 +97,10 @@ as absent.
 
 Remaining, in order:
 
-- [ ] **Home screen** — Play · Daily Titan Trial · Game Modes · Titan Trials ·
-      Hall of Titans · Statistics. This is the blocker: it is what makes every
-      other item discoverable.
+- [x] **Home screen** — built and shipping. Rank masthead, prominent Continue,
+      today's Daily Trial with its generated objective, a 2x2 mode gallery
+      stating each rule difference, chapter progress for the 18 trials, and
+      Hall of Titans / Statistics / Settings. Launch now opens here.
 - [ ] **Trial runner UI** — objective banner, move/time budget, win & fail states
 - [ ] **Trials gallery** — chapters, per-trial records, progress
 - [ ] **Statistics & achievements screen** — Path of the Titans

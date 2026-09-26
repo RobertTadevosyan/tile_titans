@@ -51,5 +51,76 @@
   "gameOver": "Game Over",
   "gameOverTitle": "Game Over 🎮",
   "finalScore": "Your final score is {score}",
-  "timeIsUp": "Time's Up!"
+  "timeIsUp": "Time's Up!",
+  "homeContinue": "Continue",
+  "homeNewGame": "New Game",
+  "homePlay": "Play",
+  "homeChooseChallenge": "Choose Your Challenge",
+  "homeDailyTrial": "Daily Titan Trial",
+  "homeTodaysChallenge": "Today's challenge",
+  "homeTitanTrials": "Titan Trials",
+  "homeHallOfTitans": "Hall of Titans",
+  "homeGameModes": "Game Modes",
+  "homeBest": "Best",
+  "homeStreakDays": "{days} day streak",
+  "@homeStreakDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRank": "Rank",
+  "homeCompleted": "{done} of {total} complete",
+  "@homeCompleted": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homePlayed": "Resume your run",
+  "modeClassic": "Classic",
+  "modeZen": "Zen",
+  "modeTimeAttack": "Time Attack",
+  "modeHardcore": "Hardcore",
+  "modeClassicDesc": "The strategic baseline",
+  "modeZenDesc": "No score, no game over",
+  "modeTimeAttackDesc": "Merges buy you seconds",
+  "modeHardcoreDesc": "5x5, heavy spawns, no help",
+  "trialMoveLimit": "{moves} moves",
+  "@trialMoveLimit": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "trialTimeLimit": "{seconds}s",
+  "@trialTimeLimit": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "trialNoUndo": "No undo",
+  "trialNoHints": "No hints",
+  "trialLocked": "Locked",
+  "trialObjective": "Objective",
+  "trialComplete": "Trial complete",
+  "trialFailed": "Trial failed",
+  "achievements": "Achievements",
+  "pathOfTitans": "Path of the Titans",
+  "statGamesPlayed": "Games played",
+  "statBestScore": "Best score",
+  "statHighestTile": "Highest tile",
+  "statTotalMerges": "Total merges",
+  "statAverageScore": "Average score",
+  "statFavouriteMode": "Favourite mode",
+  "statPlayTime": "Play time",
+  "statLongestGame": "Longest game"
 }

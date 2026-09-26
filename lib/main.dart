@@ -7,7 +7,8 @@ import 'package:flutter_2048/domain/locale_manager.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/firebase_options.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
-import 'package:flutter_2048/presentation/screens/game_screen.dart';
+import 'package:flutter_2048/domain/progress/progress_store.dart';
+import 'package:flutter_2048/presentation/screens/home_screen.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/theme/app_theme.dart';
@@ -34,6 +35,9 @@ void main() async {
           create: (_) => GameController(),
         ), // 👈 GameController added here
         ChangeNotifierProvider(create: (_) => Prefs()),
+        // Statistics, achievements and trial records. Loaded eagerly so the
+        // home screen can show rank and progress on first frame.
+        ChangeNotifierProvider(create: (_) => ProgressStore()..load()),
       ],
       child: const GameApp(),
     ),
@@ -86,7 +90,7 @@ class _GameAppState extends State<GameApp> {
               themeProvider.isInitialized
                   ? themeProvider.themeData
                   : appThemeData[AppTheme.Classic],
-          home: const GameScreen(),
+          home: const HomeScreen(),
           navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
         );
       },

@@ -181,4 +181,132 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get timeIsUp => '¡Se acabó el tiempo!';
+
+  @override
+  String get homeContinue => 'Continuar';
+
+  @override
+  String get homeNewGame => 'Partida nueva';
+
+  @override
+  String get homePlay => 'Jugar';
+
+  @override
+  String get homeChooseChallenge => 'Elige tu desafío';
+
+  @override
+  String get homeDailyTrial => 'Prueba diaria';
+
+  @override
+  String get homeTodaysChallenge => 'Desafío de hoy';
+
+  @override
+  String get homeTitanTrials => 'Pruebas de Titán';
+
+  @override
+  String get homeHallOfTitans => 'Salón de los Titanes';
+
+  @override
+  String get homeGameModes => 'Modos de juego';
+
+  @override
+  String get homeBest => 'Mejor';
+
+  @override
+  String homeStreakDays(int days) {
+    return 'Racha de $days días';
+  }
+
+  @override
+  String get homeRank => 'Rango';
+
+  @override
+  String homeCompleted(int done, int total) {
+    return '$done de $total completadas';
+  }
+
+  @override
+  String get homePlayed => 'Reanudar partida';
+
+  @override
+  String get modeClassic => 'Clásico';
+
+  @override
+  String get modeZen => 'Zen';
+
+  @override
+  String get modeTimeAttack => 'Contrarreloj';
+
+  @override
+  String get modeHardcore => 'Extremo';
+
+  @override
+  String get modeClassicDesc => 'La base estratégica';
+
+  @override
+  String get modeZenDesc => 'Sin puntos ni derrota';
+
+  @override
+  String get modeTimeAttackDesc => 'Las fusiones dan segundos';
+
+  @override
+  String get modeHardcoreDesc => '5x5, más fichas, sin ayuda';
+
+  @override
+  String trialMoveLimit(int moves) {
+    return '$moves movimientos';
+  }
+
+  @override
+  String trialTimeLimit(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get trialNoUndo => 'Sin deshacer';
+
+  @override
+  String get trialNoHints => 'Sin pistas';
+
+  @override
+  String get trialLocked => 'Bloqueado';
+
+  @override
+  String get trialObjective => 'Objetivo';
+
+  @override
+  String get trialComplete => 'Prueba superada';
+
+  @override
+  String get trialFailed => 'Prueba fallida';
+
+  @override
+  String get achievements => 'Logros';
+
+  @override
+  String get pathOfTitans => 'Senda de los Titanes';
+
+  @override
+  String get statGamesPlayed => 'Partidas jugadas';
+
+  @override
+  String get statBestScore => 'Mejor puntuación';
+
+  @override
+  String get statHighestTile => 'Ficha más alta';
+
+  @override
+  String get statTotalMerges => 'Fusiones totales';
+
+  @override
+  String get statAverageScore => 'Puntuación media';
+
+  @override
+  String get statFavouriteMode => 'Modo favorito';
+
+  @override
+  String get statPlayTime => 'Tiempo jugado';
+
+  @override
+  String get statLongestGame => 'Partida más larga';
 }

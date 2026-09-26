@@ -413,6 +413,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time\'s Up!'**
   String get timeIsUp;
+
+  /// No description provided for @homeContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get homeContinue;
+
+  /// No description provided for @homeNewGame.
+  ///
+  /// In en, this message translates to:
+  /// **'New Game'**
+  String get homeNewGame;
+
+  /// No description provided for @homePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get homePlay;
+
+  /// No description provided for @homeChooseChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Challenge'**
+  String get homeChooseChallenge;
+
+  /// No description provided for @homeDailyTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Titan Trial'**
+  String get homeDailyTrial;
+
+  /// No description provided for @homeTodaysChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s challenge'**
+  String get homeTodaysChallenge;
+
+  /// No description provided for @homeTitanTrials.
+  ///
+  /// In en, this message translates to:
+  /// **'Titan Trials'**
+  String get homeTitanTrials;
+
+  /// No description provided for @homeHallOfTitans.
+  ///
+  /// In en, this message translates to:
+  /// **'Hall of Titans'**
+  String get homeHallOfTitans;
+
+  /// No description provided for @homeGameModes.
+  ///
+  /// In en, this message translates to:
+  /// **'Game Modes'**
+  String get homeGameModes;
+
+  /// No description provided for @homeBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best'**
+  String get homeBest;
+
+  /// No description provided for @homeStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} day streak'**
+  String homeStreakDays(int days);
+
+  /// No description provided for @homeRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get homeRank;
+
+  /// No description provided for @homeCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} complete'**
+  String homeCompleted(int done, int total);
+
+  /// No description provided for @homePlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume your run'**
+  String get homePlayed;
+
+  /// No description provided for @modeClassic.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get modeClassic;
+
+  /// No description provided for @modeZen.
+  ///
+  /// In en, this message translates to:
+  /// **'Zen'**
+  String get modeZen;
+
+  /// No description provided for @modeTimeAttack.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Attack'**
+  String get modeTimeAttack;
+
+  /// No description provided for @modeHardcore.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardcore'**
+  String get modeHardcore;
+
+  /// No description provided for @modeClassicDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The strategic baseline'**
+  String get modeClassicDesc;
+
+  /// No description provided for @modeZenDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'No score, no game over'**
+  String get modeZenDesc;
+
+  /// No description provided for @modeTimeAttackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Merges buy you seconds'**
+  String get modeTimeAttackDesc;
+
+  /// No description provided for @modeHardcoreDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'5x5, heavy spawns, no help'**
+  String get modeHardcoreDesc;
+
+  /// No description provided for @trialMoveLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'{moves} moves'**
+  String trialMoveLimit(int moves);
+
+  /// No description provided for @trialTimeLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s'**
+  String trialTimeLimit(int seconds);
+
+  /// No description provided for @trialNoUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'No undo'**
+  String get trialNoUndo;
+
+  /// No description provided for @trialNoHints.
+  ///
+  /// In en, this message translates to:
+  /// **'No hints'**
+  String get trialNoHints;
+
+  /// No description provided for @trialLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get trialLocked;
+
+  /// No description provided for @trialObjective.
+  ///
+  /// In en, this message translates to:
+  /// **'Objective'**
+  String get trialObjective;
+
+  /// No description provided for @trialComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial complete'**
+  String get trialComplete;
+
+  /// No description provided for @trialFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial failed'**
+  String get trialFailed;
+
+  /// No description provided for @achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievements;
+
+  /// No description provided for @pathOfTitans.
+  ///
+  /// In en, this message translates to:
+  /// **'Path of the Titans'**
+  String get pathOfTitans;
+
+  /// No description provided for @statGamesPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Games played'**
+  String get statGamesPlayed;
+
+  /// No description provided for @statBestScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Best score'**
+  String get statBestScore;
+
+  /// No description provided for @statHighestTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Highest tile'**
+  String get statHighestTile;
+
+  /// No description provided for @statTotalMerges.
+  ///
+  /// In en, this message translates to:
+  /// **'Total merges'**
+  String get statTotalMerges;
+
+  /// No description provided for @statAverageScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Average score'**
+  String get statAverageScore;
+
+  /// No description provided for @statFavouriteMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite mode'**
+  String get statFavouriteMode;
+
+  /// No description provided for @statPlayTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Play time'**
+  String get statPlayTime;
+
+  /// No description provided for @statLongestGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest game'**
+  String get statLongestGame;
 }
 
 class _AppLocalizationsDelegate

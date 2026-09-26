@@ -181,4 +181,132 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get timeIsUp => 'Ժամանակը լրացավ!';
+
+  @override
+  String get homeContinue => 'Շարունակել';
+
+  @override
+  String get homeNewGame => 'Նոր խաղ';
+
+  @override
+  String get homePlay => 'Խաղալ';
+
+  @override
+  String get homeChooseChallenge => 'Ընտրիր մարտահրավերը';
+
+  @override
+  String get homeDailyTrial => 'Օրվա փորձություն';
+
+  @override
+  String get homeTodaysChallenge => 'Այսօրվա մարտահրավերը';
+
+  @override
+  String get homeTitanTrials => 'Տիտանների փորձություններ';
+
+  @override
+  String get homeHallOfTitans => 'Տիտանների դահլիճ';
+
+  @override
+  String get homeGameModes => 'Խաղի ռեժիմներ';
+
+  @override
+  String get homeBest => 'Լավագույն';
+
+  @override
+  String homeStreakDays(int days) {
+    return '$days օր անընդմեջ';
+  }
+
+  @override
+  String get homeRank => 'Կոչում';
+
+  @override
+  String homeCompleted(int done, int total) {
+    return '$done՝ $total-ից';
+  }
+
+  @override
+  String get homePlayed => 'Շարունակել խաղը';
+
+  @override
+  String get modeClassic => 'Դասական';
+
+  @override
+  String get modeZen => 'Զեն';
+
+  @override
+  String get modeTimeAttack => 'Ժամանակի դեմ';
+
+  @override
+  String get modeHardcore => 'Ծանր';
+
+  @override
+  String get modeClassicDesc => 'Ռազմավարական հիմքը';
+
+  @override
+  String get modeZenDesc => 'Առանց միավորի և պարտության';
+
+  @override
+  String get modeTimeAttackDesc => 'Միացումները վայրկյան են տալիս';
+
+  @override
+  String get modeHardcoreDesc => '5x5, շատ սալիկ, առանց օգնության';
+
+  @override
+  String trialMoveLimit(int moves) {
+    return '$moves քայլ';
+  }
+
+  @override
+  String trialTimeLimit(int seconds) {
+    return '$seconds վրկ';
+  }
+
+  @override
+  String get trialNoUndo => 'Առանց հետարկման';
+
+  @override
+  String get trialNoHints => 'Առանց հուշումների';
+
+  @override
+  String get trialLocked => 'Փակ է';
+
+  @override
+  String get trialObjective => 'Նպատակ';
+
+  @override
+  String get trialComplete => 'Փորձությունն անցած է';
+
+  @override
+  String get trialFailed => 'Փորձությունը ձախողվեց';
+
+  @override
+  String get achievements => 'Նվաճումներ';
+
+  @override
+  String get pathOfTitans => 'Տիտանների ուղին';
+
+  @override
+  String get statGamesPlayed => 'Խաղացած խաղեր';
+
+  @override
+  String get statBestScore => 'Լավագույն միավոր';
+
+  @override
+  String get statHighestTile => 'Ամենաբարձր սալիկ';
+
+  @override
+  String get statTotalMerges => 'Ընդհանուր միացումներ';
+
+  @override
+  String get statAverageScore => 'Միջին միավոր';
+
+  @override
+  String get statFavouriteMode => 'Սիրելի ռեժիմ';
+
+  @override
+  String get statPlayTime => 'Խաղի ժամանակ';
+
+  @override
+  String get statLongestGame => 'Ամենաերկար խաղը';
 }

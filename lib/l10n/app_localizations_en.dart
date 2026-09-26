@@ -181,4 +181,132 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeIsUp => 'Time\'s Up!';
+
+  @override
+  String get homeContinue => 'Continue';
+
+  @override
+  String get homeNewGame => 'New Game';
+
+  @override
+  String get homePlay => 'Play';
+
+  @override
+  String get homeChooseChallenge => 'Choose Your Challenge';
+
+  @override
+  String get homeDailyTrial => 'Daily Titan Trial';
+
+  @override
+  String get homeTodaysChallenge => 'Today\'s challenge';
+
+  @override
+  String get homeTitanTrials => 'Titan Trials';
+
+  @override
+  String get homeHallOfTitans => 'Hall of Titans';
+
+  @override
+  String get homeGameModes => 'Game Modes';
+
+  @override
+  String get homeBest => 'Best';
+
+  @override
+  String homeStreakDays(int days) {
+    return '$days day streak';
+  }
+
+  @override
+  String get homeRank => 'Rank';
+
+  @override
+  String homeCompleted(int done, int total) {
+    return '$done of $total complete';
+  }
+
+  @override
+  String get homePlayed => 'Resume your run';
+
+  @override
+  String get modeClassic => 'Classic';
+
+  @override
+  String get modeZen => 'Zen';
+
+  @override
+  String get modeTimeAttack => 'Time Attack';
+
+  @override
+  String get modeHardcore => 'Hardcore';
+
+  @override
+  String get modeClassicDesc => 'The strategic baseline';
+
+  @override
+  String get modeZenDesc => 'No score, no game over';
+
+  @override
+  String get modeTimeAttackDesc => 'Merges buy you seconds';
+
+  @override
+  String get modeHardcoreDesc => '5x5, heavy spawns, no help';
+
+  @override
+  String trialMoveLimit(int moves) {
+    return '$moves moves';
+  }
+
+  @override
+  String trialTimeLimit(int seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String get trialNoUndo => 'No undo';
+
+  @override
+  String get trialNoHints => 'No hints';
+
+  @override
+  String get trialLocked => 'Locked';
+
+  @override
+  String get trialObjective => 'Objective';
+
+  @override
+  String get trialComplete => 'Trial complete';
+
+  @override
+  String get trialFailed => 'Trial failed';
+
+  @override
+  String get achievements => 'Achievements';
+
+  @override
+  String get pathOfTitans => 'Path of the Titans';
+
+  @override
+  String get statGamesPlayed => 'Games played';
+
+  @override
+  String get statBestScore => 'Best score';
+
+  @override
+  String get statHighestTile => 'Highest tile';
+
+  @override
+  String get statTotalMerges => 'Total merges';
+
+  @override
+  String get statAverageScore => 'Average score';
+
+  @override
+  String get statFavouriteMode => 'Favourite mode';
+
+  @override
+  String get statPlayTime => 'Play time';
+
+  @override
+  String get statLongestGame => 'Longest game';
 }
