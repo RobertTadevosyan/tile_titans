@@ -4,6 +4,7 @@ import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
+import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:flutter_2048/presentation/screens/trial_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -31,11 +32,13 @@ class TrialsScreen extends StatelessWidget {
                 style: TitanText.cardTitle(context),
               ),
               for (final chapter in trialChapters) ...[
-                TitanSectionHeader(label: chapter.name),
+                TitanSectionHeader(
+                  label: ContentStrings.chapter(l10n, chapter.id),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: TitanSpacing.sm),
                   child: Text(
-                    chapter.theme,
+                    ContentStrings.chapterTheme(l10n, chapter.id),
                     style: TitanText.cardBody(context),
                   ),
                 ),
@@ -101,7 +104,10 @@ class _TrialTile extends StatelessWidget {
             ],
           ),
           const SizedBox(height: TitanSpacing.xs),
-          Text(trial.summary, style: TitanText.cardBody(context)),
+          Text(
+            ContentStrings.objective(l10n, trial.objective),
+            style: TitanText.cardBody(context),
+          ),
           const SizedBox(height: TitanSpacing.sm),
           Wrap(
             spacing: TitanSpacing.sm,

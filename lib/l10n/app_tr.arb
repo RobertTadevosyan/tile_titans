@@ -99,5 +99,21 @@
   "statsDaily": "Günlük",
   "statsBestStreak": "Seri",
   "statsChapters": "Bölümler",
-  "appThemeForge": "Demirhane"
+  "appThemeForge": "Demirhane",
+  "objReachTile": "{tile} taşı döv",
+  "objReachScore": "{score} puan topla",
+  "objCreateTiles": "Aynı anda {count} adet {tile} taşı tut",
+  "objSurvive": "{moves} hamle dayan",
+  "objClearBoard": "{count} taşa indir",
+  "rankNovice": "Çırak",
+  "rankWarrior": "Savaşçı",
+  "rankChampion": "Şampiyon",
+  "rankTitan": "Titan",
+  "rankLegend": "Efsane",
+  "chapterForge": "Demirhane",
+  "chapterProving": "Sınav Alanı",
+  "chapterSummit": "Zirve",
+  "chapterForgeTheme": "Hedefleri öğren",
+  "chapterProvingTheme": "Kapalı kareler, geri alma yok",
+  "chapterSummitTheme": "Zaman baskısı ve açık alan"
 }

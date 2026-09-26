@@ -99,5 +99,21 @@
   "statsDaily": "Quotidien",
   "statsBestStreak": "Série",
   "statsChapters": "Chapitres",
-  "appThemeForge": "Forge"
+  "appThemeForge": "Forge",
+  "objReachTile": "Forgez une tuile {tile}",
+  "objReachScore": "Marquez {score} points",
+  "objCreateTiles": "Ayez {count} tuiles {tile} à la fois",
+  "objSurvive": "Tenez {moves} coups",
+  "objClearBoard": "Réduisez à {count} tuiles",
+  "rankNovice": "Novice",
+  "rankWarrior": "Guerrier",
+  "rankChampion": "Champion",
+  "rankTitan": "Titan",
+  "rankLegend": "Légende",
+  "chapterForge": "La Forge",
+  "chapterProving": "Le Terrain d'Épreuve",
+  "chapterSummit": "Le Sommet",
+  "chapterForgeTheme": "Apprenez les objectifs",
+  "chapterProvingTheme": "Cases bloquées, sans annuler",
+  "chapterSummitTheme": "Le temps et le terrain ouvert"
 }

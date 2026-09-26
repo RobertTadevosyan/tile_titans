@@ -99,5 +99,21 @@
   "statsDaily": "Diária",
   "statsBestStreak": "Sequência",
   "statsChapters": "Capítulos",
-  "appThemeForge": "Forja"
+  "appThemeForge": "Forja",
+  "objReachTile": "Forja uma peça {tile}",
+  "objReachScore": "Faz {score} pontos",
+  "objCreateTiles": "Tem {count} peças {tile} ao mesmo tempo",
+  "objSurvive": "Sobrevive {moves} jogadas",
+  "objClearBoard": "Reduz a {count} peças",
+  "rankNovice": "Novato",
+  "rankWarrior": "Guerreiro",
+  "rankChampion": "Campeão",
+  "rankTitan": "Titã",
+  "rankLegend": "Lenda",
+  "chapterForge": "A Forja",
+  "chapterProving": "O Campo de Provas",
+  "chapterSummit": "O Cume",
+  "chapterForgeTheme": "Aprende os objetivos",
+  "chapterProvingTheme": "Células bloqueadas e sem anular",
+  "chapterSummitTheme": "Tempo e campo aberto"
 }

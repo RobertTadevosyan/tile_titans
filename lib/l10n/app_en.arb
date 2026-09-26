@@ -130,5 +130,59 @@
   "statsDaily": "Daily",
   "statsBestStreak": "Streak",
   "statsChapters": "Chapters",
-  "appThemeForge": "Forge"
+  "appThemeForge": "Forge",
+  "objReachTile": "Forge a {tile} tile",
+  "@objReachTile": {
+    "placeholders": {
+      "tile": {
+        "type": "int"
+      }
+    }
+  },
+  "objReachScore": "Score {score}",
+  "@objReachScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "objCreateTiles": "Hold {count} {tile} tiles at once",
+  "@objCreateTiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "tile": {
+        "type": "int"
+      }
+    }
+  },
+  "objSurvive": "Survive {moves} moves",
+  "@objSurvive": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "objClearBoard": "Collapse to {count} tiles",
+  "@objClearBoard": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rankNovice": "Novice",
+  "rankWarrior": "Warrior",
+  "rankChampion": "Champion",
+  "rankTitan": "Titan",
+  "rankLegend": "Legend",
+  "chapterForge": "The Forge",
+  "chapterProving": "The Proving Ground",
+  "chapterSummit": "The Summit",
+  "chapterForgeTheme": "Learn the objectives",
+  "chapterProvingTheme": "Blocked cells and no undo",
+  "chapterSummitTheme": "Time pressure and open ground"
 }

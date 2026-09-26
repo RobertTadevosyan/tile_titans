@@ -99,5 +99,21 @@
   "statsDaily": "Diarias",
   "statsBestStreak": "Racha",
   "statsChapters": "Capítulos",
-  "appThemeForge": "Forja"
+  "appThemeForge": "Forja",
+  "objReachTile": "Forja una ficha {tile}",
+  "objReachScore": "Consigue {score} puntos",
+  "objCreateTiles": "Ten {count} fichas {tile} a la vez",
+  "objSurvive": "Sobrevive {moves} movimientos",
+  "objClearBoard": "Reduce a {count} fichas",
+  "rankNovice": "Novato",
+  "rankWarrior": "Guerrero",
+  "rankChampion": "Campeón",
+  "rankTitan": "Titán",
+  "rankLegend": "Leyenda",
+  "chapterForge": "La Forja",
+  "chapterProving": "El Campo de Pruebas",
+  "chapterSummit": "La Cumbre",
+  "chapterForgeTheme": "Aprende los objetivos",
+  "chapterProvingTheme": "Celdas bloqueadas y sin deshacer",
+  "chapterSummitTheme": "Contrarreloj y campo abierto"
 }

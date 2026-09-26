@@ -333,4 +333,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Forge';
+
+  @override
+  String objReachTile(int tile) {
+    return 'Forge a $tile tile';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return 'Score $score';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Hold $count $tile tiles at once';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return 'Survive $moves moves';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return 'Collapse to $count tiles';
+  }
+
+  @override
+  String get rankNovice => 'Novice';
+
+  @override
+  String get rankWarrior => 'Warrior';
+
+  @override
+  String get rankChampion => 'Champion';
+
+  @override
+  String get rankTitan => 'Titan';
+
+  @override
+  String get rankLegend => 'Legend';
+
+  @override
+  String get chapterForge => 'The Forge';
+
+  @override
+  String get chapterProving => 'The Proving Ground';
+
+  @override
+  String get chapterSummit => 'The Summit';
+
+  @override
+  String get chapterForgeTheme => 'Learn the objectives';
+
+  @override
+  String get chapterProvingTheme => 'Blocked cells and no undo';
+
+  @override
+  String get chapterSummitTheme => 'Time pressure and open ground';
 }

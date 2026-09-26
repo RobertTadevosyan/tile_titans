@@ -333,4 +333,62 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Горн';
+
+  @override
+  String objReachTile(int tile) {
+    return 'Создайте плитку $tile';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return 'Наберите $score';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Соберите $count плиток $tile';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return 'Продержитесь $moves ходов';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return 'Сведите до $count плиток';
+  }
+
+  @override
+  String get rankNovice => 'Новичок';
+
+  @override
+  String get rankWarrior => 'Воин';
+
+  @override
+  String get rankChampion => 'Чемпион';
+
+  @override
+  String get rankTitan => 'Титан';
+
+  @override
+  String get rankLegend => 'Легенда';
+
+  @override
+  String get chapterForge => 'Горн';
+
+  @override
+  String get chapterProving => 'Испытательное поле';
+
+  @override
+  String get chapterSummit => 'Вершина';
+
+  @override
+  String get chapterForgeTheme => 'Знакомство с целями';
+
+  @override
+  String get chapterProvingTheme => 'Закрытые клетки, без отмены';
+
+  @override
+  String get chapterSummitTheme => 'Время и открытое поле';
 }

@@ -99,5 +99,21 @@
   "statsDaily": "デイリー",
   "statsBestStreak": "連続",
   "statsChapters": "チャプター",
-  "appThemeForge": "鍛冶場"
+  "appThemeForge": "鍛冶場",
+  "objReachTile": "{tile} タイルを作る",
+  "objReachScore": "{score} 点を取る",
+  "objCreateTiles": "{tile} タイルを同時に {count} 枚",
+  "objSurvive": "{moves} 手 生き延びる",
+  "objClearBoard": "{count} 枚まで減らす",
+  "rankNovice": "見習い",
+  "rankWarrior": "戦士",
+  "rankChampion": "覇者",
+  "rankTitan": "タイタン",
+  "rankLegend": "伝説",
+  "chapterForge": "鍛冶場",
+  "chapterProving": "試練の場",
+  "chapterSummit": "頂",
+  "chapterForgeTheme": "目標を学ぶ",
+  "chapterProvingTheme": "封鎖マスと取り消し不可",
+  "chapterSummitTheme": "時間との勝負と広い盤面"
 }

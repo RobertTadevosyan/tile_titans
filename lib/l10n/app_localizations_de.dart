@@ -333,4 +333,62 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Schmiede';
+
+  @override
+  String objReachTile(int tile) {
+    return 'Schmiede einen ${tile}er-Stein';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return 'Erreiche $score Punkte';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Halte $count ${tile}er-Steine gleichzeitig';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return 'Überstehe $moves Züge';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return 'Reduziere auf $count Steine';
+  }
+
+  @override
+  String get rankNovice => 'Neuling';
+
+  @override
+  String get rankWarrior => 'Krieger';
+
+  @override
+  String get rankChampion => 'Meister';
+
+  @override
+  String get rankTitan => 'Titan';
+
+  @override
+  String get rankLegend => 'Legende';
+
+  @override
+  String get chapterForge => 'Die Schmiede';
+
+  @override
+  String get chapterProving => 'Das Prüffeld';
+
+  @override
+  String get chapterSummit => 'Der Gipfel';
+
+  @override
+  String get chapterForgeTheme => 'Lerne die Ziele';
+
+  @override
+  String get chapterProvingTheme => 'Blockierte Felder, kein Rückgängig';
+
+  @override
+  String get chapterSummitTheme => 'Zeitdruck und offenes Feld';
 }

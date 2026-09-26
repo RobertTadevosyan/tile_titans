@@ -333,4 +333,62 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Դարբնոց';
+
+  @override
+  String objReachTile(int tile) {
+    return 'Ստեղծիր $tile սալիկ';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return 'Հավաքիր $score միավոր';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Պահիր $count հատ $tile սալիկ';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return 'Դիմացիր $moves քայլ';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return 'Իջեցրու մինչև $count սալիկ';
+  }
+
+  @override
+  String get rankNovice => 'Սկսնակ';
+
+  @override
+  String get rankWarrior => 'Մարտիկ';
+
+  @override
+  String get rankChampion => 'Ախոյան';
+
+  @override
+  String get rankTitan => 'Տիտան';
+
+  @override
+  String get rankLegend => 'Լեգենդ';
+
+  @override
+  String get chapterForge => 'Դարբնոցը';
+
+  @override
+  String get chapterProving => 'Փորձադաշտը';
+
+  @override
+  String get chapterSummit => 'Գագաթը';
+
+  @override
+  String get chapterForgeTheme => 'Սովորիր նպատակները';
+
+  @override
+  String get chapterProvingTheme => 'Փակ վանդակներ, առանց հետարկման';
+
+  @override
+  String get chapterSummitTheme => 'Ժամանակ և բաց դաշտ';
 }

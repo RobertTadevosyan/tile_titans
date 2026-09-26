@@ -99,5 +99,21 @@
   "statsDaily": "Օրվա",
   "statsBestStreak": "Շարք",
   "statsChapters": "Գլուխներ",
-  "appThemeForge": "Դարբնոց"
+  "appThemeForge": "Դարբնոց",
+  "objReachTile": "Ստեղծիր {tile} սալիկ",
+  "objReachScore": "Հավաքիր {score} միավոր",
+  "objCreateTiles": "Պահիր {count} հատ {tile} սալիկ",
+  "objSurvive": "Դիմացիր {moves} քայլ",
+  "objClearBoard": "Իջեցրու մինչև {count} սալիկ",
+  "rankNovice": "Սկսնակ",
+  "rankWarrior": "Մարտիկ",
+  "rankChampion": "Ախոյան",
+  "rankTitan": "Տիտան",
+  "rankLegend": "Լեգենդ",
+  "chapterForge": "Դարբնոցը",
+  "chapterProving": "Փորձադաշտը",
+  "chapterSummit": "Գագաթը",
+  "chapterForgeTheme": "Սովորիր նպատակները",
+  "chapterProvingTheme": "Փակ վանդակներ, առանց հետարկման",
+  "chapterSummitTheme": "Ժամանակ և բաց դաշտ"
 }

@@ -10,6 +10,7 @@ import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
+import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:flutter_2048/presentation/screens/game_screen.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
 import 'package:flutter_2048/presentation/screens/settings_screen.dart';
@@ -170,7 +171,7 @@ class _Masthead extends StatelessWidget {
                 Text(l10n.appTitle, style: TitanText.display(context)),
                 const SizedBox(height: TitanSpacing.xs),
                 Text(
-                  '${l10n.homeRank}: ${rank.name}',
+                  '${l10n.homeRank}: ${ContentStrings.rank(l10n, rank)}',
                   style: TitanText.cardBody(context),
                 ),
                 const SizedBox(height: TitanSpacing.sm),
@@ -190,7 +191,7 @@ class _Masthead extends StatelessWidget {
           ),
           const SizedBox(width: TitanSpacing.md),
           Semantics(
-            label: '${l10n.homeRank}: ${rank.name}',
+            label: '${l10n.homeRank}: ${ContentStrings.rank(l10n, rank)}',
             child: TitanEmblem(
               emblem: _emblemForRank(rank.name),
               color: Theme.of(context).primaryColor,
@@ -306,7 +307,10 @@ class _DailyTrialCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: TitanSpacing.sm),
-          Text(trial.summary, style: TitanText.cardTitle(context)),
+          Text(
+            ContentStrings.objective(l10n, trial.objective),
+            style: TitanText.cardTitle(context),
+          ),
           const SizedBox(height: TitanSpacing.sm),
           Wrap(
             spacing: TitanSpacing.sm,

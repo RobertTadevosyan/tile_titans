@@ -4,6 +4,7 @@ import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
+import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:provider/provider.dart';
 
 /// Statistics, achievements and the Path of the Titans.
@@ -218,7 +219,7 @@ class _RankCard extends StatelessWidget {
           ),
           const SizedBox(height: TitanSpacing.xs),
           Text(
-            rank.name,
+            ContentStrings.rank(l10n, rank),
             style: TitanText.display(context).copyWith(fontSize: 26),
           ),
           const SizedBox(height: TitanSpacing.sm),
@@ -234,7 +235,8 @@ class _RankCard extends StatelessWidget {
           Text(
             next == null
                 ? '${progress.points} / $maxAchievementPoints'
-                : '${progress.points} / ${next.required} → ${next.name}',
+                : '${progress.points} / ${next.required} → '
+                    '${ContentStrings.rank(l10n, next)}',
             style: TitanText.cardBody(context),
           ),
         ],

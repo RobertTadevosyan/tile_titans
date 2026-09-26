@@ -333,4 +333,62 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Demirhane';
+
+  @override
+  String objReachTile(int tile) {
+    return '$tile taşı döv';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return '$score puan topla';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Aynı anda $count adet $tile taşı tut';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return '$moves hamle dayan';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return '$count taşa indir';
+  }
+
+  @override
+  String get rankNovice => 'Çırak';
+
+  @override
+  String get rankWarrior => 'Savaşçı';
+
+  @override
+  String get rankChampion => 'Şampiyon';
+
+  @override
+  String get rankTitan => 'Titan';
+
+  @override
+  String get rankLegend => 'Efsane';
+
+  @override
+  String get chapterForge => 'Demirhane';
+
+  @override
+  String get chapterProving => 'Sınav Alanı';
+
+  @override
+  String get chapterSummit => 'Zirve';
+
+  @override
+  String get chapterForgeTheme => 'Hedefleri öğren';
+
+  @override
+  String get chapterProvingTheme => 'Kapalı kareler, geri alma yok';
+
+  @override
+  String get chapterSummitTheme => 'Zaman baskısı ve açık alan';
 }

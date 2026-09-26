@@ -333,4 +333,62 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Forge';
+
+  @override
+  String objReachTile(int tile) {
+    return 'Forgez une tuile $tile';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return 'Marquez $score points';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Ayez $count tuiles $tile à la fois';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return 'Tenez $moves coups';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return 'Réduisez à $count tuiles';
+  }
+
+  @override
+  String get rankNovice => 'Novice';
+
+  @override
+  String get rankWarrior => 'Guerrier';
+
+  @override
+  String get rankChampion => 'Champion';
+
+  @override
+  String get rankTitan => 'Titan';
+
+  @override
+  String get rankLegend => 'Légende';
+
+  @override
+  String get chapterForge => 'La Forge';
+
+  @override
+  String get chapterProving => 'Le Terrain d\'Épreuve';
+
+  @override
+  String get chapterSummit => 'Le Sommet';
+
+  @override
+  String get chapterForgeTheme => 'Apprenez les objectifs';
+
+  @override
+  String get chapterProvingTheme => 'Cases bloquées, sans annuler';
+
+  @override
+  String get chapterSummitTheme => 'Le temps et le terrain ouvert';
 }

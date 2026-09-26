@@ -99,5 +99,21 @@
   "statsDaily": "Ежедневные",
   "statsBestStreak": "Серия",
   "statsChapters": "Главы",
-  "appThemeForge": "Горн"
+  "appThemeForge": "Горн",
+  "objReachTile": "Создайте плитку {tile}",
+  "objReachScore": "Наберите {score}",
+  "objCreateTiles": "Соберите {count} плиток {tile}",
+  "objSurvive": "Продержитесь {moves} ходов",
+  "objClearBoard": "Сведите до {count} плиток",
+  "rankNovice": "Новичок",
+  "rankWarrior": "Воин",
+  "rankChampion": "Чемпион",
+  "rankTitan": "Титан",
+  "rankLegend": "Легенда",
+  "chapterForge": "Горн",
+  "chapterProving": "Испытательное поле",
+  "chapterSummit": "Вершина",
+  "chapterForgeTheme": "Знакомство с целями",
+  "chapterProvingTheme": "Закрытые клетки, без отмены",
+  "chapterSummitTheme": "Время и открытое поле"
 }

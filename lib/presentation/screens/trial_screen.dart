@@ -7,6 +7,7 @@ import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
+import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/presentation/widgets/game_board.dart';
 import 'package:provider/provider.dart';
@@ -233,7 +234,10 @@ class _ObjectiveBanner extends StatelessWidget {
             style: TitanText.sectionLabel(context),
           ),
           const SizedBox(height: TitanSpacing.xs),
-          Text(trial.summary, style: TitanText.cardTitle(context)),
+          Text(
+            ContentStrings.objective(l10n, trial.objective),
+            style: TitanText.cardTitle(context),
+          ),
           const SizedBox(height: TitanSpacing.sm),
           ClipRRect(
             borderRadius: TitanRadius.small,

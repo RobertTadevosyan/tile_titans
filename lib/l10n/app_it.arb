@@ -99,5 +99,21 @@
   "statsDaily": "Giornaliera",
   "statsBestStreak": "Serie",
   "statsChapters": "Capitoli",
-  "appThemeForge": "Fucina"
+  "appThemeForge": "Fucina",
+  "objReachTile": "Forgia una tessera {tile}",
+  "objReachScore": "Totalizza {score} punti",
+  "objCreateTiles": "Tieni {count} tessere {tile} insieme",
+  "objSurvive": "Resisti {moves} mosse",
+  "objClearBoard": "Riduci a {count} tessere",
+  "rankNovice": "Novizio",
+  "rankWarrior": "Guerriero",
+  "rankChampion": "Campione",
+  "rankTitan": "Titano",
+  "rankLegend": "Leggenda",
+  "chapterForge": "La Fucina",
+  "chapterProving": "Il Campo di Prova",
+  "chapterSummit": "La Vetta",
+  "chapterForgeTheme": "Impara gli obiettivi",
+  "chapterProvingTheme": "Celle bloccate e niente annulla",
+  "chapterSummitTheme": "Tempo e campo aperto"
 }

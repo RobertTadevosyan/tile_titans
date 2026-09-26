@@ -99,5 +99,21 @@
   "statsDaily": "Täglich",
   "statsBestStreak": "Serie",
   "statsChapters": "Kapitel",
-  "appThemeForge": "Schmiede"
+  "appThemeForge": "Schmiede",
+  "objReachTile": "Schmiede einen {tile}er-Stein",
+  "objReachScore": "Erreiche {score} Punkte",
+  "objCreateTiles": "Halte {count} {tile}er-Steine gleichzeitig",
+  "objSurvive": "Überstehe {moves} Züge",
+  "objClearBoard": "Reduziere auf {count} Steine",
+  "rankNovice": "Neuling",
+  "rankWarrior": "Krieger",
+  "rankChampion": "Meister",
+  "rankTitan": "Titan",
+  "rankLegend": "Legende",
+  "chapterForge": "Die Schmiede",
+  "chapterProving": "Das Prüffeld",
+  "chapterSummit": "Der Gipfel",
+  "chapterForgeTheme": "Lerne die Ziele",
+  "chapterProvingTheme": "Blockierte Felder, kein Rückgängig",
+  "chapterSummitTheme": "Zeitdruck und offenes Feld"
 }

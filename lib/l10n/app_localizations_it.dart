@@ -333,4 +333,62 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get appThemeForge => 'Fucina';
+
+  @override
+  String objReachTile(int tile) {
+    return 'Forgia una tessera $tile';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return 'Totalizza $score punti';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return 'Tieni $count tessere $tile insieme';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return 'Resisti $moves mosse';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return 'Riduci a $count tessere';
+  }
+
+  @override
+  String get rankNovice => 'Novizio';
+
+  @override
+  String get rankWarrior => 'Guerriero';
+
+  @override
+  String get rankChampion => 'Campione';
+
+  @override
+  String get rankTitan => 'Titano';
+
+  @override
+  String get rankLegend => 'Leggenda';
+
+  @override
+  String get chapterForge => 'La Fucina';
+
+  @override
+  String get chapterProving => 'Il Campo di Prova';
+
+  @override
+  String get chapterSummit => 'La Vetta';
+
+  @override
+  String get chapterForgeTheme => 'Impara gli obiettivi';
+
+  @override
+  String get chapterProvingTheme => 'Celle bloccate e niente annulla';
+
+  @override
+  String get chapterSummitTheme => 'Tempo e campo aperto';
 }

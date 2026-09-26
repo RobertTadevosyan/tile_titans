@@ -713,6 +713,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forge'**
   String get appThemeForge;
+
+  /// No description provided for @objReachTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Forge a {tile} tile'**
+  String objReachTile(int tile);
+
+  /// No description provided for @objReachScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Score {score}'**
+  String objReachScore(int score);
+
+  /// No description provided for @objCreateTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold {count} {tile} tiles at once'**
+  String objCreateTiles(int count, int tile);
+
+  /// No description provided for @objSurvive.
+  ///
+  /// In en, this message translates to:
+  /// **'Survive {moves} moves'**
+  String objSurvive(int moves);
+
+  /// No description provided for @objClearBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse to {count} tiles'**
+  String objClearBoard(int count);
+
+  /// No description provided for @rankNovice.
+  ///
+  /// In en, this message translates to:
+  /// **'Novice'**
+  String get rankNovice;
+
+  /// No description provided for @rankWarrior.
+  ///
+  /// In en, this message translates to:
+  /// **'Warrior'**
+  String get rankWarrior;
+
+  /// No description provided for @rankChampion.
+  ///
+  /// In en, this message translates to:
+  /// **'Champion'**
+  String get rankChampion;
+
+  /// No description provided for @rankTitan.
+  ///
+  /// In en, this message translates to:
+  /// **'Titan'**
+  String get rankTitan;
+
+  /// No description provided for @rankLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Legend'**
+  String get rankLegend;
+
+  /// No description provided for @chapterForge.
+  ///
+  /// In en, this message translates to:
+  /// **'The Forge'**
+  String get chapterForge;
+
+  /// No description provided for @chapterProving.
+  ///
+  /// In en, this message translates to:
+  /// **'The Proving Ground'**
+  String get chapterProving;
+
+  /// No description provided for @chapterSummit.
+  ///
+  /// In en, this message translates to:
+  /// **'The Summit'**
+  String get chapterSummit;
+
+  /// No description provided for @chapterForgeTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the objectives'**
+  String get chapterForgeTheme;
+
+  /// No description provided for @chapterProvingTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked cells and no undo'**
+  String get chapterProvingTheme;
+
+  /// No description provided for @chapterSummitTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Time pressure and open ground'**
+  String get chapterSummitTheme;
 }
 
 class _AppLocalizationsDelegate

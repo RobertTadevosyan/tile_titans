@@ -333,4 +333,62 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get appThemeForge => '鍛冶場';
+
+  @override
+  String objReachTile(int tile) {
+    return '$tile タイルを作る';
+  }
+
+  @override
+  String objReachScore(int score) {
+    return '$score 点を取る';
+  }
+
+  @override
+  String objCreateTiles(int count, int tile) {
+    return '$tile タイルを同時に $count 枚';
+  }
+
+  @override
+  String objSurvive(int moves) {
+    return '$moves 手 生き延びる';
+  }
+
+  @override
+  String objClearBoard(int count) {
+    return '$count 枚まで減らす';
+  }
+
+  @override
+  String get rankNovice => '見習い';
+
+  @override
+  String get rankWarrior => '戦士';
+
+  @override
+  String get rankChampion => '覇者';
+
+  @override
+  String get rankTitan => 'タイタン';
+
+  @override
+  String get rankLegend => '伝説';
+
+  @override
+  String get chapterForge => '鍛冶場';
+
+  @override
+  String get chapterProving => '試練の場';
+
+  @override
+  String get chapterSummit => '頂';
+
+  @override
+  String get chapterForgeTheme => '目標を学ぶ';
+
+  @override
+  String get chapterProvingTheme => '封鎖マスと取り消し不可';
+
+  @override
+  String get chapterSummitTheme => '時間との勝負と広い盤面';
 }
