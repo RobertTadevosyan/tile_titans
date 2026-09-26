@@ -494,6 +494,18 @@ class GameController extends ChangeNotifier {
 
   bool get isTrial => activeTrial != null;
 
+  /// The best score for whatever is being played right now.
+  ///
+  /// The board used to show one global high score regardless of mode, which
+  /// put a Classic record next to a Hardcore run it has nothing to do with.
+  /// Falls back to the legacy global figure only until a mode has been played.
+  int get sessionBestScore {
+    final store = progressStore;
+    if (store == null) return highScore;
+    final best = store.stats.forMode(_modeName).bestScore;
+    return best > 0 ? best : 0;
+  }
+
   Constraints get constraints =>
       activeTrial?.constraints ?? const Constraints();
 

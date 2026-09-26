@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/config/ads_config.dart';
+import 'package:flutter_2048/utils/helper.dart';
+import 'package:yandex_mobileads/mobile_ads.dart';
 import 'package:flutter_2048/content/titan_ranks.dart';
 import 'package:flutter_2048/content/trials.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
@@ -23,8 +26,69 @@ import 'package:provider/provider.dart';
 /// progression — which is precisely why it read as a 2048 clone. Everything
 /// that distinguishes Tile Titans is now one tap from launch, in the order a
 /// player (or a reviewer) would want it.
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  static const _adRequest = AdRequest(
+    contextQuery: 'puzzle, games, mobile apps, games',
+  );
+
+  BannerAd? _banner;
+  int _bannerHeight = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_banner == null && isMobile()) {
+      _loadBanner();
+    }
+  }
+
+  /// The home screen is browsed rather than played, so a banner here cannot
+  /// cause a mis-tap mid-swipe the way one under the board could.
+  Future<void> _loadBanner() async {
+    final width = MediaQuery.sizeOf(context).width.toInt();
+    final size = BannerAdSize.sticky(width: width);
+    final calculated = await size.getCalculatedBannerAdSize();
+    if (!mounted) return;
+
+    final ad = BannerAd(
+      adUnitId: AdsConfig.getHomeBannerID(),
+      adSize: size,
+      adRequest: _adRequest,
+      onAdLoaded: () {},
+      // Collapse the slot if nothing fills, so the page never shows a gap.
+      onAdFailedToLoad: (_) {
+        if (!mounted) return;
+        setState(() => _bannerHeight = 0);
+      },
+      onAdClicked: () {},
+      onLeftApplication: () {},
+      onReturnedToApplication: () {},
+      onImpression: (_) {},
+    );
+
+    // Do not call loadAd() here. This SDK registers the banner's platform
+    // channel only when its AdWidget is mounted, so loading first throws
+    // MissingPluginException — and because the slot was sized from onAdLoaded,
+    // the widget never mounted and the ad could never load. Size the slot from
+    // the calculated size and let mounting drive the request.
+    setState(() {
+      _banner = ad;
+      _bannerHeight = calculated.height;
+    });
+  }
+
+  @override
+  void dispose() {
+    _banner?.destroy();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +97,14 @@ class HomeScreen extends StatelessWidget {
     final daily = dailyTrialFor(DateTime.now());
 
     return Scaffold(
+      bottomNavigationBar: _bannerHeight > 0 && _banner != null
+          ? SafeArea(
+              child: SizedBox(
+                height: _bannerHeight.toDouble(),
+                child: AdWidget(bannerAd: _banner!),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: TitanPage(
           child: CustomScrollView(

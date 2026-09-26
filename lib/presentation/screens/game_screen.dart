@@ -1,5 +1,4 @@
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -133,76 +132,16 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
   }
 
-  Future<void> _checkAdConfigAndLoadAd() async {
-    final configRef = FirebaseDatabase.instance.ref().child('config');
-    // configRef.keepSynced(true);
-    final snapshot = await configRef.get();
-    final config = (snapshot.value as Map);
-    final adsEnabledConfig = config['game_screen_ads_enabled'];
-    final enabled = adsEnabledConfig == true || adsEnabledConfig == 'true';
 
-    print("CONFIG: main_page_ads_enabled: $adsEnabledConfig");
-    if (enabled && isMobile()) {
-      adRequest = const AdRequest(
-        contextQuery: 'puzzle, games, mobile apps, games',
-      );
-      _loadBanner(); // Your existing banner loading method
-    } else {
-      print("🚫 Ads disabled in remote config.");
-    }
-  }
-
-  Future<void> _loadBanner() async {
-    final windowSize = MediaQuery.of(context).size;
-    setState(() => isLoading = true);
-    if (isBannerAlreadyCreated) {
-      banner.loadAd(adRequest: adRequest);
-    } else {
-      final adSize = BannerAdSize.sticky(width: windowSize.width.toInt());
-      var calculatedBannerSize = await adSize.getCalculatedBannerAdSize();
-      banner = _createBanner(adSize);
-      setState(() {
-        bannerHeight = calculatedBannerSize.height;
-        isBannerAlreadyCreated = true;
-      });
-    }
-  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("CONFIG MAIN_PAGE: didChangeDependencies: $isBannerAlreadyCreated");
-    if (!isBannerAlreadyCreated) {
-      _checkAdConfigAndLoadAd(); // ✅ Now it's safe to use MediaQuery
-    }
+    // No banner is requested here any more. The board carries no ad, so
+    // loading one would request inventory that is never rendered — a wasted
+    // fill and an impression nobody can see.
   }
 
-  _createBanner(BannerAdSize adSize) {
-    return BannerAd(
-      // adUnitId: '', // or 'demo-banner-yandex'
-      adUnitId: AdsConfig.getGameBannerID(),
-      adSize: adSize,
-      adRequest: adRequest,
-      onAdLoaded: () {
-        setState(() {
-          isLoading = false;
-        });
-        if (!mounted) {
-          banner.destroy();
-          return;
-        }
-      },
-      onAdFailedToLoad: (error) {
-        setState(() {
-          isLoading = false;
-        });
-      },
-      onAdClicked: () {},
-      onLeftApplication: () {},
-      onReturnedToApplication: () {},
-      onImpression: (impressionData) {},
-    );
-  }
 
   void _handleSwipe(
     Offset delta,
@@ -537,7 +476,7 @@ class _GameScreenState extends State<GameScreen> {
               if (controller.scored)
                 ScoreBoard(
                   score: controller.score,
-                  highestScore: controller.highScore,
+                  highestScore: controller.sessionBestScore,
                   isLandscape: false,
                   isTablet: false,
                 ),
@@ -612,7 +551,7 @@ class _GameScreenState extends State<GameScreen> {
                       if (controller.scored)
                         ScoreBoard(
                           score: controller.score,
-                          highestScore: controller.highScore,
+                          highestScore: controller.sessionBestScore,
                           isTablet: false,
                           isLandscape: true,
                         ),
@@ -736,7 +675,7 @@ class _GameScreenState extends State<GameScreen> {
                       isTablet: true,
                       isLandscape: isLandscape,
                       score: controller.score,
-                      highestScore: controller.highScore,
+                      highestScore: controller.sessionBestScore,
                     ),
                   if (controller.mode == GameMode.timed)
                     buildTimer(appLocales, controller, context, true),
