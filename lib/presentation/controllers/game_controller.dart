@@ -13,6 +13,7 @@ import 'package:flutter_2048/domain/engine/rules.dart';
 import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
+import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
 import 'package:flutter_2048/utils/deviceInfo.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
@@ -470,6 +471,22 @@ class GameController extends ChangeNotifier {
   /// The player's own board-size preference, restored when a trial ends.
   int playerGridSize = 4;
 
+  /// Records finished runs. Injected rather than constructed here so the
+  /// controller keeps no dependency on how progress is stored.
+  ProgressStore? progressStore;
+
+  /// When the current session began, for play-time statistics.
+  DateTime? _sessionStart;
+
+  /// Set once the player has explicitly chosen what to play.
+  ///
+  /// `_initialize()` runs asynchronously at startup and finishes by restoring a
+  /// saved game or dealing a new one. Without this guard it would land *after*
+  /// a trial had been opened and overwrite its authored position with a random
+  /// board — the grid size survived, so the bug looked like a rendering fault
+  /// rather than a race.
+  bool _sessionStarted = false;
+
   bool get isTrial => activeTrial != null;
 
   Constraints get constraints =>
@@ -503,6 +520,7 @@ class GameController extends ChangeNotifier {
   /// Starts free play under [ruleSet], honouring the player's board size unless
   /// the rule set defines its own.
   void startMode(RuleSet ruleSet) {
+    _sessionStarted = true;
     _stopTimers();
     activeTrial = null;
     rules = ruleSet;
@@ -514,6 +532,7 @@ class GameController extends ChangeNotifier {
 
   /// Starts an authored trial from its fixed position.
   void startTrial(Trial trial) {
+    _sessionStarted = true;
     _stopTimers();
     activeTrial = trial;
     rules = trial.rules;
@@ -540,6 +559,7 @@ class GameController extends ChangeNotifier {
   }
 
   void _resetSessionCounters() {
+    _sessionStart = DateTime.now();
     movesUsed = 0;
     secondsElapsed = 0;
     objectiveMet = false;
@@ -752,10 +772,21 @@ class GameController extends ChangeNotifier {
     highScore = await prefs.loadHighScore();
     saveHighScoreToFirebase(highScore);
     soundEnabled = await prefs.getSoundEnabled();
-    gridSize = await prefs.getGameBoardSize();
+
     // Remember the player's own choice so a fixed-grid mode or trial can
     // borrow the board temporarily and hand it back afterwards.
-    playerGridSize = gridSize;
+    playerGridSize = await prefs.getGameBoardSize();
+
+    // A session chosen while these awaits were in flight wins. Do not touch its
+    // grid or board — only the preference above is still worth recording.
+    if (_sessionStarted) {
+      isInitialized = true;
+      notifyListeners();
+      signInAnonymously();
+      return;
+    }
+
+    gridSize = playerGridSize;
 
     final gameSettings = await prefs.loadGame();
     if (gameSettings != null) {
@@ -1146,6 +1177,11 @@ class GameController extends ChangeNotifier {
   }
 
   void _syncHighScore() {
+    // Trials start from an authored position, so their score is not comparable
+    // with a free-play run — a trial can begin with a 512 already on the board.
+    // Letting them set the high score would corrupt the leaderboard.
+    if (isTrial) return;
+    if (!rules.scored) return; // Zen keeps no score to promote.
     if (score > highScore) {
       highScore = score;
       unawaited(prefs.saveHighScore(score));
@@ -1174,7 +1210,39 @@ class GameController extends ChangeNotifier {
       _audioPlayer.play(gameOverSound);
     }
     logGameOver();
+    _recordFinishedGame();
     _showGameOverDialog(context, appLocales);
     gameOver.value = true;
+  }
+
+  /// Files a completed free-play run into the statistics store.
+  ///
+  /// Trials are excluded: they report through TrialScreen with their own
+  /// outcome, and counting them here would double-count the run.
+  void _recordFinishedGame() {
+    if (isTrial) return;
+    final store = progressStore;
+    if (store == null) return;
+
+    final started = _sessionStart;
+    final seconds =
+        started == null ? 0 : DateTime.now().difference(started).inSeconds;
+
+    store.recordGame(
+      mode: _modeName,
+      score: score,
+      highestTile: maxTile(board),
+      moves: movesUsed,
+      merges: totalMerges,
+      seconds: seconds,
+    );
+  }
+
+  /// A stable key for per-mode statistics, independent of display language.
+  String get _modeName {
+    if (rules.endBehaviour == EndBehaviour.dissolveLowest) return 'zen';
+    if (rules.timeLimit != null) return 'timeAttack';
+    if (!rules.allowUndo && !rules.allowHints) return 'hardcore';
+    return 'classic';
   }
 }

@@ -31,13 +31,17 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => localeManager),
-        ChangeNotifierProvider(
-          create: (_) => GameController(),
-        ), // 👈 GameController added here
         ChangeNotifierProvider(create: (_) => Prefs()),
         // Statistics, achievements and trial records. Loaded eagerly so the
         // home screen can show rank and progress on first frame.
         ChangeNotifierProvider(create: (_) => ProgressStore()..load()),
+        // The controller files finished runs into the progress store, so it is
+        // handed the store rather than reaching for one itself.
+        ChangeNotifierProxyProvider<ProgressStore, GameController>(
+          create: (_) => GameController(),
+          update: (_, progress, controller) =>
+              (controller ?? GameController())..progressStore = progress,
+        ),
       ],
       child: const GameApp(),
     ),
