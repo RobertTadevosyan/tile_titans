@@ -102,7 +102,7 @@
   "appThemeForge": "Forja",
   "objReachTile": "Forja uma peça {tile}",
   "objReachScore": "Faz {score} pontos",
-  "objCreateTiles": "Tem {count} peças {tile} ao mesmo tempo",
+  "objCreateTiles": "Tem {count} peças de {tile}",
   "objSurvive": "Sobrevive {moves} jogadas",
   "objClearBoard": "Reduz a {count} peças",
   "rankNovice": "Novato",

@@ -10,6 +10,18 @@ import 'package:flutter/material.dart';
 /// Colour deliberately stays with the existing `ThemeProvider` palettes — those
 /// are a shipped, user-facing feature and the redesign should not quietly
 /// replace them.
+/// Luminance at which dark foreground beats light.
+///
+/// Derived, not guessed: contrast against white is 1.05 / (L + 0.05) and
+/// against black is (L + 0.05) / 0.05, equal at L ≈ 0.179.
+const double kContrastCrossover = 0.179;
+
+/// A foreground colour guaranteed to be readable on [background].
+Color titanForegroundOn(Color background) =>
+    background.computeLuminance() > kContrastCrossover
+        ? const Color(0xFF14181C)
+        : const Color(0xFFF7F4F0);
+
 class TitanSpacing {
   const TitanSpacing._();
 
@@ -78,6 +90,7 @@ class TitanText {
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.6,
                 height: 1.05,
+                color: Theme.of(context).colorScheme.onSurface,
               ) ??
       const TextStyle(fontSize: 28, fontWeight: FontWeight.w800);
 
@@ -88,10 +101,11 @@ class TitanText {
         color: _muted(context),
       );
 
-  static TextStyle cardTitle(BuildContext context) => const TextStyle(
+  static TextStyle cardTitle(BuildContext context) => TextStyle(
         fontSize: 17,
         fontWeight: FontWeight.w700,
         height: 1.2,
+        color: Theme.of(context).colorScheme.onSurface,
       );
 
   static TextStyle cardBody(BuildContext context) => TextStyle(
@@ -100,10 +114,11 @@ class TitanText {
         color: _muted(context),
       );
 
-  static TextStyle metric(BuildContext context) => const TextStyle(
+  static TextStyle metric(BuildContext context) => TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w800,
         height: 1.1,
+        color: Theme.of(context).colorScheme.onSurface,
       );
 
   static Color _muted(BuildContext context) {
@@ -199,6 +214,17 @@ class TitanCard extends StatelessWidget {
             theme.scaffoldBackgroundColor,
           );
 
+    // A prominent card is filled with the accent colour, so text inside it
+    // must not keep resolving against the page's onSurface — on a dark theme
+    // that is near-white, and near-white on ember is unreadable. Overriding
+    // onSurface for the subtree makes every TitanText helper, and any icon,
+    // pick a foreground that actually contrasts with this card.
+    final foreground = titanForegroundOn(surface);
+    final scoped = theme.copyWith(
+      colorScheme: theme.colorScheme.copyWith(onSurface: foreground),
+      iconTheme: theme.iconTheme.copyWith(color: foreground),
+    );
+
     return Semantics(
       button: onTap != null,
       child: Material(
@@ -211,7 +237,19 @@ class TitanCard extends StatelessWidget {
           // Comfortably above the 48dp minimum target.
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 56),
-            child: Padding(padding: padding, child: child),
+            child: Padding(
+              padding: padding,
+              child: Theme(
+                data: scoped,
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(color: foreground),
+                  child: IconTheme.merge(
+                    data: IconThemeData(color: foreground),
+                    child: child,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),

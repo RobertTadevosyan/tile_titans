@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/core/theme/themes.dart';
+import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Themes are a shipped feature, so every one of them must stay complete and
@@ -66,6 +67,42 @@ void main() {
               reason: '${theme.name} tile ${entry.key} has contrast '
                   '${ratio.toStringAsFixed(2)}');
         }
+      }
+    });
+  });
+
+  group('prominent surfaces stay readable', () {
+    double contrastOf(Color a, Color b) {
+      final la = a.computeLuminance();
+      final lb = b.computeLuminance();
+      final lighter = la > lb ? la : lb;
+      final darker = la > lb ? lb : la;
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    test('accent-filled cards get a readable foreground in every theme', () {
+      // A prominent TitanCard is filled with the theme's primary colour. The
+      // win overlay, rank card and Continue button all use one, and on Forge
+      // the page's near-white onSurface was invisible against ember.
+      for (final theme in AppTheme.values) {
+        final accent = appThemeData[theme]!.primaryColor;
+        final foreground = titanForegroundOn(accent);
+        final ratio = contrastOf(accent, foreground);
+        expect(ratio, greaterThan(3.5),
+            reason: '${theme.name} accent card contrast is '
+                '${ratio.toStringAsFixed(2)}');
+      }
+    });
+
+    test('a filled button on that foreground is readable too', () {
+      // The overlay's primary button inverts: it is filled with the card's
+      // foreground colour, so its own label must contrast with that.
+      for (final theme in AppTheme.values) {
+        final accent = appThemeData[theme]!.primaryColor;
+        final onCard = titanForegroundOn(accent);
+        final onButton = titanForegroundOn(onCard);
+        expect(contrastOf(onCard, onButton), greaterThan(3.5),
+            reason: '${theme.name} button label is unreadable');
       }
     });
   });

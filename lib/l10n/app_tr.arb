@@ -102,7 +102,7 @@
   "appThemeForge": "Demirhane",
   "objReachTile": "{tile} taşı döv",
   "objReachScore": "{score} puan topla",
-  "objCreateTiles": "Aynı anda {count} adet {tile} taşı tut",
+  "objCreateTiles": "{tile} değerinde {count} taş tut",
   "objSurvive": "{moves} hamle dayan",
   "objClearBoard": "{count} taşa indir",
   "rankNovice": "Çırak",

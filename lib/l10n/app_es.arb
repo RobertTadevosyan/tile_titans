@@ -102,7 +102,7 @@
   "appThemeForge": "Forja",
   "objReachTile": "Forja una ficha {tile}",
   "objReachScore": "Consigue {score} puntos",
-  "objCreateTiles": "Ten {count} fichas {tile} a la vez",
+  "objCreateTiles": "Ten {count} fichas de {tile}",
   "objSurvive": "Sobrevive {moves} movimientos",
   "objClearBoard": "Reduce a {count} fichas",
   "rankNovice": "Novato",

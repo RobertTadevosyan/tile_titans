@@ -341,12 +341,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String objReachScore(int score) {
-    return '$score 点を取る';
+    final intl.NumberFormat scoreNumberFormat = intl
+        .NumberFormat.decimalPattern(localeName);
+    final String scoreString = scoreNumberFormat.format(score);
+
+    return '$scoreString 点を取る';
   }
 
   @override
   String objCreateTiles(int count, int tile) {
-    return '$tile タイルを同時に $count 枚';
+    return '$tile のタイルを $count 枚';
   }
 
   @override

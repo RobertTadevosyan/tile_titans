@@ -383,22 +383,44 @@ class _ResultOverlay extends StatelessWidget {
                         ),
                     ],
                     const SizedBox(height: TitanSpacing.lg),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: onLeave,
-                            child: Text(l10n.close),
-                          ),
-                        ),
-                        const SizedBox(width: TitanSpacing.md),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: onRetry,
-                            child: Text(l10n.restartGame),
-                          ),
-                        ),
-                      ],
+                    // Buttons are styled from the card's own surface rather
+                    // than the page theme. On a win the card is filled with the
+                    // accent colour, so a default FilledButton renders
+                    // accent-on-accent and an OutlinedButton's label is the
+                    // accent too — both invisible.
+                    Builder(
+                      builder: (context) {
+                        final onCard =
+                            Theme.of(context).colorScheme.onSurface;
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: onLeave,
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: onCard,
+                                  side: BorderSide(
+                                    color: onCard.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                                child: Text(l10n.close),
+                              ),
+                            ),
+                            const SizedBox(width: TitanSpacing.md),
+                            Expanded(
+                              child: FilledButton(
+                                onPressed: onRetry,
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: onCard,
+                                  foregroundColor:
+                                      titanForegroundOn(onCard),
+                                ),
+                                child: Text(l10n.restartGame),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),

@@ -102,7 +102,7 @@
   "appThemeForge": "Forge",
   "objReachTile": "Forgez une tuile {tile}",
   "objReachScore": "Marquez {score} points",
-  "objCreateTiles": "Ayez {count} tuiles {tile} à la fois",
+  "objCreateTiles": "Ayez {count} tuiles de {tile}",
   "objSurvive": "Tenez {moves} coups",
   "objClearBoard": "Réduisez à {count} tuiles",
   "rankNovice": "Novice",

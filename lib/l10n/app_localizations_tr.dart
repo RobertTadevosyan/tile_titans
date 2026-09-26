@@ -341,12 +341,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String objReachScore(int score) {
-    return '$score puan topla';
+    final intl.NumberFormat scoreNumberFormat = intl
+        .NumberFormat.decimalPattern(localeName);
+    final String scoreString = scoreNumberFormat.format(score);
+
+    return '$scoreString puan topla';
   }
 
   @override
   String objCreateTiles(int count, int tile) {
-    return 'Aynı anda $count adet $tile taşı tut';
+    return '$tile değerinde $count taş tut';
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/content/titan_ranks.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
+import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/core/theme/themes.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
 import 'package:flutter_2048/presentation/widgets/merge_bloom.dart';
@@ -19,14 +20,6 @@ import 'package:provider/provider.dart';
 ///    its own while a bloom rings outward, so fusing is a visible process
 ///    rather than a silent swap.
 ///  * **Arrival** — a scale pop for newly spawned and freshly merged tiles.
-/// Luminance at which dark text overtakes light text for contrast.
-///
-/// Derived, not guessed: contrast against white is 1.05 / (L + 0.05) and
-/// against black is (L + 0.05) / 0.05, which are equal at L ≈ 0.179. An earlier
-/// value of 0.45 sat well past the crossover, so mid-tone tiles — the greens
-/// around 32 and 64 — were given white numerals at barely 2.4:1.
-const double _contrastCrossover = 0.179;
-
 class AnimatedTile extends StatefulWidget {
   final Tile tile;
   final double tileSize;
@@ -166,7 +159,7 @@ class _AnimatedTileState extends State<AnimatedTile>
     // Contrast is measured from the colour actually on screen, so the numeral
     // stays readable mid-merge and across every theme. The old rule keyed off
     // the tile's value and guessed wrong on the dark palettes.
-    final numeralColor = surfaceColor.computeLuminance() > _contrastCrossover
+    final numeralColor = surfaceColor.computeLuminance() > kContrastCrossover
         ? const Color(0xFF14181C)
         : Colors.white;
     final showEmblem = tileSize >= 44;

@@ -102,7 +102,7 @@
   "appThemeForge": "Fucina",
   "objReachTile": "Forgia una tessera {tile}",
   "objReachScore": "Totalizza {score} punti",
-  "objCreateTiles": "Tieni {count} tessere {tile} insieme",
+  "objCreateTiles": "Tieni {count} tessere da {tile}",
   "objSurvive": "Resisti {moves} mosse",
   "objClearBoard": "Riduci a {count} tessere",
   "rankNovice": "Novizio",

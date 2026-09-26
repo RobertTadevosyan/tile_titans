@@ -102,7 +102,7 @@
   "appThemeForge": "Schmiede",
   "objReachTile": "Schmiede einen {tile}er-Stein",
   "objReachScore": "Erreiche {score} Punkte",
-  "objCreateTiles": "Halte {count} {tile}er-Steine gleichzeitig",
+  "objCreateTiles": "Halte {count} Steine mit {tile}",
   "objSurvive": "Überstehe {moves} Züge",
   "objClearBoard": "Reduziere auf {count} Steine",
   "rankNovice": "Neuling",

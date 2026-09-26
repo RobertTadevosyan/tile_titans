@@ -729,7 +729,7 @@ abstract class AppLocalizations {
   /// No description provided for @objCreateTiles.
   ///
   /// In en, this message translates to:
-  /// **'Hold {count} {tile} tiles at once'**
+  /// **'Hold {count} tiles of {tile}'**
   String objCreateTiles(int count, int tile);
 
   /// No description provided for @objSurvive.

@@ -102,7 +102,7 @@
   "appThemeForge": "Горн",
   "objReachTile": "Создайте плитку {tile}",
   "objReachScore": "Наберите {score}",
-  "objCreateTiles": "Соберите {count} плиток {tile}",
+  "objCreateTiles": "Соберите {count} плиток по {tile}",
   "objSurvive": "Продержитесь {moves} ходов",
   "objClearBoard": "Сведите до {count} плиток",
   "rankNovice": "Новичок",

@@ -102,7 +102,7 @@
   "appThemeForge": "鍛冶場",
   "objReachTile": "{tile} タイルを作る",
   "objReachScore": "{score} 点を取る",
-  "objCreateTiles": "{tile} タイルを同時に {count} 枚",
+  "objCreateTiles": "{tile} のタイルを {count} 枚",
   "objSurvive": "{moves} 手 生き延びる",
   "objClearBoard": "{count} 枚まで減らす",
   "rankNovice": "見習い",

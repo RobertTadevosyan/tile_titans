@@ -143,11 +143,12 @@
   "@objReachScore": {
     "placeholders": {
       "score": {
-        "type": "int"
+        "type": "int",
+        "format": "decimalPattern"
       }
     }
   },
-  "objCreateTiles": "Hold {count} {tile} tiles at once",
+  "objCreateTiles": "Hold {count} tiles of {tile}",
   "@objCreateTiles": {
     "placeholders": {
       "count": {

@@ -102,7 +102,7 @@
   "appThemeForge": "Դարբնոց",
   "objReachTile": "Ստեղծիր {tile} սալիկ",
   "objReachScore": "Հավաքիր {score} միավոր",
-  "objCreateTiles": "Պահիր {count} հատ {tile} սալիկ",
+  "objCreateTiles": "Պահիր {count} հատ {tile}-անոց սալիկ",
   "objSurvive": "Դիմացիր {moves} քայլ",
   "objClearBoard": "Իջեցրու մինչև {count} սալիկ",
   "rankNovice": "Սկսնակ",
