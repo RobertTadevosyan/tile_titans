@@ -34,7 +34,7 @@ class GameBoard extends StatelessWidget {
             width: boardSize,
             height: boardSize,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.2),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Stack(
@@ -86,13 +86,16 @@ class _BackgroundCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onSurface = Theme.of(context).colorScheme.onSurface;
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
+    // Derived from the theme rather than a fixed grey. The hard-coded
+    // Colors.grey[300] glared as near-white holes on every dark palette.
+    final empty = onSurface.withValues(alpha: 0.1);
+
     return Container(
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: blocked
-            ? onSurface.withValues(alpha: 0.55)
-            : Colors.grey[300],
+        color: blocked ? onSurface.withValues(alpha: 0.55) : empty,
         borderRadius: BorderRadius.circular(8),
         border: blocked
             ? Border.all(color: onSurface.withValues(alpha: 0.75), width: 2)
