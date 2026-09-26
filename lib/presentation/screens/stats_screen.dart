@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/content/trials.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
@@ -7,8 +8,11 @@ import 'package:provider/provider.dart';
 
 /// Statistics, achievements and the Path of the Titans.
 ///
-/// The controller already counted moves and merges every game and then threw
-/// them away when the run ended. This is where they finally go.
+/// Records are shown per mode rather than pooled. The modes are not comparable
+/// — Hardcore is a 5x5 board flooded with 4s, Time Attack is ninety seconds,
+/// Zen keeps no score — so a single "best score" across all of them would be a
+/// number describing nothing. Lifetime figures are still shown, but only for
+/// the quantities that genuinely add up: games, merges and time played.
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
 
@@ -25,29 +29,14 @@ class StatsScreen extends StatelessWidget {
           child: ListView(
             children: [
               _RankCard(l10n: l10n, progress: progress),
-              TitanSectionHeader(label: l10n.statistics),
-              _StatGrid(
+
+              TitanSectionHeader(label: l10n.statsLifetime),
+              _MetricGrid(
                 entries: [
                   (label: l10n.statGamesPlayed, value: '${stats.gamesPlayed}'),
                   (
-                    label: l10n.statBestScore,
-                    value: titanCompact(stats.bestScore)
-                  ),
-                  (
-                    label: l10n.statHighestTile,
-                    value: '${stats.highestTile}'
-                  ),
-                  (
                     label: l10n.statTotalMerges,
                     value: titanCompact(stats.totalMerges)
-                  ),
-                  (
-                    label: l10n.statAverageScore,
-                    value: titanCompact(stats.averageScore)
-                  ),
-                  (
-                    label: l10n.statLongestGame,
-                    value: '${stats.longestGameMoves}'
                   ),
                   (
                     label: l10n.statPlayTime,
@@ -55,10 +44,46 @@ class StatsScreen extends StatelessWidget {
                   ),
                   (
                     label: l10n.statFavouriteMode,
-                    value: stats.favouriteMode ?? '—'
+                    value: _modeLabel(l10n, stats.favouriteMode) ?? '—'
                   ),
                 ],
               ),
+
+              TitanSectionHeader(label: l10n.statsByMode),
+              for (final mode in ModeKeys.freePlay)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: TitanSpacing.md),
+                  child: _ModeCard(
+                    l10n: l10n,
+                    title: _modeLabel(l10n, mode)!,
+                    mode: mode,
+                    stats: stats.forMode(mode),
+                  ),
+                ),
+
+              TitanSectionHeader(label: l10n.statsTrials),
+              _MetricGrid(
+                entries: [
+                  (
+                    label: l10n.statsTrials,
+                    value: '${progress.trialsCompleted}/${allTrials.length}'
+                  ),
+                  (
+                    label: l10n.statsChapters,
+                    value:
+                        '${progress.chaptersCompleted}/${trialChapters.length}'
+                  ),
+                  (
+                    label: l10n.statsDaily,
+                    value: '${progress.dailyStreak}'
+                  ),
+                  (
+                    label: l10n.trialNoUndo,
+                    value: '${progress.trialsWonWithoutUndo}'
+                  ),
+                ],
+              ),
+
               TitanSectionHeader(label: l10n.achievements),
               for (final achievement in achievements)
                 Padding(
@@ -73,6 +98,96 @@ class StatsScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Mode keys are stored as stable strings; this maps them to the player's
+  /// language without the storage format depending on it.
+  static String? _modeLabel(AppLocalizations l10n, String? mode) {
+    switch (mode) {
+      case ModeKeys.classic:
+        return l10n.modeClassic;
+      case ModeKeys.zen:
+        return l10n.modeZen;
+      case ModeKeys.timeAttack:
+        return l10n.modeTimeAttack;
+      case ModeKeys.hardcore:
+        return l10n.modeHardcore;
+      default:
+        return null;
+    }
+  }
+}
+
+class _ModeCard extends StatelessWidget {
+  final AppLocalizations l10n;
+  final String title;
+  final String mode;
+  final ModeStats stats;
+
+  const _ModeCard({
+    required this.l10n,
+    required this.title,
+    required this.mode,
+    required this.stats,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Zen keeps no score, so showing a best score for it would be a lie.
+    final scored = mode != ModeKeys.zen;
+
+    return TitanCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(title, style: TitanText.cardTitle(context)),
+              ),
+              Text(
+                '${stats.gamesPlayed}',
+                style: TitanText.cardBody(context),
+              ),
+            ],
+          ),
+          const SizedBox(height: TitanSpacing.sm),
+          if (stats.isEmpty)
+            Text(l10n.statsNotPlayed, style: TitanText.cardBody(context))
+          else
+            Row(
+              children: [
+                if (scored)
+                  Expanded(
+                    child: TitanMetric(
+                      label: l10n.statBestScore,
+                      value: titanCompact(stats.bestScore),
+                    ),
+                  ),
+                Expanded(
+                  child: TitanMetric(
+                    label: l10n.statHighestTile,
+                    value: '${stats.highestTile}',
+                  ),
+                ),
+                Expanded(
+                  child: TitanMetric(
+                    label: l10n.statLongestGame,
+                    value: '${stats.longestGameMoves}',
+                  ),
+                ),
+                if (scored)
+                  Expanded(
+                    child: TitanMetric(
+                      label: l10n.statAverageScore,
+                      value: titanCompact(stats.averageScore),
+                    ),
+                  ),
+              ],
+            ),
+        ],
       ),
     );
   }
@@ -102,7 +217,10 @@ class _RankCard extends StatelessWidget {
             style: TitanText.sectionLabel(context),
           ),
           const SizedBox(height: TitanSpacing.xs),
-          Text(rank.name, style: TitanText.display(context).copyWith(fontSize: 26)),
+          Text(
+            rank.name,
+            style: TitanText.display(context).copyWith(fontSize: 26),
+          ),
           const SizedBox(height: TitanSpacing.sm),
           ClipRRect(
             borderRadius: TitanRadius.small,
@@ -125,10 +243,10 @@ class _RankCard extends StatelessWidget {
   }
 }
 
-class _StatGrid extends StatelessWidget {
+class _MetricGrid extends StatelessWidget {
   final List<({String label, String value})> entries;
 
-  const _StatGrid({required this.entries});
+  const _MetricGrid({required this.entries});
 
   @override
   Widget build(BuildContext context) {
@@ -206,10 +324,7 @@ class _AchievementRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: TitanSpacing.sm),
-          Text(
-            '${achievement.points}',
-            style: TitanText.cardBody(context),
-          ),
+          Text('${achievement.points}', style: TitanText.cardBody(context)),
         ],
       ),
     );

@@ -309,4 +309,25 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get statLongestGame => 'Ամենաերկար խաղը';
+
+  @override
+  String get statsLifetime => 'Ընդհանուր';
+
+  @override
+  String get statsByMode => 'Ըստ ռեժիմի';
+
+  @override
+  String get statsNotPlayed => 'Դեռ չի խաղացվել';
+
+  @override
+  String get statsTrials => 'Փորձություններ';
+
+  @override
+  String get statsDaily => 'Օրվա';
+
+  @override
+  String get statsBestStreak => 'Շարք';
+
+  @override
+  String get statsChapters => 'Գլուխներ';
 }

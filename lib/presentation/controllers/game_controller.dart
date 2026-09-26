@@ -305,7 +305,12 @@ class GameController extends ChangeNotifier {
     if (userId == null) return;
 
     final device = await getDeviceInfoSafe();
-    final ref = FirebaseDatabase.instance.ref('leaderboard/$userId');
+
+    // One board per mode. A 5x5 Hardcore run and a 90-second Time Attack run
+    // are not comparable with Classic, so ranking them together would produce
+    // a ladder that measures nothing.
+    final ref =
+        FirebaseDatabase.instance.ref('leaderboard/$_modeName/$userId');
 
     try {
       await ref.runTransaction((current) {
@@ -1240,9 +1245,9 @@ class GameController extends ChangeNotifier {
 
   /// A stable key for per-mode statistics, independent of display language.
   String get _modeName {
-    if (rules.endBehaviour == EndBehaviour.dissolveLowest) return 'zen';
-    if (rules.timeLimit != null) return 'timeAttack';
-    if (!rules.allowUndo && !rules.allowHints) return 'hardcore';
-    return 'classic';
+    if (rules.endBehaviour == EndBehaviour.dissolveLowest) return ModeKeys.zen;
+    if (rules.timeLimit != null) return ModeKeys.timeAttack;
+    if (!rules.allowUndo && !rules.allowHints) return ModeKeys.hardcore;
+    return ModeKeys.classic;
   }
 }

@@ -91,5 +91,12 @@
   "statAverageScore": "Средний счёт",
   "statFavouriteMode": "Любимый режим",
   "statPlayTime": "Время игры",
-  "statLongestGame": "Самая длинная партия"
+  "statLongestGame": "Самая длинная партия",
+  "statsLifetime": "За всё время",
+  "statsByMode": "По режимам",
+  "statsNotPlayed": "Ещё не играли",
+  "statsTrials": "Испытания",
+  "statsDaily": "Ежедневные",
+  "statsBestStreak": "Серия",
+  "statsChapters": "Главы"
 }

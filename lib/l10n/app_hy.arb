@@ -91,5 +91,12 @@
   "statAverageScore": "Միջին միավոր",
   "statFavouriteMode": "Սիրելի ռեժիմ",
   "statPlayTime": "Խաղի ժամանակ",
-  "statLongestGame": "Ամենաերկար խաղը"
+  "statLongestGame": "Ամենաերկար խաղը",
+  "statsLifetime": "Ընդհանուր",
+  "statsByMode": "Ըստ ռեժիմի",
+  "statsNotPlayed": "Դեռ չի խաղացվել",
+  "statsTrials": "Փորձություններ",
+  "statsDaily": "Օրվա",
+  "statsBestStreak": "Շարք",
+  "statsChapters": "Գլուխներ"
 }

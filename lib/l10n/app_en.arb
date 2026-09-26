@@ -122,5 +122,12 @@
   "statAverageScore": "Average score",
   "statFavouriteMode": "Favourite mode",
   "statPlayTime": "Play time",
-  "statLongestGame": "Longest game"
+  "statLongestGame": "Longest game",
+  "statsLifetime": "Lifetime",
+  "statsByMode": "By mode",
+  "statsNotPlayed": "Not played yet",
+  "statsTrials": "Trials",
+  "statsDaily": "Daily",
+  "statsBestStreak": "Streak",
+  "statsChapters": "Chapters"
 }

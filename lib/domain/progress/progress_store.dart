@@ -6,12 +6,30 @@ import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Lifetime player statistics.
+/// The canonical mode keys used for per-mode records.
 ///
-/// The controller already counted moves and merges every game and then threw
-/// them away when the run ended (see AUDIT.md §5). This keeps them.
+/// Stable strings rather than an enum so stored statistics survive any future
+/// reshuffling of the mode list.
+class ModeKeys {
+  const ModeKeys._();
+
+  static const String classic = 'classic';
+  static const String zen = 'zen';
+  static const String timeAttack = 'timeAttack';
+  static const String hardcore = 'hardcore';
+
+  /// Free-play modes, in the order the home screen presents them.
+  static const List<String> freePlay = [classic, zen, timeAttack, hardcore];
+}
+
+/// Statistics for one mode.
+///
+/// Records are kept per mode because the modes are not comparable: a Hardcore
+/// score comes off a 5x5 board flooded with 4s, a Time Attack score comes from
+/// ninety seconds, and Zen keeps no score at all. A single pooled "best score"
+/// would compare none of them meaningfully.
 @immutable
-class PlayerStats {
+class ModeStats {
   final int gamesPlayed;
   final int bestScore;
   final int highestTile;
@@ -19,16 +37,11 @@ class PlayerStats {
   final int totalMoves;
   final int totalScore;
 
-  /// Longest single run, in moves.
+  /// Longest single run in this mode, in moves.
   final int longestGameMoves;
-
-  /// Seconds of play time, accumulated.
   final int playTimeSeconds;
 
-  /// Runs per mode, keyed by mode name, for "favourite mode".
-  final Map<String, int> gamesByMode;
-
-  const PlayerStats({
+  const ModeStats({
     this.gamesPlayed = 0,
     this.bestScore = 0,
     this.highestTile = 0,
@@ -37,43 +50,30 @@ class PlayerStats {
     this.totalScore = 0,
     this.longestGameMoves = 0,
     this.playTimeSeconds = 0,
-    this.gamesByMode = const {},
   });
 
-  /// Mean score per completed run, or 0 before the first one.
+  /// Mean score per run in this mode, or 0 before the first one.
   int get averageScore => gamesPlayed == 0 ? 0 : totalScore ~/ gamesPlayed;
 
-  /// The mode played most, or null before anything is recorded.
-  String? get favouriteMode {
-    if (gamesByMode.isEmpty) return null;
-    var best = gamesByMode.entries.first;
-    for (final entry in gamesByMode.entries) {
-      if (entry.value > best.value) best = entry;
-    }
-    return best.key;
-  }
+  bool get isEmpty => gamesPlayed == 0;
 
-  PlayerStats copyWith({
-    int? gamesPlayed,
-    int? bestScore,
-    int? highestTile,
-    int? totalMerges,
-    int? totalMoves,
-    int? totalScore,
-    int? longestGameMoves,
-    int? playTimeSeconds,
-    Map<String, int>? gamesByMode,
+  ModeStats merging({
+    required int score,
+    required int highestTile,
+    required int moves,
+    required int merges,
+    required int seconds,
   }) {
-    return PlayerStats(
-      gamesPlayed: gamesPlayed ?? this.gamesPlayed,
-      bestScore: bestScore ?? this.bestScore,
-      highestTile: highestTile ?? this.highestTile,
-      totalMerges: totalMerges ?? this.totalMerges,
-      totalMoves: totalMoves ?? this.totalMoves,
-      totalScore: totalScore ?? this.totalScore,
-      longestGameMoves: longestGameMoves ?? this.longestGameMoves,
-      playTimeSeconds: playTimeSeconds ?? this.playTimeSeconds,
-      gamesByMode: gamesByMode ?? this.gamesByMode,
+    return ModeStats(
+      gamesPlayed: gamesPlayed + 1,
+      bestScore: score > bestScore ? score : bestScore,
+      highestTile:
+          highestTile > this.highestTile ? highestTile : this.highestTile,
+      totalMerges: totalMerges + merges,
+      totalMoves: totalMoves + moves,
+      totalScore: totalScore + score,
+      longestGameMoves: moves > longestGameMoves ? moves : longestGameMoves,
+      playTimeSeconds: playTimeSeconds + seconds,
     );
   }
 
@@ -86,10 +86,9 @@ class PlayerStats {
         'totalScore': totalScore,
         'longestGameMoves': longestGameMoves,
         'playTimeSeconds': playTimeSeconds,
-        'gamesByMode': gamesByMode,
       };
 
-  static PlayerStats fromJson(Map<String, dynamic> json) => PlayerStats(
+  static ModeStats fromJson(Map<String, dynamic> json) => ModeStats(
         gamesPlayed: json['gamesPlayed'] as int? ?? 0,
         bestScore: json['bestScore'] as int? ?? 0,
         highestTile: json['highestTile'] as int? ?? 0,
@@ -98,10 +97,99 @@ class PlayerStats {
         totalScore: json['totalScore'] as int? ?? 0,
         longestGameMoves: json['longestGameMoves'] as int? ?? 0,
         playTimeSeconds: json['playTimeSeconds'] as int? ?? 0,
-        gamesByMode: (json['gamesByMode'] as Map?)
-                ?.map((k, v) => MapEntry(k as String, v as int)) ??
-            const {},
       );
+}
+
+/// Player statistics, held per mode with lifetime figures derived.
+///
+/// Nothing lifetime is stored: totals are summed and bests are maxed on read,
+/// so the per-mode records can never drift out of step with the aggregate.
+@immutable
+class PlayerStats {
+  final Map<String, ModeStats> byMode;
+
+  const PlayerStats({this.byMode = const {}});
+
+  ModeStats forMode(String mode) => byMode[mode] ?? const ModeStats();
+
+  int _sum(int Function(ModeStats) field) =>
+      byMode.values.fold<int>(0, (total, stats) => total + field(stats));
+
+  int _max(int Function(ModeStats) field) => byMode.values
+      .fold<int>(0, (best, stats) => field(stats) > best ? field(stats) : best);
+
+  int get gamesPlayed => _sum((s) => s.gamesPlayed);
+  int get totalMerges => _sum((s) => s.totalMerges);
+  int get totalMoves => _sum((s) => s.totalMoves);
+  int get totalScore => _sum((s) => s.totalScore);
+  int get playTimeSeconds => _sum((s) => s.playTimeSeconds);
+
+  /// The best score achieved in any single mode.
+  ///
+  /// This is a max across modes rather than a pooled record, so it always names
+  /// an actual run rather than an average of incomparable ones.
+  int get bestScore => _max((s) => s.bestScore);
+  int get highestTile => _max((s) => s.highestTile);
+  int get longestGameMoves => _max((s) => s.longestGameMoves);
+
+  int get averageScore => gamesPlayed == 0 ? 0 : totalScore ~/ gamesPlayed;
+
+  /// The mode played most, or null before anything is recorded.
+  String? get favouriteMode {
+    String? best;
+    var mostGames = 0;
+    byMode.forEach((mode, stats) {
+      if (stats.gamesPlayed > mostGames) {
+        mostGames = stats.gamesPlayed;
+        best = mode;
+      }
+    });
+    return best;
+  }
+
+  PlayerStats recording({
+    required String mode,
+    required int score,
+    required int highestTile,
+    required int moves,
+    required int merges,
+    required int seconds,
+  }) {
+    final updated = Map<String, ModeStats>.from(byMode);
+    updated[mode] = forMode(mode).merging(
+      score: score,
+      highestTile: highestTile,
+      moves: moves,
+      merges: merges,
+      seconds: seconds,
+    );
+    return PlayerStats(byMode: updated);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'version': 2,
+        'byMode': byMode.map((mode, stats) => MapEntry(mode, stats.toJson())),
+      };
+
+  static PlayerStats fromJson(Map<String, dynamic> json) {
+    final modes = json['byMode'];
+    if (modes is Map) {
+      return PlayerStats(
+        byMode: modes.map(
+          (mode, stats) => MapEntry(
+            mode as String,
+            ModeStats.fromJson(Map<String, dynamic>.from(stats as Map)),
+          ),
+        ),
+      );
+    }
+
+    // Version 1 kept one pooled record with no mode attribution. Fold it into
+    // Classic rather than discarding a player's history.
+    final legacy = ModeStats.fromJson(json);
+    if (legacy.gamesPlayed == 0) return const PlayerStats();
+    return PlayerStats(byMode: {ModeKeys.classic: legacy});
+  }
 }
 
 /// A player's best result on one trial.
@@ -248,21 +336,13 @@ class ProgressStore extends ChangeNotifier {
     required int merges,
     required int seconds,
   }) async {
-    final byMode = Map<String, int>.from(_stats.gamesByMode);
-    byMode[mode] = (byMode[mode] ?? 0) + 1;
-
-    _stats = _stats.copyWith(
-      gamesPlayed: _stats.gamesPlayed + 1,
-      bestScore: score > _stats.bestScore ? score : _stats.bestScore,
-      highestTile:
-          highestTile > _stats.highestTile ? highestTile : _stats.highestTile,
-      totalMerges: _stats.totalMerges + merges,
-      totalMoves: _stats.totalMoves + moves,
-      totalScore: _stats.totalScore + score,
-      longestGameMoves:
-          moves > _stats.longestGameMoves ? moves : _stats.longestGameMoves,
-      playTimeSeconds: _stats.playTimeSeconds + seconds,
-      gamesByMode: byMode,
+    _stats = _stats.recording(
+      mode: mode,
+      score: score,
+      highestTile: highestTile,
+      moves: moves,
+      merges: merges,
+      seconds: seconds,
     );
 
     final newlyUnlocked = _evaluateAchievements();

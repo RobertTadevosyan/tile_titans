@@ -653,6 +653,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Longest game'**
   String get statLongestGame;
+
+  /// No description provided for @statsLifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get statsLifetime;
+
+  /// No description provided for @statsByMode.
+  ///
+  /// In en, this message translates to:
+  /// **'By mode'**
+  String get statsByMode;
+
+  /// No description provided for @statsNotPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not played yet'**
+  String get statsNotPlayed;
+
+  /// No description provided for @statsTrials.
+  ///
+  /// In en, this message translates to:
+  /// **'Trials'**
+  String get statsTrials;
+
+  /// No description provided for @statsDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get statsDaily;
+
+  /// No description provided for @statsBestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get statsBestStreak;
+
+  /// No description provided for @statsChapters.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapters'**
+  String get statsChapters;
 }
 
 class _AppLocalizationsDelegate

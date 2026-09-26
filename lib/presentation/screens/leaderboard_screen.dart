@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/config/ads_config.dart';
+import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/presentation/models/leaderboard_entry.dart';
 import 'package:flutter_2048/utils/helper.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
@@ -194,17 +195,45 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 
+  /// Which board is being shown. Scores are ranked per mode.
+  String boardMode = ModeKeys.classic;
+
   Future<List<LeaderboardEntry>> fetchLeaderboard() async {
     final snapshot = await FirebaseDatabase.instance.ref('leaderboard').once();
     final data = snapshot.snapshot.value as Map<dynamic, dynamic>?;
-
     if (data == null) return [];
-    leaderboardEntries =
-        data.entries.map((e) {
-            return LeaderboardEntry.fromMap(e.key, e.value);
-          }).toList()
-          ..sort((a, b) => b.score.compareTo(a.score));
-    return leaderboardEntries; // sort descending
+
+    final entries = <String, LeaderboardEntry>{};
+
+    // Scores used to be written flat as `leaderboard/<uid>`, before boards were
+    // split per mode. Those rows are indistinguishable from Classic play, so
+    // they are folded into the Classic board rather than discarded — otherwise
+    // every existing player would appear to have lost their ranking.
+    if (boardMode == ModeKeys.classic) {
+      data.forEach((key, value) {
+        if (value is! Map) return;
+        if (!value.containsKey('high_score')) return; // a mode bucket, not a row
+        entries[key as String] =
+            LeaderboardEntry.fromMap(key, value);
+      });
+    }
+
+    final bucket = data[boardMode];
+    if (bucket is Map) {
+      bucket.forEach((key, value) {
+        if (value is! Map) return;
+        final entry = LeaderboardEntry.fromMap(key as String, value);
+        final existing = entries[key];
+        // A player may hold both a legacy row and a new one; keep the better.
+        if (existing == null || entry.score > existing.score) {
+          entries[key] = entry;
+        }
+      });
+    }
+
+    leaderboardEntries = entries.values.toList()
+      ..sort((a, b) => b.score.compareTo(a.score));
+    return leaderboardEntries;
   }
 
   @override
@@ -257,7 +286,47 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           ),
         ],
       ),
-      body: FutureBuilder<List<LeaderboardEntry>>(
+      body: Column(
+        children: [
+          _buildBoardSelector(appLocales),
+          Expanded(child: _buildBoard(appLocales, isTablet)),
+        ],
+      ),
+    );
+  }
+
+  /// Ranked boards are per mode, so the player picks which ladder to see.
+  Widget _buildBoardSelector(AppLocalizations appLocales) {
+    // Zen is absent on purpose: it keeps no score, so it has no ranking.
+    final boards = <String, String>{
+      ModeKeys.classic: appLocales.modeClassic,
+      ModeKeys.timeAttack: appLocales.modeTimeAttack,
+      ModeKeys.hardcore: appLocales.modeHardcore,
+    };
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          for (final entry in boards.entries)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                label: Text(entry.value),
+                selected: boardMode == entry.key,
+                onSelected: (_) => setState(() => boardMode = entry.key),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBoard(AppLocalizations appLocales, bool isTablet) {
+    return FutureBuilder<List<LeaderboardEntry>>(
+        // Keyed on the board so switching modes refetches.
+        key: ValueKey(boardMode),
         future: fetchLeaderboard(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -356,7 +425,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             );
           }
         },
-      ),
-    );
+      );
   }
 }

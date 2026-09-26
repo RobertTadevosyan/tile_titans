@@ -309,4 +309,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get statLongestGame => 'Самая длинная партия';
+
+  @override
+  String get statsLifetime => 'За всё время';
+
+  @override
+  String get statsByMode => 'По режимам';
+
+  @override
+  String get statsNotPlayed => 'Ещё не играли';
+
+  @override
+  String get statsTrials => 'Испытания';
+
+  @override
+  String get statsDaily => 'Ежедневные';
+
+  @override
+  String get statsBestStreak => 'Серия';
+
+  @override
+  String get statsChapters => 'Главы';
 }

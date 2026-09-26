@@ -309,4 +309,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statLongestGame => 'Longest game';
+
+  @override
+  String get statsLifetime => 'Lifetime';
+
+  @override
+  String get statsByMode => 'By mode';
+
+  @override
+  String get statsNotPlayed => 'Not played yet';
+
+  @override
+  String get statsTrials => 'Trials';
+
+  @override
+  String get statsDaily => 'Daily';
+
+  @override
+  String get statsBestStreak => 'Streak';
+
+  @override
+  String get statsChapters => 'Chapters';
 }

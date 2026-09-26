@@ -91,5 +91,12 @@
   "statAverageScore": "Puntuación media",
   "statFavouriteMode": "Modo favorito",
   "statPlayTime": "Tiempo jugado",
-  "statLongestGame": "Partida más larga"
+  "statLongestGame": "Partida más larga",
+  "statsLifetime": "Histórico",
+  "statsByMode": "Por modo",
+  "statsNotPlayed": "Aún sin jugar",
+  "statsTrials": "Pruebas",
+  "statsDaily": "Diarias",
+  "statsBestStreak": "Racha",
+  "statsChapters": "Capítulos"
 }

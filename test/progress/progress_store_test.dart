@@ -49,10 +49,93 @@ void main() {
       expect(store.rank.name, 'Novice');
     });
 
+    test('keep records separate per mode', () async {
+      final store = await freshStore();
+      await store.recordGame(
+        mode: ModeKeys.classic,
+        score: 5000,
+        highestTile: 512,
+        moves: 200,
+        merges: 90,
+        seconds: 300,
+      );
+      await store.recordGame(
+        mode: ModeKeys.hardcore,
+        score: 800,
+        highestTile: 64,
+        moves: 40,
+        merges: 15,
+        seconds: 60,
+      );
+
+      // A weak Hardcore run must not be compared against a strong Classic one.
+      expect(store.stats.forMode(ModeKeys.classic).bestScore, 5000);
+      expect(store.stats.forMode(ModeKeys.hardcore).bestScore, 800);
+      expect(store.stats.forMode(ModeKeys.zen).isEmpty, isTrue);
+    });
+
+    test('lifetime figures are derived, never stored', () async {
+      final store = await freshStore();
+      await store.recordGame(
+        mode: ModeKeys.classic,
+        score: 1000,
+        highestTile: 128,
+        moves: 50,
+        merges: 20,
+        seconds: 100,
+      );
+      await store.recordGame(
+        mode: ModeKeys.timeAttack,
+        score: 3000,
+        highestTile: 256,
+        moves: 70,
+        merges: 35,
+        seconds: 90,
+      );
+
+      // Totals add up; bests are the best of any single mode, not a pool.
+      expect(store.stats.gamesPlayed, 2);
+      expect(store.stats.totalMerges, 55);
+      expect(store.stats.playTimeSeconds, 190);
+      expect(store.stats.bestScore, 3000);
+      expect(store.stats.highestTile, 256);
+    });
+
+    test('per-mode records survive a reload', () async {
+      final store = await freshStore();
+      await store.recordGame(
+        mode: ModeKeys.hardcore,
+        score: 4200,
+        highestTile: 256,
+        moves: 120,
+        merges: 60,
+        seconds: 200,
+      );
+
+      final reloaded = await freshStore();
+      expect(reloaded.stats.forMode(ModeKeys.hardcore).bestScore, 4200);
+      expect(reloaded.stats.forMode(ModeKeys.classic).isEmpty, isTrue);
+    });
+
+    test('version 1 pooled data folds into Classic rather than vanishing',
+        () async {
+      SharedPreferences.setMockInitialValues({
+        'tt_stats': '{"gamesPlayed":7,"bestScore":9000,"highestTile":1024,'
+            '"totalMerges":400,"totalMoves":900,"totalScore":30000,'
+            '"longestGameMoves":300,"playTimeSeconds":1200}',
+      });
+      final store = ProgressStore();
+      await store.load();
+
+      expect(store.stats.forMode(ModeKeys.classic).bestScore, 9000);
+      expect(store.stats.gamesPlayed, 7,
+          reason: 'a player must not lose their history to the format change');
+    });
+
     test('accumulate across runs and keep bests', () async {
       final store = await freshStore();
       await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 1200,
         highestTile: 128,
         moves: 90,
@@ -60,7 +143,7 @@ void main() {
         seconds: 120,
       );
       await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 800,
         highestTile: 64,
         moves: 60,
@@ -74,14 +157,14 @@ void main() {
       expect(store.stats.totalMerges, 65);
       expect(store.stats.longestGameMoves, 90);
       expect(store.stats.averageScore, 1000);
-      expect(store.stats.favouriteMode, 'classic');
+      expect(store.stats.favouriteMode, ModeKeys.classic);
     });
 
     test('favourite mode tracks the most played', () async {
       final store = await freshStore();
       for (var i = 0; i < 3; i++) {
         await store.recordGame(
-          mode: 'zen',
+          mode: ModeKeys.zen,
           score: 10,
           highestTile: 8,
           moves: 5,
@@ -90,20 +173,20 @@ void main() {
         );
       }
       await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 10,
         highestTile: 8,
         moves: 5,
         merges: 2,
         seconds: 10,
       );
-      expect(store.stats.favouriteMode, 'zen');
+      expect(store.stats.favouriteMode, ModeKeys.zen);
     });
 
     test('survive a reload', () async {
       final store = await freshStore();
       await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 5000,
         highestTile: 512,
         moves: 200,
@@ -122,7 +205,7 @@ void main() {
       final store = await freshStore();
 
       final first = await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 100,
         highestTile: 128,
         moves: 10,
@@ -133,7 +216,7 @@ void main() {
 
       // Same achievement must not fire twice.
       final second = await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 100,
         highestTile: 128,
         moves: 10,
@@ -148,7 +231,7 @@ void main() {
       expect(store.points, 0);
 
       await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 100,
         highestTile: 2048,
         moves: 10,
@@ -164,7 +247,7 @@ void main() {
     test('tile progress is measured in doublings, not ratio', () async {
       final store = await freshStore();
       await store.recordGame(
-        mode: 'classic',
+        mode: ModeKeys.classic,
         score: 0,
         highestTile: 64,
         moves: 1,
@@ -278,7 +361,7 @@ void main() {
   test('reset clears everything', () async {
     final store = await freshStore();
     await store.recordGame(
-      mode: 'classic',
+      mode: ModeKeys.classic,
       score: 900,
       highestTile: 256,
       moves: 50,
