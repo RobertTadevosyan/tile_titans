@@ -467,6 +467,7 @@ class _ChapterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final done = chapter.trials
         .where((t) => progress.recordFor(t.id)?.completed == true)
         .length;
@@ -479,7 +480,7 @@ class _ChapterRow extends StatelessWidget {
         SizedBox(
           width: 152,
           child: Text(
-            chapter.name,
+            ContentStrings.chapter(l10n, chapter.id),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TitanText.cardBody(context),
