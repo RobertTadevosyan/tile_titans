@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
+import 'package:flutter_2048/domain/engine/objective.dart';
 import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/presentation/widgets/game_board.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
 import 'package:provider/provider.dart';
 
 /// Plays one authored trial or the Daily Trial.
@@ -148,6 +151,12 @@ class _TrialScreenState extends State<TrialScreen> {
     final trial = widget.trial;
 
     return Scaffold(
+      // Same placement as the free-play board: the banner sits below the
+      // controls with clear space above it, so an overshot swipe lands on the
+      // gap rather than the ad.
+      bottomNavigationBar: ScreenBanner(
+        adUnitId: AdsConfig.getGameBannerID(),
+      ),
       appBar: AppBar(title: Text(trial.name)),
       body: SafeArea(
         child: Stack(
@@ -182,7 +191,7 @@ class _TrialScreenState extends State<TrialScreen> {
                         label: Text(l10n.undo),
                       ),
                     ),
-                  const SizedBox(height: TitanSpacing.md),
+                  const SizedBox(height: TitanSpacing.lg),
                 ],
               ),
             ),
@@ -217,6 +226,10 @@ class _ObjectiveBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final progress = controller.objectiveProgress ?? 0;
     final movesLeft = controller.movesRemaining;
+    // A survive objective has no move budget, so nothing was shown at all and
+    // the player could not see how far through it they were.
+    final survivalTarget =
+        trial.objective.kind == ObjectiveKind.survive ? trial.objective.target : null;
     final timeLimit = trial.constraints.timeLimit;
     final secondsLeft =
         timeLimit == null ? null : (timeLimit - controller.secondsElapsed);
@@ -256,6 +269,12 @@ class _ObjectiveBanner extends StatelessWidget {
                   icon: Icons.swipe_rounded,
                   label: l10n.trialMoveLimit(movesLeft),
                   urgent: urgent,
+                )
+              else if (survivalTarget != null)
+                _Budget(
+                  icon: Icons.swipe_rounded,
+                  label: '${controller.movesUsed} / $survivalTarget',
+                  urgent: false,
                 ),
               if (secondsLeft != null)
                 _Budget(
@@ -269,7 +288,9 @@ class _ObjectiveBanner extends StatelessWidget {
               if (controller.scored)
                 Text(
                   l10n.score(controller.score),
-                  style: TitanText.cardBody(context),
+                  style: TitanText.cardBody(context).copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
             ],
           ),
@@ -292,23 +313,39 @@ class _Budget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colour =
-        urgent ? Theme.of(context).colorScheme.error : null;
+    // Urgency is signalled with weight and a tinted pill, never by recolouring
+    // the text. Painting it colorScheme.error assumed that red contrasts with
+    // whatever card it lands on, which is not true across six themes — the same
+    // mistake that made the win dialog unreadable.
+    final onCard = Theme.of(context).colorScheme.onSurface;
+    final error = Theme.of(context).colorScheme.error;
+
     return Padding(
       padding: const EdgeInsets.only(right: TitanSpacing.md),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: colour),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TitanText.cardBody(context).copyWith(
-              color: colour,
-              fontWeight: urgent ? FontWeight.w700 : null,
+      child: Container(
+        padding: urgent
+            ? const EdgeInsets.symmetric(horizontal: 8, vertical: 2)
+            : EdgeInsets.zero,
+        decoration: urgent
+            ? BoxDecoration(
+                color: error.withValues(alpha: 0.22),
+                borderRadius: TitanRadius.small,
+              )
+            : null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: onCard),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TitanText.cardBody(context).copyWith(
+                color: onCard,
+                fontWeight: urgent ? FontWeight.w800 : null,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
