@@ -39,6 +39,11 @@ class _GameScreenState extends State<GameScreen> {
   /// The game-over listener rebuilds for as long as `isOver` stays true, and
   /// each rebuild scheduled another post-frame callback, so a single loss could
   /// fire several ads back to back.
+  ///
+  /// It is seeded from the controller in initState rather than starting false.
+  /// Entering this screen on a run that is *already* over — which is what
+  /// tapping Continue after a loss does — otherwise looked exactly like the
+  /// game ending, and fired an ad for a game the player had already finished.
   bool _interstitialShownThisGame = false;
 
 
@@ -52,6 +57,9 @@ class _GameScreenState extends State<GameScreen> {
     }
     // Interstitials are owned by InterstitialService so the cooldown and the
     // ad-free grace period apply across every screen, not per screen.
+    //
+    // Only a game ending *while this screen is open* should trigger one.
+    _interstitialShownThisGame = context.read<GameController>().gameOver.value;
   }
 
 
