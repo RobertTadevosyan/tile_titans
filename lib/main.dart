@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/config/ad_policy.dart';
+import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/domain/locale_manager.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/firebase_options.dart';
@@ -26,12 +28,20 @@ void main() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   final localeManager = LocaleManager();
   await localeManager.loadLocale();
+
+  // Counting the session here, before any screen builds, keeps the ad-free
+  // grace period honest across the whole app rather than per screen.
+  final adPolicy = AdPolicy();
+  await adPolicy.startSession();
+  final interstitials = InterstitialService(adPolicy)..preload();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => localeManager),
         ChangeNotifierProvider(create: (_) => Prefs()),
+        Provider<AdPolicy>.value(value: adPolicy),
+        Provider<InterstitialService>.value(value: interstitials),
         // Statistics, achievements and trial records. Loaded eagerly so the
         // home screen can show rank and progress on first frame.
         ChangeNotifierProvider(create: (_) => ProgressStore()..load()),

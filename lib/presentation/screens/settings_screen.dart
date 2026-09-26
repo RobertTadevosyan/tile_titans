@@ -5,7 +5,6 @@ import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
 import 'package:flutter_2048/domain/ai_difficultt.dart';
-import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/widgets/language_selector.dart';
 import 'package:flutter_2048/utils/helper.dart';
@@ -215,34 +214,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
 
-        Card(
-          child: Consumer<GameController>(
-            builder: (context, controller, _) {
-              return ListTile(
-                title: Text(
-                  appLocales.gameMode,
-                  style: TextStyle(fontSize: settingTextSize),
-                ),
-                trailing: DropdownButton<GameMode>(
-                  value: controller.mode,
-                  items:
-                      GameMode.values.map((mode) {
-                        return DropdownMenuItem(
-                          value: mode,
-                          child: Text(
-                            gameModeToString(mode, appLocales),
-                            style: TextStyle(fontSize: valueTextSize),
-                          ),
-                        );
-                      }).toList(),
-                  onChanged: (mode) {
-                    if (mode != null) controller.setGameMode(mode);
-                  },
-                ),
-              );
-            },
-          ),
-        ),
+        // The Game Mode picker used to live here, listing the old GameMode
+        // enum. Modes are now chosen from the home screen, where each card
+        // states its rule difference — and the picker could contradict the
+        // rule set actually in play, since it set a different field. Removed
+        // rather than kept in sync.
 
         Card(
           child: Consumer<GameController>(

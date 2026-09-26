@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
@@ -121,6 +122,12 @@ class _TrialScreenState extends State<TrialScreen> {
       _result = outcome;
       _unlocked = unlocked;
     });
+
+    // Shown after the result is on screen, so the player sees what they earned
+    // before anything interrupts — and only on every third win.
+    if (outcome.won) {
+      await context.read<InterstitialService>().maybeShowAfterWin();
+    }
   }
 
   void _retry() {

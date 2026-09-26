@@ -2,7 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_2048/config/ads_config.dart';
+import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/domain/direction.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
@@ -33,8 +33,6 @@ class _GameScreenState extends State<GameScreen> {
   var isBannerAlreadyCreated = false;
   var bannerHeight = 0;
 
-  late final Future<InterstitialAdLoader> _adLoader;
-  InterstitialAd? _ad;
 
   /// Guards against showing more than one interstitial per game over.
   ///
@@ -43,10 +41,6 @@ class _GameScreenState extends State<GameScreen> {
   /// fire several ads back to back.
   bool _interstitialShownThisGame = false;
 
-  /// Sessions are counted so the first few are ad-free, which is the single
-  /// biggest difference to a new player's first impression.
-  static const int _adFreeSessions = 2;
-  int _sessionCount = 0;
 
   @override
   void initState() {
@@ -56,73 +50,12 @@ class _GameScreenState extends State<GameScreen> {
     if (isLandscape) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
-    if (isMobile()) {
-      _adLoader = _createInterstitialAdLoader();
-      _loadInterstitialAd();
-    }
+    // Interstitials are owned by InterstitialService so the cooldown and the
+    // ad-free grace period apply across every screen, not per screen.
   }
 
-  Future<InterstitialAdLoader> _createInterstitialAdLoader() {
-    return InterstitialAdLoader.create(
-      onAdLoaded: (InterstitialAd interstitialAd) {
-        // The ad was loaded successfully. Now you can show loaded ad
-        _ad = interstitialAd;
-      },
-      onAdFailedToLoad: (error) {
-        // Ad failed to load with AdRequestError.
-        // Attempting to load a new ad from the onAdFailedToLoad() method is strongly discouraged.
-      },
-    );
-  }
 
-  Future<void> _loadInterstitialAd() async {
-    if (!isMobile()) return;
-    final adLoader = await _adLoader;
-    await adLoader.loadAd(
-      adRequestConfiguration: AdRequestConfiguration(
-        adUnitId: AdsConfig.getInterstitialID(),
-      ),
-    ); // for debug you can use 'demo-interstitial-yandex'
-  }
 
-  _showIntestitialAd() async {
-    if (!isMobile()) return;
-    // Give new players a clean run of games before the first interstitial.
-    if (_sessionCount < _adFreeSessions) return;
-    _ad?.setAdEventListener(
-      eventListener: InterstitialAdEventListener(
-        onAdShown: () {
-          // Called when ad is shown.
-        },
-        onAdFailedToShow: (error) {
-          // Called when an InterstitialAd failed to show.
-          // Destroy the ad so you don't show the ad a second time.
-          _ad?.destroy();
-          _ad = null;
-
-          // Now you can preload the next interstitial ad.
-          _loadInterstitialAd();
-        },
-        onAdClicked: () {
-          // Called when a click is recorded for an ad.
-        },
-        onAdDismissed: () {
-          // Called when ad is dismissed.
-          // Destroy the ad so you don't show the ad a second time.
-          _ad?.destroy();
-          _ad = null;
-
-          // Now you can preload the next interstitial ad.
-          _loadInterstitialAd();
-        },
-        onAdImpression: (impressionData) {
-          // Called when an impression is recorded for an ad.
-        },
-      ),
-    );
-    await _ad?.show();
-    await _ad?.waitForDismiss();
-  }
 
   @override
   void dispose() {
@@ -190,7 +123,7 @@ class _GameScreenState extends State<GameScreen> {
             if (isOver && !_interstitialShownThisGame) {
               _interstitialShownThisGame = true;
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                _showIntestitialAd();
+                context.read<InterstitialService>().maybeShowAfterGameOver();
               });
             } else if (!isOver) {
               _interstitialShownThisGame = false;
