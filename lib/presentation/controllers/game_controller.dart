@@ -887,12 +887,11 @@ class GameController extends ChangeNotifier {
 
         rebuilt.add(
           Tile(
-            // A merged tile is a new object so its pop animation retriggers;
-            // a tile that merely slid keeps its id so Flutter reuses the widget
-            // and the movement tween runs instead of a rebuild.
-            id: merged || source == null
-                ? 'tile_${_tileIdCounter++}'
-                : source.id,
+            // Always inherit the origin tile's id, merges included. Keeping the
+            // identity is what lets AnimatedPositioned slide the tile along its
+            // real path; a fresh id would make it pop into existence at the
+            // destination. The merge pop is driven by `justMerged` instead.
+            id: source?.id ?? 'tile_${_tileIdCounter++}',
             value: value,
             x: x,
             y: y,

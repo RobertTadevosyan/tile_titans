@@ -150,23 +150,31 @@ class _EmblemPainter extends CustomPainter {
   /// hooked "beard" beneath it that makes the silhouette read as an axe rather
   /// than a banner.
   void _drawAxe(Canvas canvas, Paint stroke, Paint fill, _P p) {
-    // Short haft, big blade. An earlier version used a full-height haft with a
-    // small head and read unmistakably as a flag on a pole — at this size the
-    // blade has to dominate for the shape to say "axe".
+    // A double-bit axe, deliberately symmetric.
+    //
+    // Two earlier single-bladed versions both read as a flag on a pole, which
+    // is unavoidable: one shape hanging off the top of a vertical line *is* the
+    // flag silhouette. Mirroring the blade removes the ambiguity entirely.
     canvas.drawPath(
       Path()
-        ..moveTo(p(0.3, 0.1).dx, p(0.3, 0.1).dy)
-        ..lineTo(p(0.3, 0.93).dx, p(0.3, 0.93).dy),
+        ..moveTo(p(0.5, 0.06).dx, p(0.5, 0.06).dy)
+        ..lineTo(p(0.5, 0.94).dx, p(0.5, 0.94).dy),
       stroke,
     );
-    final blade = Path()
-      ..moveTo(p(0.3, 0.12).dx, p(0.3, 0.12).dy)
-      ..lineTo(p(0.6, 0.07).dx, p(0.6, 0.07).dy)
-      ..quadraticBezierTo(
-          p(0.99, 0.36).dx, p(0.99, 0.36).dy, p(0.6, 0.66).dx, p(0.6, 0.66).dy)
-      ..lineTo(p(0.3, 0.6).dx, p(0.3, 0.6).dy)
-      ..close();
-    canvas.drawPath(blade, fill);
+    for (final side in [1.0, -1.0]) {
+      final blade = Path()
+        ..moveTo(p(0.5, 0.12).dx, p(0.5, 0.12).dy)
+        ..lineTo(p(0.5 + side * 0.2, 0.1).dx, p(0.5 + side * 0.2, 0.1).dy)
+        ..quadraticBezierTo(
+          p(0.5 + side * 0.48, 0.32).dx,
+          p(0.5 + side * 0.48, 0.32).dy,
+          p(0.5 + side * 0.2, 0.54).dx,
+          p(0.5 + side * 0.2, 0.54).dy,
+        )
+        ..lineTo(p(0.5, 0.5).dx, p(0.5, 0.5).dy)
+        ..close();
+      canvas.drawPath(blade, fill);
+    }
   }
 
   /// 32 — Shieldman. A round-topped shield.

@@ -104,26 +104,24 @@ class _AnimatedTileState extends State<AnimatedTile>
 
     final rank = rankForValue(tile.value);
 
-    // The tile starts its tween at wherever it came from and settles at its new
-    // cell. `previousX/Y` carry the real origin from the engine, so this is a
-    // plain difference.
-    final dx = ((tile.previousX ?? tile.x) - tile.x) * tileSize;
-    final dy = ((tile.previousY ?? tile.y) - tile.y) * tileSize;
-
-    return Positioned(
+    // Position is animated by AnimatedPositioned rather than by tweening an
+    // offset back to zero.
+    //
+    // The offset approach cannot work here: a sliding tile keeps its id, so
+    // Flutter reuses the widget, and TweenAnimationBuilder only re-runs when
+    // its `end` changes. With `end` pinned at Offset.zero the tile was already
+    // sitting at the target, so a new `begin` was ignored and the tile jumped.
+    // AnimatedPositioned interpolates left/top between builds instead, which
+    // gives the true path for any distance.
+    return AnimatedPositioned(
       key: ValueKey(tile.id),
+      duration: Duration(milliseconds: reduceMotion ? 0 : 190),
+      curve: Curves.easeOutCubic,
       left: tile.x * tileSize,
       top: tile.y * tileSize,
       width: tileSize,
       height: tileSize,
-      child: TweenAnimationBuilder<Offset>(
-        tween: Tween<Offset>(begin: Offset(dx, dy), end: Offset.zero),
-        duration: Duration(milliseconds: reduceMotion ? 0 : 200),
-        curve: Curves.easeOutCubic,
-        builder: (context, offset, child) {
-          return Transform.translate(offset: offset, child: child);
-        },
-        child: ScaleTransition(
+      child: ScaleTransition(
           scale: _scaleAnimation,
           child: TweenAnimationBuilder<Color?>(
             tween: ColorTween(
@@ -146,7 +144,6 @@ class _AnimatedTileState extends State<AnimatedTile>
             },
           ),
         ),
-      ),
     );
   }
 
@@ -202,11 +199,11 @@ class _AnimatedTileState extends State<AnimatedTile>
           // number is what you actually need.
           if (showEmblem) ...[
             Align(
-              alignment: const Alignment(0, -0.26),
+              alignment: const Alignment(0, -0.2),
               child: TitanEmblem(
                 emblem: rank.emblem,
                 color: numeralColor.withOpacity(rank.isMilestone ? 0.98 : 0.88),
-                size: tileSize * (rank.isMilestone ? 0.5 : 0.46),
+                size: tileSize * (rank.isMilestone ? 0.58 : 0.54),
                 weight: rank.isMilestone ? 0.12 : 0.105,
               ),
             ),
@@ -238,7 +235,7 @@ class _AnimatedTileState extends State<AnimatedTile>
           if (tile.justMerged)
             Positioned.fill(
               child: MergeBloom(
-                key: ValueKey('bloom-${tile.id}'),
+                key: ValueKey('bloom-${tile.id}-${tile.value}'),
                 color: _bloomColor(finalColor, numeralColor),
                 emphatic: rank.isMilestone,
                 enabled: !reduceMotion,
@@ -269,7 +266,7 @@ class _AnimatedTileState extends State<AnimatedTile>
       5 => 0.74,
       _ => 0.64,
     };
-    return (tileSize * 0.235 * scale).clamp(9.0, 24.0);
+    return (tileSize * 0.185 * scale).clamp(8.0, 19.0);
   }
 
   /// Fallback sizing for boards too small to carry an emblem.
