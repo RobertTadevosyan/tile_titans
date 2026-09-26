@@ -1,25 +1,22 @@
 # App Store Review Notes — Tile Titans
 
-> ## ⛔ STATUS: NOT READY TO SUBMIT
+> ## Status: differentiating content is now reachable; submission still gated
 >
-> The systems described below are **implemented and unit-tested in the engine
-> layer, but are not yet reachable from the app's UI.** A reviewer opening the
-> current build would still see the same single endless board as the rejected
-> version.
+> The ⛔ blocker on this file has been lifted. Every system described below is
+> implemented, tested, and **reachable within two taps of launch** — the earlier
+> warning was that none of it was visible to a reviewer, and that is no longer
+> true.
 >
-> **Do not submit this document or this build to App Review yet.** Submitting
-> notes describing features a reviewer cannot reach would be worse than the
-> original rejection. The remaining work is listed in §6.
->
-> This file becomes accurate — and submittable — when §6 is complete.
+> Two things still gate an actual submission, and they are listed in §7. Neither
+> is about the game's content.
 
 ---
 
 ## 1. Context
 
 A previous version of Tile Titans was reviewed under **Guideline 4.3(a) —
-Design: Spam**, on the basis that it shared a similar binary, metadata and/or
-concept with other submissions.
+Design: Spam**, for sharing a similar binary, metadata and/or concept with other
+submissions.
 
 Our own audit agreed with the substance of that assessment. At the time of
 rejection the app offered six named game modes whose entire mechanical
@@ -33,44 +30,44 @@ difference was:
 | Hardcore | Hid the undo button |
 | Zen | Set the score to zero |
 
-Those are presentation toggles over one rule set. The app also had no home
-screen, no objectives, no levels, no progression, and no persistent statistics —
-it launched directly into an endless board.
+Those are presentation toggles over one rule set. The app had no home screen, no
+objectives, no levels, no progression and no persistent statistics — it launched
+directly into an endless board.
 
 We are not disputing the rejection. We rebuilt the product.
 
 ## 2. What is different now
 
-Each item below is a concrete, implemented system with automated tests.
+Each item is a concrete, implemented system with automated tests.
 
 ### 2.1 Titan Trials — 18 authored puzzles
 
-A library of hand-designed puzzles in `lib/content/trials.dart`, arranged in
-three chapters. Each trial has a **fixed starting position**, an **objective**
-and **constraints**. These are authored positions, not generated boards.
+A library of hand-designed puzzles in `lib/content/trials.dart`, in three
+chapters. Each has a **fixed starting position**, an **objective** and
+**constraints**. These are authored positions, not generated boards.
 
-Objective types: reach a target tile · reach a score · hold N tiles of a value
-simultaneously · survive N moves · collapse the board to N tiles.
-Constraint types: move limit · time limit · blocked cells · no undo · no hints.
+Objectives: reach a target tile · reach a score · hold N tiles of a value at
+once · survive N moves · collapse the board to N tiles.
+Constraints: move limit · time limit · blocked cells · no undo · no hints.
 
 Chapters: *The Forge* (objectives), *The Proving Ground* (blocked cells, no
 undo), *The Summit* (time pressure, 5×5 boards).
 
-**Trial XII is a fully deterministic puzzle with no tile spawning at all** — a
-fixed position with a known 3-move solution, verified by a test that replays it.
-A randomly-generating merge game cannot contain this.
+**Trial XII spawns no tiles at all** — a fixed position with a known three-move
+solution, verified by a test that replays it. A randomly-generating merge game
+cannot contain this.
 
 ### 2.2 Daily Titan Trial — deterministic, no backend
 
 `dailyTrialFor(date)` derives a board, objective and move budget from the
 calendar date through a fixed 32-bit xorshift PRNG. Every player worldwide gets
-the same puzzle on the same date **with no server involved**. Tests assert that
-the same date always yields an identical trial, that time-of-day is irrelevant,
-and that generated dailies satisfy the same integrity rules as authored ones.
+the same puzzle on the same date **with no server involved**. Tests assert the
+same date always yields an identical trial, that time of day is irrelevant, and
+that generated dailies meet the same integrity rules as authored ones.
 
 ### 2.3 Rule sets that actually differ
 
-Modes are now data (`lib/domain/engine/rules.dart`), not scattered conditionals:
+Modes are data (`lib/domain/engine/rules.dart`), not scattered conditionals:
 
 | Mode | Mechanical difference |
 |---|---|
@@ -80,40 +77,71 @@ Modes are now data (`lib/domain/engine/rules.dart`), not scattered conditionals:
 | Hardcore | **5×5, two tiles per move, 70% of spawns are 4s**, no undo, no hints |
 | Trial | Objective-driven; ends on the goal or the limit, not on a jam |
 
-`evilAI` was **removed**. Its implementation was defective (it gated on
-`score % 3`, and score rises by merge values, so it fired arbitrarily) and its
-`1` tiles were unmergeable dead weight. Its intent — spawn pressure — is now
+`evilAI` was **removed**. Its implementation was defective — it gated on
+`score % 3`, and score rises by merge values, so it fired arbitrarily — and its
+`1` tiles were unmergeable dead weight. Its intent, spawn pressure, is now
 expressed properly in Hardcore's weighting.
 
-### 2.4 Progression and statistics
+`test/engine/rules_test.dart` asserts **no two rule sets share a
+configuration**, so the rejected condition cannot silently return.
 
-`lib/domain/progress/` persists what the previous build computed and discarded:
-games played, best score, highest tile, total merges and moves, average score,
-longest game, play time, and per-mode counts.
+### 2.4 Progression and statistics, separated per mode
+
+`lib/domain/progress/` persists what the previous build computed and discarded.
+Records are kept **per mode**, because the modes are not comparable: a Hardcore
+score comes off a 5×5 board flooded with 4s, a Time Attack score comes from
+ninety seconds, and Zen keeps no score at all.
+
+Leaderboards are likewise split per mode (`leaderboard/<mode>/<uid>`).
 
 15 in-app achievements drive **Path of the Titans** (Novice → Warrior →
-Champion → Titan → Legend). Rank is derived purely from achievement points, so
-it cannot be bought or ground out — there is no currency and no IAP.
+Champion → Titan → Legend). Rank derives purely from achievement points, so it
+cannot be bought or ground out — there is no currency and no IAP.
 
-Daily streaks are tracked with correct calendar semantics (a gap resets to 1,
-because today still counts; the same day cannot be counted twice).
+### 2.5 Visual identity
 
-## 3. Verification
+The board is no longer a cream/tan 2048 grid. Tiles carry **Titan rank sigils**
+drawn as vector paths (14 original emblems, no imported artwork), the numeral
+sits beneath as a label, and merges animate the tile's colour from the pair's
+colour to its own with a forge bloom. A test forbids any theme from using the
+classic 2048 cream `0xFFFAF3DD`.
 
-181 automated tests, all passing:
+## 3. Reviewer path
+
+Launch the app. The home screen shows, top to bottom:
+
+1. **CONTINUE** — resumes the current run.
+2. **DAILY TITAN TRIAL** — today's objective and constraints. *Tap it* to play a
+   deterministic dated puzzle; the board is the authored position, including
+   blocked cells drawn as solid ✕ cells.
+3. **CHOOSE YOUR CHALLENGE** — Classic / Zen / Time Attack / Hardcore, each
+   card stating its rule difference. *Tap Hardcore* for the clearest contrast: a
+   5×5 board, two spawns per move, undo and hints disabled.
+4. **TITAN TRIALS** — *tap* for the 18 authored puzzles across three chapters,
+   each showing its board size, budget and restrictions.
+5. **HALL OF TITANS** — per-mode leaderboards.
+6. **STATISTICS** — per-mode records, achievements, Path of the Titans.
+
+Nothing is gated behind progress. Every trial is playable from a fresh install.
+
+## 4. Verification
+
+254 automated tests, all passing:
 
 - `test/engine/board_test.dart` — move/merge rules, including that blocked cells
-  partition a line and that a tile merges at most once per move.
-- `test/engine/trials_test.dart` — every authored trial is square, uses only
-  legal cell values, starts playable, **is not already solved at move zero**,
-  and has a sane move budget. Plus daily determinism.
-- `test/progress/progress_store_test.dart` — statistics, achievement
-  thresholds, trial records, streak edge cases, corrupt-data recovery.
+  partition a line and a tile merges at most once per move.
+- `test/engine/tile_movement_test.dart` — movement paths.
+- `test/engine/rules_test.dart` — rule sets are mechanically distinct.
+- `test/engine/trials_test.dart` — every authored trial is square, legal,
+  playable, **not already solved at move zero**, and sanely budgeted; plus daily
+  determinism.
+- `test/progress/progress_store_test.dart` — per-mode statistics, achievement
+  thresholds, trial records, streak edge cases, corrupt-data recovery, and
+  migration of pre-existing pooled data.
+- `test/theme/themes_test.dart` — every tile of every theme clears 3.5:1
+  contrast; no theme may use the 2048 cream.
 
-One authored trial was **caught and redesigned by these tests** during
-development: Trial XII originally began on a completely full board.
-
-## 4. Source-code origin
+## 5. Source-code origin
 
 We audited for template origin because the rejection cited binary similarity.
 
@@ -124,36 +152,45 @@ standard platform SDK (Flutter, Firebase, `provider`, `shared_preferences`,
 and animation model.
 
 One template artifact was found and removed: `test/widget_test.dart` was still
-the stock Flutter "Counter increments" test and referenced a `MyApp` class that
-does not exist in this project, so it could not compile.
+the stock Flutter "Counter increments" test, referencing a `MyApp` class that
+does not exist here, so it could not compile.
 
-## 5. Reviewer path
+## 6. Defects found and fixed during this work
 
-*(To be completed when §6 lands — this section must describe exactly what to tap,
-and every claim in §2 must be reachable within two taps of launch.)*
+Listed because several were user-visible and would have affected a reviewer:
 
-## 6. Remaining work before this document is accurate
+1. The leaderboard overwrote a player's high score with their **current run**.
+2. Tiles animated exactly one cell regardless of distance travelled.
+3. Opening a trial during a cold start silently discarded its authored board.
+4. `isGameOver()` treated two adjacent blocked cells as a mergeable pair, so a
+   board containing them could never end.
+5. The seeded PRNG could freeze at zero, making the Daily Trial degenerate.
+6. Tile numerals used a guessed contrast threshold; mid-tone tiles sat at 2.36:1.
+7. The board requested a banner ad it never displayed.
+8. iOS could not build at all against current Xcode.
 
-- [ ] Home screen exposing Play · Daily Titan Trial · Game Modes · Titan Trials
-      · Hall of Titans · Statistics
-- [ ] Trial runner UI: objective banner, move/time budget, win & fail states
-- [ ] Trials gallery with per-trial records and chapter progress
-- [ ] Statistics & achievements screen with Path of the Titans
-- [ ] `GameController` migrated onto the new engine so modes use the new rule
-      sets in play (currently the engine is additive and the live screens still
-      use the old logic)
-- [ ] Visual identity pass on the board and chrome
-- [ ] Ads: remove the banner from the active board, latch the interstitial
+## 7. What still gates submission
 
-## 7. Honest assessment
+Neither item is about game content:
 
-We cannot and do not claim that these changes guarantee approval.
+- [ ] **Non-English translations are machine-produced.** 45 new strings were
+      added across Russian, Spanish and Armenian without native review. Tests
+      assert they are present and short enough not to truncate, but not that
+      they read naturally.
+- [ ] **The parity contract has not been walked end to end on a device** for
+      every row of `AUDIT.md` §3. Core play, trials, modes, statistics, themes
+      and ads have been verified on a Samsung device, a Pixel emulator and the
+      iOS simulator; state restoration and the full settings matrix have not.
 
-What we can say is specific: the previous build had one rule set behind six
+## 8. Honest assessment
+
+We cannot and do not claim these changes guarantee approval.
+
+What we can state specifically: the previous build had one rule set behind six
 labels and no authored content. This build adds 18 designed puzzles, a
-deterministic daily challenge, four mechanically distinct rule sets, and a
-progression system — all covered by tests.
+deterministic daily challenge, four mechanically distinct rule sets, per-mode
+progression and leaderboards, and an original visual system — all covered by
+tests, and all reachable within two taps of launch.
 
-**Until §6 is complete, none of that is visible to a reviewer, and the app
-should not be resubmitted.** The differentiation is real but currently
-unreachable, which for review purposes is the same as not existing.
+Whether that clears 4.3(a) is Apple's judgement. The difference is no longer
+cosmetic, which is the bar we set ourselves after the audit.

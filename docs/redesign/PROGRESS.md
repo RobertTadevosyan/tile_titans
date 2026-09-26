@@ -88,28 +88,38 @@ Three systems were chosen over many small features:
 
 ---
 
-## Not done — this is what "not ready to submit" means
+## Reachability — resolved
 
-The systems above are **implemented and tested, but not reachable from the UI.**
-A reviewer opening the current build still sees a single endless board. The
-differentiation is real but invisible, which for App Review purposes is the same
-as absent.
+The differentiating content is now reachable within two taps of launch. See
+`APP_STORE_REVIEW_NOTES.md` §3 for the reviewer path.
 
-Remaining, in order:
+Delivered since the first checkpoint: home screen, trial runner, trials gallery,
+statistics with per-mode records, mode wiring onto the new rule sets, per-mode
+leaderboards, the ads rework, and the visual identity pass (Titan sigils,
+scoreboard tiles, flat chrome, the Forge theme, and retirement of the 2048
+cream palette).
+
+## Remaining
 
 - [x] **Home screen** — built and shipping. Rank masthead, prominent Continue,
       today's Daily Trial with its generated objective, a 2x2 mode gallery
       stating each rule difference, chapter progress for the 18 trials, and
       Hall of Titans / Statistics / Settings. Launch now opens here.
-- [ ] **Trial runner UI** — objective banner, move/time budget, win & fail states
-- [ ] **Trials gallery** — chapters, per-trial records, progress
-- [ ] **Statistics & achievements screen** — Path of the Titans
-- [ ] **Mode selection** wired to the new `RuleSet`s (the engine has them; the
-      live game screen still uses the old `GameMode` branches)
-- [ ] **Visual identity pass** on board chrome and app bar
-- [ ] **Ads** — remove the banner from the active board; latch the interstitial
-      (it can currently fire repeatedly on one game over)
-- [ ] **iOS gate re-assessment** and honest resubmission verdict
+- [x] **Trial runner UI** — objective banner, live budget, win & fail states
+- [x] **Trials gallery** — chapters, per-trial records, constraints shown
+- [x] **Statistics & achievements** — per-mode records, Path of the Titans
+- [x] **Mode selection** wired to the new `RuleSet`s
+- [x] **Visual identity pass** — sigils, scoreboard tiles, flat chrome, Forge
+- [x] **Ads** — banner off the board, moved to Home; interstitial latched;
+      first two sessions ad-free
+- [x] **iOS build** — was impossible against current Xcode; now runs on the
+      simulator
+- [ ] **Native review of ru / es / hy** — 45 new strings are machine-translated
+- [ ] **Full parity-contract walk on device** — core play, trials, modes,
+      statistics, themes and ads verified; state restoration and the complete
+      settings matrix not yet
+- [ ] **Settings still exposes the old Game Mode and AI Difficulty pickers**,
+      which now duplicate (and can contradict) the home screen's mode cards
 
 ## Known gaps in verification
 
