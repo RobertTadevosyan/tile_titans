@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/domain/ai_difficultt.dart';
+import 'package:flutter_2048/domain/direction.dart';
+import 'package:flutter_2048/domain/engine/board.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
@@ -259,34 +261,65 @@ class GameController extends ChangeNotifier {
   }
 
   void cancelTimers() {
-    print("cancelTimers");
-    setHighScoreInFirebaseDbActionPerformed();
+    // Flush any debounced leaderboard write before shutting the timers down,
+    // so a qualifying score earned in the last few seconds is not lost.
+    if (_pendingHighScore > 0) {
+      _publishHighScore(_pendingHighScore);
+    }
     _updateTimer?.cancel();
     _timer?.cancel();
     autoPlayTimer?.cancel();
   }
 
   Timer? _updateTimer;
-  void saveHighScoreToFirebase(int score) async {
+  /// Highest value waiting to be published, captured at call time.
+  ///
+  /// This must not be read from [score] when the debounce fires: the field
+  /// keeps changing during those five seconds (a reset sets it to 0, Zen mode
+  /// forces it to 0), and publishing whatever it happens to hold is what used
+  /// to overwrite a player's leaderboard entry with their current run.
+  int _pendingHighScore = 0;
+
+  void saveHighScoreToFirebase(int value) {
+    if (value <= 0) return;
+    if (value > _pendingHighScore) _pendingHighScore = value;
+
     _updateTimer?.cancel();
-    _updateTimer = Timer(Duration(seconds: 5), () async {
-      setHighScoreInFirebaseDbActionPerformed();
+    _updateTimer = Timer(const Duration(seconds: 5), () {
+      _publishHighScore(_pendingHighScore);
     });
   }
 
-  void setHighScoreInFirebaseDbActionPerformed() async {
-    print("setHighScoreInFirebaseDbActionPerformed");
-    final db = FirebaseDatabase.instance.ref();
+  /// Writes the leaderboard entry, never lowering an existing score.
+  ///
+  /// Uses a transaction rather than `set()` so a stale or smaller value can
+  /// never clobber a bigger one — including from another device signed into the
+  /// same account, which a plain write would silently lose.
+  Future<void> _publishHighScore(int value) async {
+    if (value <= 0) return;
     final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
     final device = await getDeviceInfoSafe();
-    print("saveHighScoreToFirebase: userId: $userId, $device");
-    if (userId != null) {
-      await db.child('leaderboard/$userId').set({
-        'high_score': score,
-        'platform': device['platform'],
-        'device': device['device'],
-        'os': device['os'],
+    final ref = FirebaseDatabase.instance.ref('leaderboard/$userId');
+
+    try {
+      await ref.runTransaction((current) {
+        final existing = current is Map ? current['high_score'] : null;
+        final existingScore = existing is int ? existing : 0;
+        if (value <= existingScore) {
+          return Transaction.abort();
+        }
+        return Transaction.success({
+          'high_score': value,
+          'platform': device['platform'],
+          'device': device['device'],
+          'os': device['os'],
+        });
       });
+    } catch (_) {
+      // A failed leaderboard write must never interrupt play; the next
+      // qualifying score will try again.
     }
   }
 
@@ -601,12 +634,6 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void _resetTileStates() {
-    tiles =
-        tiles
-            .map((tile) => tile.copyWith(isNew: false, justMerged: false))
-            .toList();
-  }
 
   List<Tile> getTiles() => tiles;
 
@@ -759,146 +786,184 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void moveLeft(BuildContext context, AppLocalizations appLocales) {
-    logMove("left");
-    updateHistory(context, appLocales);
-    lastMoveOffset = const Offset(-1, 0);
-    bool moved = false;
-    _resetTileStates();
+  // ---------------------------------------------------------------------------
+  // Movement
+  //
+  // All four directions run through one pipeline backed by the pure engine in
+  // `domain/engine/board.dart`. The engine reports where every tile started and
+  // finished, which is what lets tiles animate their real path. The previous
+  // implementation rebuilt the tile list by matching positions *after* the board
+  // had moved, so a travelling tile never matched itself and was recreated with
+  // no history — it animated a single cell no matter how far it actually went.
+  // ---------------------------------------------------------------------------
 
-    for (int y = 0; y < gridSize; y++) {
-      final row = board[y];
-      final originalRow = List<int>.from(row);
-      final newRow = _collapse(row, y: y, horizontal: true);
-      if (!_listsEqual(originalRow, newRow)) moved = true;
-      board[y] = newRow;
+  void moveLeft(BuildContext context, AppLocalizations appLocales) =>
+      _performMove(Direction.left, context, appLocales);
+
+  void moveRight(BuildContext context, AppLocalizations appLocales) =>
+      _performMove(Direction.right, context, appLocales);
+
+  void moveUp(BuildContext context, AppLocalizations appLocales) =>
+      _performMove(Direction.up, context, appLocales);
+
+  void moveDown(BuildContext context, AppLocalizations appLocales) =>
+      _performMove(Direction.down, context, appLocales);
+
+  static const Map<Direction, Offset> _moveOffsets = {
+    Direction.left: Offset(-1, 0),
+    Direction.right: Offset(1, 0),
+    Direction.up: Offset(0, -1),
+    Direction.down: Offset(0, 1),
+  };
+
+  void _performMove(
+    Direction direction,
+    BuildContext context,
+    AppLocalizations appLocales,
+  ) {
+    final result = applyMove(board, direction);
+
+    // A swipe into a wall must not consume a turn. The old code pushed undo
+    // history before testing this, so a no-op swipe silently ate an undo step.
+    if (!result.moved) {
+      _checkGameOver(context, appLocales);
+      return;
     }
 
-    if (moved) {
-      update();
+    logMove(direction.name);
+    _pushHistory();
+    lastMoveOffset = _moveOffsets[direction];
+
+    board = result.board;
+    if (mode != GameMode.zen) {
+      score += result.gained;
     }
+    totalMerges += result.merges.length;
+    totalMergeValue += result.gained;
+
+    // One sound per move, not one per merged pair: the old collapse loop fired
+    // inside the merge loop, so a four-way cascade stacked four overlapping
+    // plays of the same clip.
+    if (result.merges.isNotEmpty) {
+      _playMergeSound();
+    }
+
+    _rebuildTilesFrom(result);
+    _spawnTile();
+
+    unawaited(prefs.saveGame(score, gridSize, board));
+    _applyModeRules(context, appLocales);
+    _syncHighScore();
+    notifyListeners();
+    _checkGameOver(context, appLocales);
   }
 
-  void moveRight(BuildContext context, AppLocalizations appLocales) {
-    logMove("right");
-    updateHistory(context, appLocales);
-    lastMoveOffset = const Offset(1, 0);
-    bool moved = false;
-    _resetTileStates();
-
-    for (int y = 0; y < gridSize; y++) {
-      final row = board[y].reversed.toList();
-      final originalRow = List<int>.from(row);
-      final newRow = _collapse(row, y: y, horizontal: true, reversed: true);
-      if (!_listsEqual(originalRow, newRow.reversed.toList())) moved = true;
-      board[y] = newRow.reversed.toList();
-    }
-
-    if (moved) {
-      update();
-    }
+  /// Snapshots the pre-move state for undo.
+  void _pushHistory() {
+    _boardHistory.add(board.map((row) => List<int>.from(row)).toList());
+    _tileHistory.add(getOldTiles());
+    _scoreHistory.add(score);
+    totalMoves++;
   }
 
-  void moveUp(BuildContext context, AppLocalizations appLocales) {
-    logMove("up");
-    updateHistory(context, appLocales);
-    lastMoveOffset = const Offset(0, -1);
-    bool moved = false;
-    _resetTileStates();
-
-    for (int x = 0; x < gridSize; x++) {
-      final col = List.generate(gridSize, (y) => board[y][x]);
-      final originalCol = List<int>.from(col);
-      final newCol = _collapse(col, x: x, horizontal: false);
-      if (!_listsEqual(originalCol, newCol)) moved = true;
-      for (int y = 0; y < gridSize; y++) {
-        board[y][x] = newCol[y];
-      }
+  /// Rebuilds the tile list, carrying each tile's identity and origin across so
+  /// the widget layer can animate the true distance travelled.
+  void _rebuildTilesFrom(MoveResult result) {
+    final previousById = <String, Tile>{};
+    for (final tile in tiles) {
+      previousById['${tile.x},${tile.y}'] = tile;
     }
 
-    if (moved) {
-      update();
-    }
-  }
+    final rebuilt = <Tile>[];
+    for (var y = 0; y < gridSize; y++) {
+      for (var x = 0; x < gridSize; x++) {
+        final value = board[y][x];
+        if (value <= 0) continue;
 
-  void moveDown(BuildContext context, AppLocalizations appLocales) {
-    logMove("down");
-    updateHistory(context, appLocales);
-    lastMoveOffset = const Offset(0, 1);
-    bool moved = false;
-    _resetTileStates();
+        final origin = result.originOf(x, y);
+        final merged = result.merges.any((m) => m.x == x && m.y == y);
+        final source =
+            origin == null ? null : previousById['${origin.fromX},${origin.fromY}'];
 
-    for (int x = 0; x < gridSize; x++) {
-      final col = List.generate(gridSize, (y) => board[y][x]).reversed.toList();
-      final originalCol = List<int>.from(col);
-      var newCol = _collapse(col, x: x, horizontal: false, reversed: true);
-      if (!_listsEqual(originalCol, newCol.reversed.toList())) moved = true;
-      newCol = newCol.reversed.toList();
-      for (int y = 0; y < gridSize; y++) {
-        board[y][x] = newCol[y];
-      }
-    }
-
-    if (moved) {
-      update();
-    }
-  }
-
-  List<int> _collapse(
-    List<int> line, {
-    int? x,
-    int? y,
-    required bool horizontal,
-    bool reversed = false,
-  }) {
-    List<int> result = [];
-    List<int> newLine = line.where((x) => x != 0).toList();
-
-    int index = 0;
-    while (index < newLine.length) {
-      if (index + 1 < newLine.length && newLine[index] == newLine[index + 1]) {
-        final mergedValue = newLine[index] * 2;
-        score += mergedValue;
-        totalMerges++;
-        totalMergeValue += mergedValue;
-        _playMergeSound();
-        result.add(mergedValue);
-
-        final posX =
-            horizontal
-                ? (reversed ? (gridSize - result.length) : result.length - 1)
-                : x!;
-        final posY =
-            horizontal
-                ? y!
-                : (reversed ? (gridSize - result.length) : result.length - 1);
-
-        tiles.add(
+        rebuilt.add(
           Tile(
-            id: 'tile_${_tileIdCounter++}',
-            value: mergedValue,
-            x: posX,
-            y: posY,
-            justMerged: true,
-            mergeScore: mergedValue,
+            // A merged tile is a new object so its pop animation retriggers;
+            // a tile that merely slid keeps its id so Flutter reuses the widget
+            // and the movement tween runs instead of a rebuild.
+            id: merged || source == null
+                ? 'tile_${_tileIdCounter++}'
+                : source.id,
+            value: value,
+            x: x,
+            y: y,
+            isNew: false,
+            justMerged: merged,
+            mergeScore: merged ? value : null,
+            // Halving is exact here: a merge is always two equal tiles.
+            mergedFromValue: merged ? value ~/ 2 : null,
+            previousX: origin?.fromX ?? x,
+            previousY: origin?.fromY ?? y,
           ),
         );
-
-        index += 2;
-      } else {
-        result.add(newLine[index]);
-        index++;
       }
     }
-
-    while (result.length < gridSize) {
-      result.add(0);
-    }
-
-    return result;
+    tiles = rebuilt;
   }
 
-  bool _listsEqual(List<int> a, List<int> b) =>
-      a.length == b.length &&
-      List.generate(a.length, (i) => a[i] == b[i]).every((e) => e);
+  /// Adds the post-move tile(s) and appends them to the list, rather than
+  /// rebuilding it and losing every tile's origin.
+  void _spawnTile() {
+    final random = Random();
+    for (var i = 0; i < _spawnCount; i++) {
+      final empty = <Point<int>>[];
+      for (var y = 0; y < gridSize; y++) {
+        for (var x = 0; x < gridSize; x++) {
+          if (board[y][x] == 0) empty.add(Point(x, y));
+        }
+      }
+      if (empty.isEmpty) return;
+
+      final pos = empty[random.nextInt(empty.length)];
+      final value = random.nextDouble() < _fourSpawnChance ? 4 : 2;
+      board[pos.y][pos.x] = value;
+      tiles.add(
+        Tile(
+          id: 'tile_${_tileIdCounter++}',
+          value: value,
+          x: pos.x,
+          y: pos.y,
+          isNew: true,
+          justMerged: false,
+          previousX: pos.x,
+          previousY: pos.y,
+        ),
+      );
+    }
+  }
+
+  /// Hardcore applies real spawn pressure rather than just hiding undo.
+  int get _spawnCount => mode == GameMode.hardcore ? 2 : 1;
+
+  double get _fourSpawnChance => mode == GameMode.hardcore ? 0.7 : 0.1;
+
+  void _syncHighScore() {
+    if (score > highScore) {
+      highScore = score;
+      unawaited(prefs.saveHighScore(score));
+      saveHighScoreToFirebase(score);
+    }
+  }
+
+  void _checkGameOver(BuildContext context, AppLocalizations appLocales) {
+    if (mode == GameMode.zen) return; // Zen never ends.
+    if (gameOver.value) return; // Already handled; do not re-fire.
+    if (!isGameOver()) return;
+
+    if (soundEnabled) {
+      _audioPlayer.play(gameOverSound);
+    }
+    logGameOver();
+    _showGameOverDialog(context, appLocales);
+    gameOver.value = true;
+  }
 }

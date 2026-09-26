@@ -9,6 +9,11 @@ class Tile {
   final int? previousX;
   final int? previousY;
 
+  /// The value this tile held before merging, so the UI can animate the colour
+  /// change rather than snapping straight to the doubled tile's colour. Null
+  /// for tiles that did not merge this move.
+  final int? mergedFromValue;
+
   Tile({
     required this.id,
     required this.value,
@@ -19,6 +24,7 @@ class Tile {
     this.mergeScore,
     this.previousX,
     this.previousY,
+    this.mergedFromValue,
   });
 
   Tile copyWith({
@@ -32,6 +38,7 @@ class Tile {
     int? mergeScore,
     int? previousX,
     int? previousY,
+    int? mergedFromValue,
   }) {
     return Tile(
       id: id ?? this.id,
@@ -43,6 +50,7 @@ class Tile {
       mergeScore: mergeScore ?? this.mergeScore,
       previousX: previousX ?? this.previousX,
       previousY: previousY ?? this.previousY,
+      mergedFromValue: mergedFromValue ?? this.mergedFromValue,
     );
   }
 
