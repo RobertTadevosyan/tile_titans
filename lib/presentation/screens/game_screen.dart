@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/domain/direction.dart';
 import 'package:flutter_2048/domain/game_mode.dart';
@@ -32,6 +33,7 @@ class _GameScreenState extends State<GameScreen> {
   var isLoading = false;
   var isBannerAlreadyCreated = false;
   var bannerHeight = 0;
+  BannerAd? _banner;
 
 
   /// Guards against showing more than one interstitial per game over.
@@ -70,14 +72,57 @@ class _GameScreenState extends State<GameScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     final controller = context.read<GameController>();
     controller.cancelTimers(); //
+    // Release the native banner view; leaving it attached leaks a platform
+    // view every time the board is opened and closed.
+    _banner?.destroy();
     super.dispose();
   }
 
 
 
+  /// Loads the board banner.
+  ///
+  /// Mirrors the home screen: the slot is sized from the calculated ad size and
+  /// the AdWidget mounting drives the request. Calling loadAd() first throws
+  /// MissingPluginException, because this SDK only registers a banner's
+  /// platform channel once its widget is in the tree.
+  Future<void> _loadGameBanner() async {
+    if (!isMobile() || _banner != null) return;
+
+    final width = MediaQuery.sizeOf(context).width.toInt();
+    final size = BannerAdSize.sticky(width: width);
+    final calculated = await size.getCalculatedBannerAdSize();
+    if (!mounted) return;
+
+    final ad = BannerAd(
+      adUnitId: AdsConfig.getGameBannerID(),
+      adSize: size,
+      adRequest: adRequest,
+      onAdLoaded: () {},
+      onAdFailedToLoad: (_) {
+        if (!mounted) return;
+        setState(() {
+          bannerHeight = 0;
+          isBannerAlreadyCreated = false;
+        });
+      },
+      onAdClicked: () {},
+      onLeftApplication: () {},
+      onReturnedToApplication: () {},
+      onImpression: (_) {},
+    );
+
+    setState(() {
+      _banner = ad;
+      bannerHeight = calculated.height;
+      isBannerAlreadyCreated = true;
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _loadGameBanner();
     // No banner is requested here any more. The board carries no ad, so
     // loading one would request inventory that is never rendered — a wasted
     // fill and an impression nobody can see.
@@ -113,6 +158,10 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  /// Clear space between the controls and the ad, so a swipe that overshoots
+  /// the board does not land on the banner.
+  static const double _bannerGap = 12;
+
   @override
   Widget build(BuildContext context) {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
@@ -140,9 +189,14 @@ class _GameScreenState extends State<GameScreen> {
           },
           child: Stack(
             children: [
-              // This will stretch to fill space *above the banner*
+              // Content is inset by the banner's height plus a gap, so the ad
+              // never sits directly beneath the controls. The board is a
+              // swiping surface, and an ad flush against it invites mis-taps —
+              // the separation is what keeps the placement safe.
               Positioned.fill(
-                bottom: 0,
+                bottom: isBannerAlreadyCreated
+                    ? bannerHeight.toDouble() + _bannerGap
+                    : 0,
                 child: screenContent(
                   appLocales,
                   controller,
@@ -151,10 +205,19 @@ class _GameScreenState extends State<GameScreen> {
                   shortestSide,
                 ),
               ),
-              // No banner here by design: the board is the highest-attention
-              // surface in the app, and an ad under a puzzle grid invites
-              // mis-taps during play. Banners stay on Home, Leaderboard and
-              // Settings, which are low-attention pages.
+              if (isBannerAlreadyCreated && _banner != null)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: SafeArea(
+                    top: false,
+                    child: SizedBox(
+                      height: bannerHeight.toDouble(),
+                      child: AdWidget(bannerAd: _banner!),
+                    ),
+                  ),
+                ),
             ],
           ),
         );
