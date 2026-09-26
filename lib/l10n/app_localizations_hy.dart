@@ -330,4 +330,7 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get statsChapters => 'Գլուխներ';
+
+  @override
+  String get appThemeForge => 'Դարբնոց';
 }

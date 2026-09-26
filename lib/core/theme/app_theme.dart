@@ -1,6 +1,6 @@
 import 'package:flutter_2048/l10n/app_localizations.dart';
 
-enum AppTheme { Classic, Dark, Ocean, Retro, Neon }
+enum AppTheme { Classic, Dark, Ocean, Retro, Neon, Forge }
 
 String appThemeToString(AppTheme theme, AppLocalizations appLocales) {
   switch (theme) {
@@ -14,5 +14,7 @@ String appThemeToString(AppTheme theme, AppLocalizations appLocales) {
       return appLocales.appThemeRetro;
     case AppTheme.Neon:
       return appLocales.appThemeNeon;
+    case AppTheme.Forge:
+      return appLocales.appThemeForge;
   }
 }

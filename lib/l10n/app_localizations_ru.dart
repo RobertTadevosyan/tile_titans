@@ -330,4 +330,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get statsChapters => 'Главы';
+
+  @override
+  String get appThemeForge => 'Горн';
 }

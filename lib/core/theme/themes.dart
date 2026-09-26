@@ -11,7 +11,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF66BB6A), // App bar green
       foregroundColor: Colors.white,
-      elevation: 2,
+      elevation: 0,
     ),
   ),
   AppTheme.Dark: ThemeData(
@@ -23,7 +23,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey[900],
       foregroundColor: Colors.white,
-      elevation: 2,
+      elevation: 0,
     ),
   ),
   AppTheme.Ocean: ThemeData(
@@ -35,19 +35,21 @@ final Map<AppTheme, ThemeData> appThemeData = {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.blueAccent,
       foregroundColor: Colors.white,
-      elevation: 2,
+      elevation: 0,
     ),
   ),
   AppTheme.Retro: ThemeData(
     brightness: Brightness.light,
-    primaryColor: Colors.brown,
-    scaffoldBackgroundColor: Color(0xFFFAF3DD),
+    // Deliberately not the 2048 cream (0xFFFAF3DD) and tan board this used to
+    // be: that palette is the single most recognisable marker of a clone.
+    primaryColor: Color(0xFF9A6A3A),
+    scaffoldBackgroundColor: Color(0xFFF3EAE0),
     fontFamily: 'PressStart2P',
     textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.brown[900])),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.brown[700],
       foregroundColor: Colors.white,
-      elevation: 2,
+      elevation: 0,
     ),
   ),
   AppTheme.Neon: ThemeData(
@@ -59,12 +61,52 @@ final Map<AppTheme, ThemeData> appThemeData = {
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFFFF00FF), // Neon pink-purple
       foregroundColor: Colors.black,
-      elevation: 2,
+      elevation: 0,
+    ),
+  ),
+  AppTheme.Forge: ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: Color(0xFFE2703A), // ember
+    scaffoldBackgroundColor: Color(0xFF15181C), // cold iron
+    fontFamily: 'OpenSans',
+    colorScheme: const ColorScheme.dark(
+      primary: Color(0xFFE2703A),
+      surface: Color(0xFF15181C),
+      onSurface: Color(0xFFF2EDE7),
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Color(0xFFF2EDE7)),
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF15181C),
+      foregroundColor: Color(0xFFF2EDE7),
+      elevation: 0,
     ),
   ),
 };
 
 final Map<AppTheme, Map<int, Color>> tileColors = {
+  AppTheme.Forge: {
+    2: Color(0xFF2C3238),
+    4: Color(0xFF3A424A),
+    8: Color(0xFF4A545E),
+    16: Color(0xFF5E6B77),
+    32: Color(0xFF7A5C46),
+    64: Color(0xFF96633F),
+    128: Color(0xFFB06A34),
+    256: Color(0xFFC87A2E),
+    512: Color(0xFFDB8A27),
+    1024: Color(0xFFE99A22),
+    2048: Color(0xFFF4A91D),
+    4096: Color(0xFFFF7A2F),
+    8192: Color(0xFFFF5A2B),
+    16384: Color(0xFFE83F2A),
+    32768: Color(0xFFC62B28),
+    65536: Color(0xFF9E1F22),
+    131072: Color(0xFF75161B),
+    262144: Color(0xFF4E0F14),
+    524288: Color(0xFF2A080B),
+  },
   AppTheme.Classic: {
     2: Color(0xFFE8F5E9), // Very light mint
     4: Color(0xFFC8E6C9),

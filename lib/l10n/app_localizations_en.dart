@@ -330,4 +330,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsChapters => 'Chapters';
+
+  @override
+  String get appThemeForge => 'Forge';
 }
