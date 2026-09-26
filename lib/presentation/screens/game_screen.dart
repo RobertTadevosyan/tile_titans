@@ -37,6 +37,18 @@ class _GameScreenState extends State<GameScreen> {
   late final Future<InterstitialAdLoader> _adLoader;
   InterstitialAd? _ad;
 
+  /// Guards against showing more than one interstitial per game over.
+  ///
+  /// The game-over listener rebuilds for as long as `isOver` stays true, and
+  /// each rebuild scheduled another post-frame callback, so a single loss could
+  /// fire several ads back to back.
+  bool _interstitialShownThisGame = false;
+
+  /// Sessions are counted so the first few are ad-free, which is the single
+  /// biggest difference to a new player's first impression.
+  static const int _adFreeSessions = 2;
+  int _sessionCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +88,8 @@ class _GameScreenState extends State<GameScreen> {
 
   _showIntestitialAd() async {
     if (!isMobile()) return;
+    // Give new players a clean run of games before the first interstitial.
+    if (_sessionCount < _adFreeSessions) return;
     _ad?.setAdEventListener(
       eventListener: InterstitialAdEventListener(
         onAdShown: () {
@@ -234,10 +248,13 @@ class _GameScreenState extends State<GameScreen> {
         return ValueListenableBuilder<bool>(
           valueListenable: controller.gameOver,
           builder: (context, isOver, child) {
-            if (isOver) {
+            if (isOver && !_interstitialShownThisGame) {
+              _interstitialShownThisGame = true;
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _showIntestitialAd();
               });
+            } else if (!isOver) {
+              _interstitialShownThisGame = false;
             }
             return child!;
           },
@@ -245,7 +262,7 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               // This will stretch to fill space *above the banner*
               Positioned.fill(
-                bottom: isMobile() ? bannerHeight.toDouble() : 0,
+                bottom: 0,
                 child: screenContent(
                   appLocales,
                   controller,
@@ -254,15 +271,10 @@ class _GameScreenState extends State<GameScreen> {
                   shortestSide,
                 ),
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                      isBannerAlreadyCreated
-                          ? AdWidget(bannerAd: banner)
-                          : null,
-                ),
-              ),
+              // No banner here by design: the board is the highest-attention
+              // surface in the app, and an ad under a puzzle grid invites
+              // mis-taps during play. Banners stay on Home, Leaderboard and
+              // Settings, which are low-attention pages.
             ],
           ),
         );

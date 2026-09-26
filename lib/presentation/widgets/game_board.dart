@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/domain/engine/board.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/presentation/widgets/animated_tile.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class GameBoard extends StatelessWidget {
     final controller = Provider.of<GameController>(context);
     final tiles = controller.getTiles();
     final gridSize = controller.gridSize;
+    final board = controller.board;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -45,12 +47,13 @@ class GameBoard extends StatelessWidget {
                       top: y * tileSize,
                       width: tileSize,
                       height: tileSize,
-                      child: Container(
-                        margin: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                      child: _BackgroundCell(
+                        // A blocked cell must look solid rather than empty,
+                        // otherwise a trial's shape is invisible and the player
+                        // cannot tell why a tile will not slide there.
+                        blocked: y < board.length &&
+                            x < board[y].length &&
+                            board[y][x] == blockedCell,
                       ),
                     ),
 
@@ -71,6 +74,41 @@ class GameBoard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// An empty or blocked cell behind the tiles.
+class _BackgroundCell extends StatelessWidget {
+  final bool blocked;
+
+  const _BackgroundCell({required this.blocked});
+
+  @override
+  Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+    return Container(
+      margin: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: blocked
+            ? onSurface.withValues(alpha: 0.55)
+            : Colors.grey[300],
+        borderRadius: BorderRadius.circular(8),
+        border: blocked
+            ? Border.all(color: onSurface.withValues(alpha: 0.75), width: 2)
+            : null,
+      ),
+      child: blocked
+          ? Center(
+              child: Icon(
+                Icons.close_rounded,
+                size: 18,
+                // Blocked state is carried by shape as well as colour, so it
+                // does not rely on colour vision alone.
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            )
+          : null,
     );
   }
 }

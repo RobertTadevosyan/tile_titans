@@ -10,6 +10,9 @@ import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:flutter_2048/presentation/screens/game_screen.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
 import 'package:flutter_2048/presentation/screens/settings_screen.dart';
+import 'package:flutter_2048/presentation/screens/stats_screen.dart';
+import 'package:flutter_2048/presentation/screens/trial_screen.dart';
+import 'package:flutter_2048/presentation/screens/trials_screen.dart';
 import 'package:flutter_2048/presentation/widgets/titan_emblem.dart';
 import 'package:provider/provider.dart';
 
@@ -201,7 +204,11 @@ class _DailyTrialCard extends StatelessWidget {
     final streak = progress.dailyStreak;
 
     return TitanCard(
-      onTap: () => _notYetPlayable(context, l10n.homeDailyTrial),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => TrialScreen(trial: trial, isDaily: true),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -347,7 +354,9 @@ class _TrialsCard extends StatelessWidget {
     final done = progress.trialsCompleted;
 
     return TitanCard(
-      onTap: () => _notYetPlayable(context, l10n.homeTitanTrials),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const TrialsScreen()),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -450,7 +459,9 @@ class _SecondaryRow extends StatelessWidget {
               vertical: TitanSpacing.md,
               horizontal: TitanSpacing.md,
             ),
-            onTap: () => _notYetPlayable(context, l10n.statistics),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const StatsScreen()),
+            ),
             child: _IconLabel(
               icon: Icons.insights_rounded,
               label: l10n.statistics,
@@ -536,16 +547,3 @@ void _startMode(BuildContext context, RuleSet rules) {
   );
 }
 
-/// Placeholder for destinations whose runners are not built yet.
-///
-/// Deliberately explicit rather than a dead tap: an unresponsive card reads as
-/// a bug, and these routes are the next thing being built.
-void _notYetPlayable(BuildContext context, String what) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('$what — coming in the next build'),
-      behavior: SnackBarBehavior.floating,
-      duration: const Duration(seconds: 2),
-    ),
-  );
-}

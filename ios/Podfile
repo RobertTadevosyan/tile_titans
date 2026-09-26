@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '13.0'
+platform :ios, '15.0'
 
 # Disable CocoaPods I/O-paths optimization so Flutter’s headers stay put
 install! 'cocoapods', :disable_input_output_paths => true
@@ -42,5 +42,15 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    # Several transitive pods still declare a deployment target of 12.0/13.0.
+    # Current Xcode refuses to build anything below 15.0 for the simulator, so
+    # without this the project cannot be built or submitted at all.
+    target.build_configurations.each do |config|
+      current = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      if current.nil? || current.to_f < 15.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      end
+    end
   end
 end
