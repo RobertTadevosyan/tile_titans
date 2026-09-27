@@ -35,9 +35,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
   }
 
-
-
-
   void _scrollToUser() {
     if (!_scrollController.hasClients) return;
     final index = leaderboardEntries.indexWhere(
@@ -71,8 +68,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         contextQuery: 'puzzle, games, mobile apps, games',
       );
       _loadBanner(); // Your existing banner loading method
-    } else {
-    }
+    } else {}
   }
 
   Future<void> _loadBanner() async {
@@ -145,8 +141,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       entries.add(LeaderboardEntry.fromMap(key as String, row));
     });
 
-    leaderboardEntries = entries
-      ..sort((a, b) => b.score.compareTo(a.score));
+    leaderboardEntries = entries..sort((a, b) => b.score.compareTo(a.score));
     return leaderboardEntries;
   }
 
@@ -239,31 +234,40 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
   Widget _buildBoard(AppLocalizations appLocales, bool isTablet) {
     return FutureBuilder<List<LeaderboardEntry>>(
-        // Keyed on the board so switching modes refetches.
-        key: ValueKey(boardMode),
-        future: fetchLeaderboard(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text(
-                appLocales.noScore,
-                style: TextStyle(fontSize: isTablet ? 32 : 16),
-              ),
-            );
-          }
+      // Keyed on the board so switching modes refetches.
+      key: ValueKey(boardMode),
+      future: fetchLeaderboard(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Text(
+              appLocales.noScore,
+              style: TextStyle(fontSize: isTablet ? 32 : 16),
+            ),
+          );
+        }
 
-          final entries = snapshot.data!;
+        final entries = snapshot.data!;
 
-          if (isTablet) {
-            // Use DataTable for tablets
-            final columnTextStyle = TextStyle(fontSize: 22);
-            final cellTextStyle = TextStyle(fontSize: 20);
-            return SingleChildScrollView(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              controller: _scrollController,
-              scrollDirection: Axis.vertical,
+        if (isTablet) {
+          // Use DataTable for tablets
+          final columnTextStyle = TextStyle(fontSize: 22);
+          final cellTextStyle = TextStyle(fontSize: 20);
+          // A DataTable sizes itself to its widest cell, and this one sat in
+          // a vertically-scrolling view only. Device names are arbitrary
+          // strings — "Cuttlefish arm64 phone 64-bit only" is a real row —
+          // so the table grew past the viewport and overflowed with no way
+          // to reach the rest. Long cells are capped below, and the
+          // horizontal scroll is the safety net for whatever a future device
+          // calls itself.
+          return SingleChildScrollView(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            controller: _scrollController,
+            scrollDirection: Axis.vertical,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: DataTable(
-                columnSpacing: 54,
+                columnSpacing: 32,
                 columns: [
                   DataColumn(
                     label: Text(appLocales.rank, style: columnTextStyle),
@@ -290,14 +294,34 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       return entry.userId == currentUserUid
                           ? Theme.of(
                             context,
-                          ).colorScheme.secondary.withOpacity(0.2)
+                          ).colorScheme.secondary.withValues(alpha: 0.2)
                           : null;
                     }),
                     cells: [
                       DataCell(Text('#${index + 1}', style: cellTextStyle)),
                       DataCell(Text('${entry.score}', style: cellTextStyle)),
-                      DataCell(Text(entry.platform, style: cellTextStyle)),
-                      DataCell(Text(entry.device, style: cellTextStyle)),
+                      DataCell(
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 160),
+                          child: Text(
+                            entry.platform,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: cellTextStyle,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 260),
+                          child: Text(
+                            entry.device,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: cellTextStyle,
+                          ),
+                        ),
+                      ),
                       DataCell(
                         Text(
                           entry.userId.substring(0, 6),
@@ -308,37 +332,38 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   );
                 }),
               ),
-            );
-          } else {
-            // Use ListView for phones
-            return ListView.separated(
-              controller: _scrollController,
-              itemCount: entries.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final entry = entries[index];
-                return Container(
-                  height: itemHeight,
-                  color:
-                      entry.userId == currentUserUid
-                          ? Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.2)
-                          : Colors.transparent,
-                  child: ListTile(
-                    leading: Text(
-                      '#${index + 1}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    title: Text(appLocales.points(entry.score)),
-                    subtitle: Text('${entry.platform} • ${entry.device}'),
-                    trailing: Text(entry.userId.substring(0, 6)),
+            ),
+          );
+        } else {
+          // Use ListView for phones
+          return ListView.separated(
+            controller: _scrollController,
+            itemCount: entries.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final entry = entries[index];
+              return Container(
+                height: itemHeight,
+                color:
+                    entry.userId == currentUserUid
+                        ? Theme.of(
+                          context,
+                        ).colorScheme.secondary.withValues(alpha: 0.2)
+                        : Colors.transparent,
+                child: ListTile(
+                  leading: Text(
+                    '#${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                );
-              },
-            );
-          }
-        },
-      );
+                  title: Text(appLocales.points(entry.score)),
+                  subtitle: Text('${entry.platform} • ${entry.device}'),
+                  trailing: Text(entry.userId.substring(0, 6)),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 }

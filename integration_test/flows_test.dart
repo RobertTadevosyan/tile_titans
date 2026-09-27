@@ -24,6 +24,13 @@ void main() {
   }
 
   Future<void> boot(WidgetTester tester) async {
+    // main() installs Crashlytics as FlutterError.onError. Inside a test that
+    // replaces the harness's own handler, and the framework then trips
+    // '_pendingExceptionDetails != null' instead of reporting what actually
+    // happened — which is how an iPad run reported a failure with no exception
+    // and no overflow anywhere in the log. The handler is put back so errors
+    // reach takeException() and are attributed to the test that caused them.
+    final harnessOnError = FlutterError.onError;
     app.main();
     // The home screen waits on Firebase, stored preferences and an ad request,
     // none of which settle, so pumpAndSettle would time out.
@@ -31,6 +38,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 250));
       if (find.byIcon(Icons.settings_rounded).evaluate().isNotEmpty) break;
     }
+    FlutterError.onError = harnessOnError;
     await settle(tester);
   }
 
