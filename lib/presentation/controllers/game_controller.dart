@@ -245,10 +245,28 @@ class GameController extends ChangeNotifier {
 
   final Set<Point<int>> _lockedTiles = {};
 
+  /// Signs in anonymously so scores can be attributed to a stable id.
+  ///
+  /// Both callers fire this without awaiting it, so a throw here became an
+  /// unhandled async error: opening the app with no connectivity raised
+  /// `[firebase_auth/network-request-failed]` with nobody to catch it. Sign-in
+  /// is not something the player asked for and nothing on screen depends on it
+  /// — the game is fully playable offline — so a failure is recorded and the
+  /// app carries on. The next launch tries again.
   Future<void> signInAnonymously() async {
     final auth = FirebaseAuth.instance;
-    if (auth.currentUser == null) {
+    if (auth.currentUser != null) return;
+    try {
       await auth.signInAnonymously();
+    } catch (error, stack) {
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          error,
+          stack,
+          reason: 'anonymous sign-in failed',
+          fatal: false,
+        ),
+      );
     }
   }
 
