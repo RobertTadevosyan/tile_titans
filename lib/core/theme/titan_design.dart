@@ -410,15 +410,22 @@ class TitanMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Most values are short numbers, but a few are words — the favourite mode,
+    // for one. At the numeral size a translated mode name does not fit on one
+    // line, and "Contre-la-montre" was displayed as "Contre-la-m…". A wordy
+    // value gets a smaller face and a second line instead of being cut.
+    final wordy = value.length > 7;
+    final style = TitanText.metric(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           value,
-          maxLines: 1,
+          maxLines: wordy ? 2 : 1,
           overflow: TextOverflow.ellipsis,
-          style: TitanText.metric(context),
+          style: wordy ? style.copyWith(fontSize: 15, height: 1.15) : style,
         ),
         const SizedBox(height: TitanSpacing.xs),
         Text(

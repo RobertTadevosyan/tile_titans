@@ -159,6 +159,11 @@ class _ModeCard extends StatelessWidget {
             Text(l10n.statsNotPlayed, style: TitanText.cardBody(context))
           else
             Row(
+              // Metrics whose labels wrap to two lines are taller than the
+              // rest, and a centred row then hangs them at different heights —
+              // "Score moyen" sat low enough against "Partie la plus longue"
+              // to read as overlapping text. They line up from the top.
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (scored)
                   Expanded(
