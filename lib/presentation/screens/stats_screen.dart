@@ -158,40 +158,60 @@ class _ModeCard extends StatelessWidget {
           if (stats.isEmpty)
             Text(l10n.statsNotPlayed, style: TitanText.cardBody(context))
           else
-            Row(
-              // Metrics whose labels wrap to two lines are taller than the
-              // rest, and a centred row then hangs them at different heights —
-              // "Score moyen" sat low enough against "Partie la plus longue"
-              // to read as overlapping text. They line up from the top.
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (scored)
-                  Expanded(
-                    child: TitanMetric(
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final metrics = <Widget>[
+                  if (scored)
+                    TitanMetric(
                       label: l10n.statBestScore,
                       value: titanCompact(stats.bestScore),
                     ),
-                  ),
-                Expanded(
-                  child: TitanMetric(
+                  TitanMetric(
                     label: l10n.statHighestTile,
                     value: '${stats.highestTile}',
                   ),
-                ),
-                Expanded(
-                  child: TitanMetric(
+                  TitanMetric(
                     label: l10n.statLongestGame,
                     value: '${stats.longestGameMoves}',
                   ),
-                ),
-                if (scored)
-                  Expanded(
-                    child: TitanMetric(
+                  if (scored)
+                    TitanMetric(
                       label: l10n.statAverageScore,
                       value: titanCompact(stats.averageScore),
                     ),
-                  ),
-              ],
+                ];
+
+                // Four columns inside a card leave about 75dp each on a phone.
+                // English fits; "Partie la plus longue" does not, and adjacent
+                // labels ran into each other with no gap between them. Two
+                // columns on a narrow card, four when there is room.
+                final columns = constraints.maxWidth >= 420 ? 4 : 2;
+                const gap = TitanSpacing.md;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var i = 0; i < metrics.length; i += columns) ...[
+                      if (i > 0) const SizedBox(height: gap),
+                      Row(
+                        // A label that wraps to two lines is taller than its
+                        // neighbours, and a centred row hangs them at
+                        // different heights — close enough to read as
+                        // overlapping text.
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var j = i;
+                              j < i + columns && j < metrics.length;
+                              j++) ...[
+                            if (j > i) const SizedBox(width: gap),
+                            Expanded(child: metrics[j]),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ],
+                );
+              },
             ),
         ],
       ),

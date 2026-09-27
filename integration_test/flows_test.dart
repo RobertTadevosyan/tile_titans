@@ -52,7 +52,12 @@ void main() {
     expect(find.byType(Scaffold), findsWidgets,
         reason: '$name opened to nothing');
 
-    final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+    // Pop the root navigator: the screens nest their own, and popping the
+    // innermost one leaves the walk stranded on the screen it just opened.
+    final nav = Navigator.of(
+      tester.element(find.byType(Scaffold).last),
+      rootNavigator: true,
+    );
     if (nav.canPop()) nav.pop();
     await settle(tester);
     expect(tester.takeException(), isNull,
@@ -73,13 +78,13 @@ void main() {
     await visit(tester, Icons.spa_rounded, 'Zen');
     await visit(tester, Icons.timer_rounded, 'Time Attack');
     await visit(tester, Icons.whatshot_rounded, 'Hardcore');
-  });
+  }, timeout: const Timeout(Duration(minutes: 3)));
 
   testWidgets('the daily trial and the trial list open', (tester) async {
     await boot(tester);
     await visit(tester, Icons.local_fire_department_rounded, 'Daily Trial');
     await visit(tester, Icons.chevron_right_rounded, 'Titan Trials');
-  });
+  }, timeout: const Timeout(Duration(minutes: 2)));
 
   testWidgets('leaderboard, statistics and settings all open', (tester) async {
     await boot(tester);
@@ -89,10 +94,10 @@ void main() {
     await visit(tester, Icons.emoji_events_rounded, 'Leaderboard');
     await visit(tester, Icons.insights_rounded, 'Statistics');
     await visit(tester, Icons.settings_rounded, 'Settings');
-  });
+  }, timeout: const Timeout(Duration(minutes: 3)));
 
   testWidgets('resuming the saved run opens the board', (tester) async {
     await boot(tester);
     await visit(tester, Icons.play_arrow_rounded, 'Continue');
-  });
+  }, timeout: const Timeout(Duration(minutes: 2)));
 }
