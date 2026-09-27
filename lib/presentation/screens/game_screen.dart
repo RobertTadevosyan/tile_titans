@@ -485,7 +485,7 @@ class _GameScreenState extends State<GameScreen> {
                   isLandscape: false,
                   isTablet: false,
                 ),
-              if (controller.mode == GameMode.timed)
+              if (controller.isTimed)
                 buildTimer(appLocales, controller, context, false),
               const SizedBox(height: 16),
               const GameBoard(
@@ -560,7 +560,7 @@ class _GameScreenState extends State<GameScreen> {
                           isTablet: false,
                           isLandscape: true,
                         ),
-                      if (controller.mode == GameMode.timed)
+                      if (controller.isTimed)
                         buildTimer(appLocales, controller, context, false),
                       const SizedBox(height: 8),
                       buildActionButtonsPhoneLandscape(
@@ -682,7 +682,7 @@ class _GameScreenState extends State<GameScreen> {
                       score: controller.score,
                       highestScore: controller.sessionBestScore,
                     ),
-                  if (controller.mode == GameMode.timed)
+                  if (controller.isTimed)
                     buildTimer(appLocales, controller, context, true),
                   const SizedBox(height: 16),
                   GameBoard(
@@ -725,7 +725,9 @@ class _GameScreenState extends State<GameScreen> {
     BuildContext context,
     bool isTablet,
   ) {
-    final percent = controller.timeLeft / 60;
+    // Merges add seconds, so the bar can be asked to show more than full.
+    final percent =
+        (controller.timeLeft / controller.timeLimitSeconds).clamp(0.0, 1.0);
     return Column(
       children: [
         LinearProgressIndicator(

@@ -53,7 +53,17 @@ class GameController extends ChangeNotifier {
   GameMode mode = GameMode.normal;
   Timer? _timer;
   int timeLeft = 60; // for timed mode
-  bool get isTimed => mode == GameMode.timed;
+  /// Whether this session is against a clock.
+  ///
+  /// The legacy [GameMode] enum and the newer [RuleSet] both describe a timed
+  /// game, and the home screen sets only the rules. Gating on the enum alone
+  /// meant Time Attack started from the home screen had no countdown, never
+  /// ran out, and never finished — so it recorded no statistics and its
+  /// leaderboard could not fill no matter what the publishing code did.
+  bool get isTimed => mode == GameMode.timed || rules.timeLimit != null;
+
+  /// How long a timed session starts with.
+  int get timeLimitSeconds => rules.timeLimit ?? 60;
 
   AIDifficulty aiDifficulty = AIDifficulty.smart;
 
@@ -389,7 +399,7 @@ class GameController extends ChangeNotifier {
   }
 
   void _applyModeRules(BuildContext context, AppLocalizations appLocales) {
-    if (mode == GameMode.timed) {
+    if (isTimed) {
       _startTimer(context, appLocales);
     }
 
@@ -454,7 +464,7 @@ class GameController extends ChangeNotifier {
       return;
     }
     _timer?.cancel();
-    timeLeft = 60;
+    timeLeft = timeLimitSeconds;
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       timeLeft--;
@@ -696,6 +706,10 @@ class GameController extends ChangeNotifier {
     if (dialogShown) return;
     dialogShown = true;
     _timer?.cancel();
+    // A timed run ends here rather than through _checkGameOver, so without
+    // this it was the one finished game that never reached the statistics.
+    logGameOver();
+    _recordFinishedGame();
     showDialog(
       context: context,
       barrierDismissible: false,
