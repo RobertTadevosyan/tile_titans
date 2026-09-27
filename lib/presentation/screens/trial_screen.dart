@@ -82,8 +82,17 @@ class _TrialScreenState extends State<TrialScreen> {
   @override
   void dispose() {
     _clock?.cancel();
-    // Hand the board back to the player's own settings.
-    _controller?.exitTrial();
+    // Hand the board back to the player's own settings, but not from inside
+    // dispose: exitTrial notifies its listeners, and the widget tree is locked
+    // while a route is being torn down — "setState() or markNeedsBuild()
+    // called when widget tree was locked". Deferring by a frame lets the
+    // teardown finish first.
+    final controller = _controller;
+    if (controller != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.exitTrial();
+      });
+    }
     super.dispose();
   }
 

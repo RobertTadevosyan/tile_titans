@@ -26,7 +26,18 @@ class GameBoard extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final boardSize = constraints.maxWidth.clamp(minSize, maxSize);
+        // The board is square, so it has to fit the shorter of the two axes.
+        // Sizing from width alone worked until the surrounding column ran out
+        // of room: on an iPhone SE the game screen overflowed by 148 pixels,
+        // because a 343-wide board was asked for on a screen that had less
+        // than that left over. Height is only considered when it is bounded —
+        // inside a scrolling parent it is not.
+        final available = constraints.maxHeight.isFinite
+            ? (constraints.maxWidth < constraints.maxHeight
+                ? constraints.maxWidth
+                : constraints.maxHeight)
+            : constraints.maxWidth;
+        final boardSize = available.clamp(minSize, maxSize);
         final tileSize = boardSize / gridSize;
 
         return Center(

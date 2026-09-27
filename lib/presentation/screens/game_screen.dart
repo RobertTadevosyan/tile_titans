@@ -513,11 +513,16 @@ class _GameScreenState extends State<GameScreen> {
               if (controller.isTimed)
                 buildTimer(appLocales, controller, context, false),
               const SizedBox(height: 16),
-              const GameBoard(
-                minSize: 300,
-                maxSize: 500,
-                isTablet: false,
-                isLandscape: false,
+              // Takes whatever height is left after the score, the controls
+              // and the banner, so a short screen shrinks the board instead of
+              // overflowing off the bottom of it.
+              const Expanded(
+                child: GameBoard(
+                  minSize: 220,
+                  maxSize: 500,
+                  isTablet: false,
+                  isLandscape: false,
+                ),
               ),
               const SizedBox(height: 16),
               buildActionButtons(
