@@ -199,35 +199,38 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   String boardMode = ModeKeys.classic;
 
   Future<List<LeaderboardEntry>> fetchLeaderboard() async {
-    final snapshot = await FirebaseDatabase.instance.ref('leaderboard').once();
-    final data = snapshot.snapshot.value as Map<dynamic, dynamic>?;
-    if (data == null) return [];
-
     final entries = <String, LeaderboardEntry>{};
 
-    // Scores used to be written flat as `leaderboard/<uid>`, before boards were
-    // split per mode. Those rows are indistinguishable from Classic play, so
-    // they are folded into the Classic board rather than discarded — otherwise
-    // every existing player would appear to have lost their ranking.
     if (boardMode == ModeKeys.classic) {
+      // Classic's ladder is the flat `leaderboard/<uid>` path, which is where
+      // every score went before boards were split per mode. Those rows are
+      // indistinguishable from Classic play, so they are the Classic board
+      // rather than being discarded — otherwise every existing player would
+      // appear to have lost their ranking.
+      final snapshot =
+          await FirebaseDatabase.instance.ref('leaderboard').get();
+      final data = snapshot.value as Map<dynamic, dynamic>?;
+      if (data == null) return [];
+
       data.forEach((key, value) {
         if (value is! Map) return;
-        if (!value.containsKey('high_score')) return; // a mode bucket, not a row
-        entries[key as String] =
-            LeaderboardEntry.fromMap(key, value);
+        // A mode bucket is a map of rows, not a row: it has no score of its own.
+        if (!value.containsKey('high_score')) return;
+        entries[key as String] = LeaderboardEntry.fromMap(key, value);
       });
-    }
+    } else {
+      // Read just this mode's bucket. Pulling the whole node to show one board
+      // meant downloading every Classic row — hundreds of them, and growing —
+      // only to filter them all out.
+      final snapshot =
+          await FirebaseDatabase.instance.ref('leaderboard/$boardMode').get();
+      final data = snapshot.value as Map<dynamic, dynamic>?;
+      if (data == null) return [];
 
-    final bucket = data[boardMode];
-    if (bucket is Map) {
-      bucket.forEach((key, value) {
+      data.forEach((key, value) {
         if (value is! Map) return;
-        final entry = LeaderboardEntry.fromMap(key as String, value);
-        final existing = entries[key];
-        // A player may hold both a legacy row and a new one; keep the better.
-        if (existing == null || entry.score > existing.score) {
-          entries[key] = entry;
-        }
+        if (!value.containsKey('high_score')) return;
+        entries[key as String] = LeaderboardEntry.fromMap(key, value);
       });
     }
 

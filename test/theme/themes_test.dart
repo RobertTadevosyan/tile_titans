@@ -80,12 +80,52 @@ void main() {
       return (lighter + 0.05) / (darker + 0.05);
     }
 
+    test('prominent cards avoid the muddy mid-luminance band', () {
+      // Dark text on a mid-tone accent scores well on paper and still looks
+      // washed out. Every prominent surface must land clearly dark or clearly
+      // light so its text reads as deliberate.
+      for (final theme in AppTheme.values) {
+        final surface = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final l = surface.computeLuminance();
+        final settled = l <= 0.24 || l >= 0.70;
+        expect(settled, isTrue,
+            reason: '${theme.name} prominent surface sits at '
+                '${l.toStringAsFixed(2)}, in the muddy middle');
+      }
+    });
+
+    test('prominent cards clear AA for body text in every theme', () {
+      // Retro's brown sat at 4.3:1 with white — readable-ish, under the floor.
+      for (final theme in AppTheme.values) {
+        final surface = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final ratio = titanContrastRatio(surface, titanForegroundOn(surface));
+        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
+            reason: '${theme.name} prominent card is only '
+                '${ratio.toStringAsFixed(1)}:1');
+      }
+    });
+
+    test('end-of-game dialogs are readable in every theme', () {
+      // These dialogs fill with the app bar colour. On Classic that was
+      // #66BB6A with the title white and the body text left to inherit a
+      // near-black onSurface — two answers in one dialog, the second unreadable.
+      for (final theme in AppTheme.values) {
+        final base = appThemeData[theme]!.appBarTheme.backgroundColor;
+        expect(base, isNotNull, reason: '${theme.name} has no app bar colour');
+        final surface = titanProminentSurface(base!);
+        final ratio = titanContrastRatio(surface, titanForegroundOn(surface));
+        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
+            reason: '${theme.name} dialog text is only '
+                '${ratio.toStringAsFixed(1)}:1');
+      }
+    });
+
     test('accent-filled cards get a readable foreground in every theme', () {
       // A prominent TitanCard is filled with the theme's primary colour. The
       // win overlay, rank card and Continue button all use one, and on Forge
       // the page's near-white onSurface was invisible against ember.
       for (final theme in AppTheme.values) {
-        final accent = appThemeData[theme]!.primaryColor;
+        final accent = titanProminentSurface(appThemeData[theme]!.primaryColor);
         final foreground = titanForegroundOn(accent);
         final ratio = contrastOf(accent, foreground);
         expect(ratio, greaterThan(3.5),
@@ -98,7 +138,7 @@ void main() {
       // The overlay's primary button inverts: it is filled with the card's
       // foreground colour, so its own label must contrast with that.
       for (final theme in AppTheme.values) {
-        final accent = appThemeData[theme]!.primaryColor;
+        final accent = titanProminentSurface(appThemeData[theme]!.primaryColor);
         final onCard = titanForegroundOn(accent);
         final onButton = titanForegroundOn(onCard);
         expect(contrastOf(onCard, onButton), greaterThan(3.5),

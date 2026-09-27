@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_2048/core/theme/titan_design.dart';
+import 'package:flutter_2048/presentation/models/leaderboard_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/domain/ai_difficultt.dart';
 import 'package:flutter_2048/domain/direction.dart';
@@ -268,7 +270,7 @@ class GameController extends ChangeNotifier {
     // Flush any debounced leaderboard write before shutting the timers down,
     // so a qualifying score earned in the last few seconds is not lost.
     if (_pendingHighScore > 0) {
-      _publishHighScore(_pendingHighScore);
+      _publishHighScore(_pendingHighScore, _pendingScoreMode);
     }
     _updateTimer?.cancel();
     _timer?.cancel();
@@ -284,22 +286,44 @@ class GameController extends ChangeNotifier {
   /// to overwrite a player's leaderboard entry with their current run.
   int _pendingHighScore = 0;
 
-  void saveHighScoreToFirebase(int value) {
+  /// Which board the pending score belongs to, captured with it.
+  ///
+  /// [_modeName] is derived from the live rules, so reading it when the
+  /// debounce fires would file the score under whatever mode the player had
+  /// switched to by then.
+  String _pendingScoreMode = ModeKeys.classic;
+
+  void saveHighScoreToFirebase(int value, {String? mode}) {
     if (value <= 0) return;
+    final board = mode ?? _modeName;
+
+    // A score for a different board must not be folded into the one waiting:
+    // flush it first, or switching modes inside the debounce window would post
+    // one mode's score to the other's ladder.
+    if (board != _pendingScoreMode && _pendingHighScore > 0) {
+      _updateTimer?.cancel();
+      _publishHighScore(_pendingHighScore, _pendingScoreMode);
+      _pendingHighScore = 0;
+    }
+
+    _pendingScoreMode = board;
     if (value > _pendingHighScore) _pendingHighScore = value;
 
     _updateTimer?.cancel();
     _updateTimer = Timer(const Duration(seconds: 5), () {
-      _publishHighScore(_pendingHighScore);
+      _publishHighScore(_pendingHighScore, _pendingScoreMode);
     });
   }
+
+  DatabaseReference _leaderboardRef(String mode, String userId) =>
+      FirebaseDatabase.instance.ref(leaderboardPathFor(mode, userId));
 
   /// Writes the leaderboard entry, never lowering an existing score.
   ///
   /// Uses a transaction rather than `set()` so a stale or smaller value can
   /// never clobber a bigger one — including from another device signed into the
   /// same account, which a plain write would silently lose.
-  Future<void> _publishHighScore(int value) async {
+  Future<void> _publishHighScore(int value, String mode) async {
     if (value <= 0) return;
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return;
@@ -308,9 +332,9 @@ class GameController extends ChangeNotifier {
 
     // One board per mode. A 5x5 Hardcore run and a 90-second Time Attack run
     // are not comparable with Classic, so ranking them together would produce
-    // a ladder that measures nothing.
-    final ref =
-        FirebaseDatabase.instance.ref('leaderboard/$_modeName/$userId');
+    // a ladder that measures nothing. The row keeps the same four fields on
+    // every board, so one reader and one model serve them all.
+    final ref = _leaderboardRef(mode, userId);
 
     try {
       await ref.runTransaction((current) {
@@ -677,26 +701,29 @@ class GameController extends ChangeNotifier {
       barrierDismissible: false,
       builder: (ctx) {
         final theme = Theme.of(ctx);
+        final dialogColors = titanDialogColors(ctx);
         return AlertDialog(
-          backgroundColor: theme.appBarTheme.backgroundColor,
+          backgroundColor: dialogColors.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           title: Text(
             appLocales.timeIsUp,
             style: theme.textTheme.titleLarge?.copyWith(
-              color: theme.appBarTheme.foregroundColor,
+              color: dialogColors.foreground,
             ),
           ),
           content: Text(
             appLocales.finalScore(score),
-            style: theme.textTheme.bodyLarge,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: dialogColors.foreground,
+            ),
           ),
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: dialogColors.foreground,
+                foregroundColor: dialogColors.surface,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 16,
@@ -716,13 +743,13 @@ class GameController extends ChangeNotifier {
               },
               child: Text(
                 appLocales.restart,
-                style: TextStyle(color: theme.appBarTheme.foregroundColor),
+                style: TextStyle(color: dialogColors.surface),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: dialogColors.foreground,
+                foregroundColor: dialogColors.surface,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 16,
@@ -743,7 +770,7 @@ class GameController extends ChangeNotifier {
               },
               child: Text(
                 appLocales.close,
-                style: TextStyle(color: theme.appBarTheme.foregroundColor),
+                style: TextStyle(color: dialogColors.surface),
               ),
             ),
           ],
@@ -787,7 +814,8 @@ class GameController extends ChangeNotifier {
 
   void _initialize() async {
     highScore = await prefs.loadHighScore();
-    saveHighScoreToFirebase(highScore);
+    // The stored figure predates per-mode boards, so it belongs to Classic.
+    saveHighScoreToFirebase(highScore, mode: ModeKeys.classic);
     soundEnabled = await prefs.getSoundEnabled();
 
     // Remember the player's own choice so a fixed-grid mode or trial can
@@ -956,22 +984,28 @@ class GameController extends ChangeNotifier {
       pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, _, __) {
         final theme = Theme.of(context);
+        final dialogColors = titanDialogColors(context);
         return ScaleTransition(
           scale: CurvedAnimation(parent: animation, curve: Curves.elasticOut),
           child: AlertDialog(
-            backgroundColor: theme.appBarTheme.backgroundColor,
+            backgroundColor: dialogColors.surface,
             title: Text(
               appLocales.gameOverTitle,
               style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.appBarTheme.foregroundColor,
+                color: dialogColors.foreground,
               ),
             ),
-            content: Text(appLocales.finalScore(score)),
+            content: Text(
+              appLocales.finalScore(score),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: dialogColors.foreground,
+              ),
+            ),
             actions: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  backgroundColor: dialogColors.foreground,
+                  foregroundColor: dialogColors.surface,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 16,
@@ -996,7 +1030,7 @@ class GameController extends ChangeNotifier {
                 },
                 child: Text(
                   appLocales.restart,
-                  style: TextStyle(color: theme.appBarTheme.foregroundColor),
+                  style: TextStyle(color: dialogColors.surface),
                 ),
               ),
             ],
@@ -1015,7 +1049,7 @@ class GameController extends ChangeNotifier {
     _updateTileList();
     if (score > highScore) {
       highScore = score;
-      await prefs.saveHighScore(score); // 👈 call here
+      await prefs.saveHighScore(score);
       saveHighScoreToFirebase(score);
     }
     notifyListeners();
@@ -1199,10 +1233,28 @@ class GameController extends ChangeNotifier {
     // Letting them set the high score would corrupt the leaderboard.
     if (isTrial) return;
     if (!rules.scored) return; // Zen keeps no score to promote.
+
+    // The global figure is still kept — settings shows it, and it is what the
+    // legacy Classic board was built from — but it must not gate publishing.
+    // It did, and that is why the Time Attack and Hardcore boards were empty:
+    // a player holding a 153,532 Classic record would have to beat it in a
+    // 90-second run before their first Time Attack score ever posted.
+    final previousGlobal = highScore;
     if (score > highScore) {
       highScore = score;
       unawaited(prefs.saveHighScore(score));
-      saveHighScoreToFirebase(score);
+    }
+
+    final mode = _modeName;
+    final modeBest = progressStore?.stats.forMode(mode).bestScore ?? 0;
+    // Classic shares the legacy ladder, so until it has per-mode statistics of
+    // its own it is measured against the global figure rather than zero —
+    // otherwise the first Classic run after updating would repost a low score.
+    final threshold =
+        mode == ModeKeys.classic && modeBest == 0 ? previousGlobal : modeBest;
+
+    if (score > threshold) {
+      saveHighScoreToFirebase(score, mode: mode);
     }
   }
 

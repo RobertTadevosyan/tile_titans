@@ -16,11 +16,81 @@ import 'package:flutter/material.dart';
 /// against black is (L + 0.05) / 0.05, equal at L ≈ 0.179.
 const double kContrastCrossover = 0.179;
 
+/// The fill and text colour for a dialog that is filled with the theme accent.
+///
+/// The end-of-game dialogs used the app bar colour as their background and then
+/// let the body text fall back to the page's `onSurface`. On Classic that put
+/// near-black body text on a mid green while the title above it was white —
+/// two different answers to the same question in one dialog. Both now come from
+/// here, so every theme gets one settled surface and one readable foreground.
+({Color surface, Color foreground}) titanDialogColors(BuildContext context) {
+  final theme = Theme.of(context);
+  final base =
+      theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
+  final surface = titanProminentSurface(base);
+  return (surface: surface, foreground: titanForegroundOn(surface));
+}
+
 /// A foreground colour guaranteed to be readable on [background].
 Color titanForegroundOn(Color background) =>
     background.computeLuminance() > kContrastCrossover
         ? const Color(0xFF14181C)
         : const Color(0xFFF7F4F0);
+
+/// The contrast ratio between two colours, as WCAG defines it.
+double titanContrastRatio(Color a, Color b) {
+  final la = a.computeLuminance();
+  final lb = b.computeLuminance();
+  final lighter = la > lb ? la : lb;
+  final darker = la > lb ? lb : la;
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/// The minimum contrast for body text, from WCAG AA.
+const double kMinBodyContrast = 4.5;
+
+/// The fill for a prominent card, pushed away from the muddy middle.
+///
+/// Maximising the contrast ratio alone is not enough. A mid-luminance accent —
+/// Classic's #81C784 sits near 0.47 — technically scores well against black,
+/// but dark text on a mid green reads washed out and cheap. Anything in that
+/// band is deepened until white text sits on it cleanly, which is both more
+/// readable and more deliberate-looking.
+///
+/// Then the result is pushed further from the crossover until it clears AA for
+/// body text. Retro's brown needed this: it was already dark enough to take
+/// white text and still only reached 4.3:1, which is under the floor.
+Color titanProminentSurface(Color accent) {
+  var surface = accent;
+  final luminance = accent.computeLuminance();
+
+  if (luminance > 0.22 && luminance < 0.72) {
+    // Darken toward a confident, saturated version of the same hue rather than
+    // desaturating it, so each theme keeps its identity.
+    final hsl = HSLColor.fromColor(accent);
+    surface = hsl
+        .withLightness((hsl.lightness * 0.45).clamp(0.12, 0.34))
+        .withSaturation((hsl.saturation * 1.15).clamp(0.0, 1.0))
+        .toColor();
+  }
+
+  // Move away from the crossover in whichever direction the text is already
+  // on, so each step adds contrast instead of cancelling it out.
+  final goesDarker = surface.computeLuminance() <= kContrastCrossover;
+  var guard = 0;
+  while (titanContrastRatio(surface, titanForegroundOn(surface)) <
+          kMinBodyContrast &&
+      guard < 40) {
+    guard++;
+    final hsl = HSLColor.fromColor(surface);
+    final step = goesDarker ? -0.02 : 0.02;
+    final next = (hsl.lightness + step).clamp(0.0, 1.0);
+    if (next == hsl.lightness) break; // Nowhere further to go.
+    surface = hsl.withLightness(next).toColor();
+  }
+
+  return surface;
+}
 
 class TitanSpacing {
   const TitanSpacing._();
@@ -208,7 +278,7 @@ class TitanCard extends StatelessWidget {
     final theme = Theme.of(context);
     final base = accent ?? theme.primaryColor;
     final surface = prominent
-        ? base
+        ? titanProminentSurface(base)
         : Color.alphaBlend(
             base.withValues(alpha: 0.1),
             theme.scaffoldBackgroundColor,

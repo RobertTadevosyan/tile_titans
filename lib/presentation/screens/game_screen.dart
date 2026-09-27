@@ -1,6 +1,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/config/interstitial_service.dart';
@@ -755,15 +756,19 @@ class _GameScreenState extends State<GameScreen> {
       context: context,
       builder: (ctx) {
         final theme = Theme.of(ctx);
+        // Consistent with the end-of-game dialogs: one settled surface and one
+        // foreground measured against it. This dialog was white text on the
+        // mid-green app bar colour, barely 2.2:1.
+        final dialogColors = titanDialogColors(ctx);
         return AlertDialog(
-          backgroundColor: theme.appBarTheme.backgroundColor,
+          backgroundColor: dialogColors.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           title: Text(
             appLocales.statistics,
             style: theme.textTheme.titleLarge?.copyWith(
-              color: theme.appBarTheme.foregroundColor,
+              color: dialogColors.foreground,
               fontSize: isTablet ? 32 : 22,
             ),
           ),
@@ -774,14 +779,14 @@ class _GameScreenState extends State<GameScreen> {
               Text(
                 appLocales.moves(controller.totalMoves),
                 style: TextStyle(
-                  color: theme.appBarTheme.foregroundColor,
+                  color: dialogColors.foreground,
                   fontSize: textSize,
                 ),
               ),
               Text(
                 appLocales.merges(controller.totalMerges),
                 style: TextStyle(
-                  color: theme.appBarTheme.foregroundColor,
+                  color: dialogColors.foreground,
                   fontSize: textSize,
                 ),
               ),
@@ -792,7 +797,7 @@ class _GameScreenState extends State<GameScreen> {
                       : (controller.totalMergeValue ~/ controller.totalMerges),
                 ),
                 style: TextStyle(
-                  color: theme.appBarTheme.foregroundColor,
+                  color: dialogColors.foreground,
                   fontSize: textSize,
                 ),
               ),
@@ -803,7 +808,7 @@ class _GameScreenState extends State<GameScreen> {
                       : (controller.totalMerges * 100 ~/ controller.totalMoves),
                 ),
                 style: TextStyle(
-                  color: theme.appBarTheme.foregroundColor,
+                  color: dialogColors.foreground,
                   fontSize: textSize,
                 ),
               ),
@@ -812,8 +817,8 @@ class _GameScreenState extends State<GameScreen> {
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: dialogColors.foreground,
+                foregroundColor: dialogColors.surface,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 16,
@@ -831,7 +836,7 @@ class _GameScreenState extends State<GameScreen> {
               },
               child: Text(
                 appLocales.close,
-                style: TextStyle(color: theme.appBarTheme.foregroundColor),
+                style: TextStyle(color: dialogColors.surface),
               ),
             ),
           ],
