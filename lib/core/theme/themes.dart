@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_theme.dart';
+import 'titan_design.dart';
 
 final Map<AppTheme, ThemeData> appThemeData = {
   AppTheme.Classic: ThemeData(
@@ -8,11 +9,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     scaffoldBackgroundColor: Color(0xFFF1F8E9), // Lightest green background
     fontFamily: 'Roboto',
     textTheme: const TextTheme(bodyLarge: TextStyle(color: Colors.black)),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF66BB6A), // App bar green
-      foregroundColor: Colors.white,
-      elevation: 0,
-    ),
+    appBarTheme: titanAppBar(const Color(0xFF66BB6A)),
   ),
   AppTheme.Dark: ThemeData(
     brightness: Brightness.dark,
@@ -20,11 +17,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     scaffoldBackgroundColor: Colors.black,
     fontFamily: 'Courier New',
     textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.white)),
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey[900],
-      foregroundColor: Colors.white,
-      elevation: 0,
-    ),
+    appBarTheme: titanAppBar(Colors.grey[900]!),
   ),
   AppTheme.Ocean: ThemeData(
     brightness: Brightness.light,
@@ -32,11 +25,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     scaffoldBackgroundColor: Colors.lightBlue[50],
     fontFamily: 'OpenSans',
     textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.blue[900])),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.blueAccent,
-      foregroundColor: Colors.white,
-      elevation: 0,
-    ),
+    appBarTheme: titanAppBar(Colors.blueAccent),
   ),
   AppTheme.Retro: ThemeData(
     brightness: Brightness.light,
@@ -46,11 +35,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     scaffoldBackgroundColor: Color(0xFFF3EAE0),
     fontFamily: 'PressStart2P',
     textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.brown[900])),
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.brown[700],
-      foregroundColor: Colors.white,
-      elevation: 0,
-    ),
+    appBarTheme: titanAppBar(Colors.brown[700]!),
   ),
   AppTheme.Neon: ThemeData(
     brightness: Brightness.dark,
@@ -58,11 +43,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     scaffoldBackgroundColor: Colors.black,
     fontFamily: 'Orbitron',
     textTheme: TextTheme(bodyLarge: TextStyle(color: Colors.pinkAccent)),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFFF00FF), // Neon pink-purple
-      foregroundColor: Colors.black,
-      elevation: 0,
-    ),
+    appBarTheme: titanAppBar(const Color(0xFFFF00FF)), // neon pink-purple
   ),
   AppTheme.Forge: ThemeData(
     brightness: Brightness.dark,
@@ -77,11 +58,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: Color(0xFFF2EDE7)),
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF15181C),
-      foregroundColor: Color(0xFFF2EDE7),
-      elevation: 0,
-    ),
+    appBarTheme: titanAppBar(const Color(0xFF15181C)),
   ),
 };
 

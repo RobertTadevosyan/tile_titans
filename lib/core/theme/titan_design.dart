@@ -33,6 +33,24 @@ Color titanMutedOn(Color surface, Color foreground) {
   return foreground;
 }
 
+/// An app bar whose title is guaranteed to be readable on it.
+///
+/// Every theme hardcoded its bar's foreground, and two of them chose a colour
+/// that does not survive contact with their own fill: Classic's white on
+/// #66BB6A measured 2.36:1 and Ocean's 3.32:1, on the title that sits at the
+/// top of every screen. The fill goes through the same rule as a prominent
+/// card, so a mid-tone bar is deepened out of the muddy band rather than being
+/// left readable-but-washed-out, and the title colour is measured against
+/// whatever the fill ends up being.
+AppBarTheme titanAppBar(Color background) {
+  final surface = titanProminentSurface(background);
+  return AppBarTheme(
+    backgroundColor: surface,
+    foregroundColor: titanForegroundOn(surface),
+    elevation: 0,
+  );
+}
+
 /// The fill and text colour for a dialog that is filled with the theme accent.
 ///
 /// The end-of-game dialogs used the app bar colour as their background and then

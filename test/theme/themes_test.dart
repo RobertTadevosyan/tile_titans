@@ -105,6 +105,20 @@ void main() {
       }
     });
 
+    test('the app bar title is readable in every theme', () {
+      // Each theme hardcoded its bar foreground and two of them picked one
+      // that loses against their own fill: Classic's white on #66BB6A was
+      // 2.36:1 and Ocean's 3.32:1 — on the title at the top of every screen.
+      for (final theme in AppTheme.values) {
+        final bar = appThemeData[theme]!.appBarTheme;
+        final ratio =
+            titanContrastRatio(bar.backgroundColor!, bar.foregroundColor!);
+        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
+            reason: '${theme.name} app bar title is only '
+                '${ratio.toStringAsFixed(2)}:1');
+      }
+    });
+
     test('end-of-game dialogs are readable in every theme', () {
       // These dialogs fill with the app bar colour. On Classic that was
       // #66BB6A with the title white and the body text left to inherit a
