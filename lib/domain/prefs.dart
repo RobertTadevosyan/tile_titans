@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/domain/game_settings.dart';
+import 'package:flutter_2048/core/theme/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs extends ChangeNotifier{
@@ -66,9 +67,15 @@ class Prefs extends ChangeNotifier{
     return GameSettings(gridSize: gridSize, scroe: score, board: board);
   }
 
+  /// The saved theme, or the app's default when the player has not chosen.
+  ///
+  /// The default is [kDefaultTheme] and is stated once, here and in
+  /// ThemeProvider, rather than being spelled out at each fallback — this
+  /// method quietly returning Classic is why setting the default elsewhere
+  /// appeared to do nothing.
   Future<String> getCurrentTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('theme') ?? AppTheme.Classic.name;
+    return prefs.getString('theme') ?? kDefaultTheme.name;
   }
 
   Future<void> setCurrentTheme(String themeName) async {
