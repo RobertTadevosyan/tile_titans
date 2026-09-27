@@ -11,21 +11,65 @@ void main() {
           'leaderboard/abc123');
     });
 
-    test('other modes get their own bucket', () {
+    test('other modes nest under the player, not in a top-level bucket', () {
+      // The security rules grant write access only to leaderboard/<own uid>.
+      // A top-level bucket such as leaderboard/timeAttack/<uid> is rejected
+      // with permission denied, and the failure is swallowed so that a broken
+      // leaderboard write never interrupts play — so it failed invisibly and
+      // the mode boards stayed empty.
       expect(leaderboardPathFor(ModeKeys.timeAttack, 'abc123'),
-          'leaderboard/timeAttack/abc123');
+          'leaderboard/abc123/modes/timeAttack');
       expect(leaderboardPathFor(ModeKeys.hardcore, 'abc123'),
-          'leaderboard/hardcore/abc123');
+          'leaderboard/abc123/modes/hardcore');
     });
 
-    test('no mode bucket can collide with a legacy uid row', () {
-      // A legacy row is `leaderboard/<uid>`; a bucket is `leaderboard/<mode>`.
-      // If a mode key ever looked like a uid the reader could not tell them
-      // apart, so the keys stay short and lower-camel.
-      for (final mode in [ModeKeys.timeAttack, ModeKeys.hardcore, ModeKeys.zen]) {
-        expect(mode.length, lessThan(20));
-        expect(RegExp(r'^[a-zA-Z]+$').hasMatch(mode), isTrue);
+    test('every write stays inside the branch the player owns', () {
+      for (final mode in ModeKeys.freePlay) {
+        expect(leaderboardPathFor(mode, 'abc123'), startsWith('leaderboard/abc123'));
       }
+    });
+  });
+
+  group('reading a board', () {
+    final node = {
+      'high_score': 153532,
+      'platform': 'Android',
+      'device': 'SM-S928B',
+      'os': 'Android 16',
+      'modes': {
+        'timeAttack': {
+          'high_score': 624,
+          'platform': 'Android',
+          'device': 'Mi A2',
+          'os': 'Android 12',
+        },
+      },
+    };
+
+    test('Classic reads the legacy top-level fields', () {
+      final row = leaderboardRowFor(ModeKeys.classic, node);
+      expect(row, isNotNull);
+      expect(LeaderboardEntry.fromMap('u', row!).score, 153532);
+    });
+
+    test('a mode reads its nested row', () {
+      final row = leaderboardRowFor(ModeKeys.timeAttack, node);
+      expect(row, isNotNull);
+      final entry = LeaderboardEntry.fromMap('u', row!);
+      expect(entry.score, 624);
+      // Same four fields on every board, so one model serves them all.
+      expect(entry.device, 'Mi A2');
+      expect(entry.platform, 'Android');
+    });
+
+    test('a player absent from a board is left off it', () {
+      expect(leaderboardRowFor(ModeKeys.hardcore, node), isNull);
+    });
+
+    test('a legacy-only player still appears on Classic', () {
+      final legacy = {'high_score': 900, 'platform': 'Web', 'device': 'Mac'};
+      expect(leaderboardRowFor(ModeKeys.classic, legacy), isNotNull);
+      expect(leaderboardRowFor(ModeKeys.timeAttack, legacy), isNull);
     });
   });
 

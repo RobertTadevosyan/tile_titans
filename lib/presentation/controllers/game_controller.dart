@@ -354,6 +354,10 @@ class GameController extends ChangeNotifier {
           return Transaction.abort();
         }
         return Transaction.success({
+          // Classic writes the player's whole node, which now also carries the
+          // other modes underneath it. Replacing the node outright would delete
+          // every per-mode score the moment a Classic record was beaten.
+          if (current is Map) ...current.cast<String, Object?>(),
           'high_score': value,
           'platform': device['platform'],
           'device': device['device'],
@@ -760,7 +764,11 @@ class GameController extends ChangeNotifier {
                 Navigator.of(ctx).pop();
               },
               child: Text(
-                appLocales.restart,
+                // The `restart` string is the bare glyph 🔄 in every locale,
+                // which is fine on the small on-board button but leaves a
+                // dialog's primary action unlabelled — and an emoji ignores
+                // the text colour, so it rendered at 2.1:1 on the button fill.
+                appLocales.restartGame,
                 style: TextStyle(color: dialogColors.surface),
               ),
             ),
@@ -1047,7 +1055,7 @@ class GameController extends ChangeNotifier {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  appLocales.restart,
+                  appLocales.restartGame,
                   style: TextStyle(color: dialogColors.surface),
                 ),
               ),

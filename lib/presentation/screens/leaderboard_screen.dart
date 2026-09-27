@@ -199,42 +199,22 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   String boardMode = ModeKeys.classic;
 
   Future<List<LeaderboardEntry>> fetchLeaderboard() async {
-    final entries = <String, LeaderboardEntry>{};
+    // One read serves every board. Each player's scores live under their own
+    // node — Classic at the top level, where hundreds of rows already sit from
+    // before boards were split, and the other modes nested beneath it.
+    final snapshot = await FirebaseDatabase.instance.ref('leaderboard').get();
+    final data = snapshot.value as Map<dynamic, dynamic>?;
+    if (data == null) return [];
 
-    if (boardMode == ModeKeys.classic) {
-      // Classic's ladder is the flat `leaderboard/<uid>` path, which is where
-      // every score went before boards were split per mode. Those rows are
-      // indistinguishable from Classic play, so they are the Classic board
-      // rather than being discarded — otherwise every existing player would
-      // appear to have lost their ranking.
-      final snapshot =
-          await FirebaseDatabase.instance.ref('leaderboard').get();
-      final data = snapshot.value as Map<dynamic, dynamic>?;
-      if (data == null) return [];
+    final entries = <LeaderboardEntry>[];
+    data.forEach((key, value) {
+      if (value is! Map) return;
+      final row = leaderboardRowFor(boardMode, value);
+      if (row == null) return; // no score on this board
+      entries.add(LeaderboardEntry.fromMap(key as String, row));
+    });
 
-      data.forEach((key, value) {
-        if (value is! Map) return;
-        // A mode bucket is a map of rows, not a row: it has no score of its own.
-        if (!value.containsKey('high_score')) return;
-        entries[key as String] = LeaderboardEntry.fromMap(key, value);
-      });
-    } else {
-      // Read just this mode's bucket. Pulling the whole node to show one board
-      // meant downloading every Classic row — hundreds of them, and growing —
-      // only to filter them all out.
-      final snapshot =
-          await FirebaseDatabase.instance.ref('leaderboard/$boardMode').get();
-      final data = snapshot.value as Map<dynamic, dynamic>?;
-      if (data == null) return [];
-
-      data.forEach((key, value) {
-        if (value is! Map) return;
-        if (!value.containsKey('high_score')) return;
-        entries[key as String] = LeaderboardEntry.fromMap(key, value);
-      });
-    }
-
-    leaderboardEntries = entries.values.toList()
+    leaderboardEntries = entries
       ..sort((a, b) => b.score.compareTo(a.score));
     return leaderboardEntries;
   }
