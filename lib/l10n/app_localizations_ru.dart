@@ -524,4 +524,12 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return 'Сыграйте $_temp0';
   }
+
+  @override
+  String trialName(String numeral) {
+    return 'Испытание $numeral';
+  }
+
+  @override
+  String get dailyTrialTitle => 'Ежедневное испытание титанов';
 }

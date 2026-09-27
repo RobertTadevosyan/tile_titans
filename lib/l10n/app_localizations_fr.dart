@@ -512,4 +512,12 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return 'Jouez $_temp0';
   }
+
+  @override
+  String trialName(String numeral) {
+    return 'Épreuve $numeral';
+  }
+
+  @override
+  String get dailyTrialTitle => 'Épreuve du Jour des Titans';
 }

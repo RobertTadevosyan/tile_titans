@@ -250,5 +250,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "trialName": "Trial {numeral}",
+  "@trialName": {
+    "placeholders": {
+      "numeral": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyTrialTitle": "Daily Titan Trial"
 }

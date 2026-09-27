@@ -178,7 +178,7 @@ class _TrialScreenState extends State<TrialScreen> {
       bottomNavigationBar: ScreenBanner(
         adUnitId: AdsConfig.getGameBannerID(),
       ),
-      appBar: AppBar(title: Text(trial.name)),
+      appBar: AppBar(title: Text(ContentStrings.trialName(l10n, trial))),
       body: SafeArea(
         child: Stack(
           children: [

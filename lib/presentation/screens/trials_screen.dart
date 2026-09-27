@@ -94,7 +94,8 @@ class _TrialTile extends StatelessWidget {
               ),
               const SizedBox(width: TitanSpacing.sm),
               Expanded(
-                child: Text(trial.name, style: TitanText.cardTitle(context)),
+                child: Text(ContentStrings.trialName(l10n, trial),
+                    style: TitanText.cardTitle(context)),
               ),
               if (done && record!.bestMoves > 0)
                 Text(

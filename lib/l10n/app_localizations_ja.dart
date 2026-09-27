@@ -476,4 +476,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String achDescGames(int count) {
     return '$count回プレイする';
   }
+
+  @override
+  String trialName(String numeral) {
+    return '試練 $numeral';
+  }
+
+  @override
+  String get dailyTrialTitle => 'デイリータイタン試練';
 }

@@ -180,5 +180,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "trialName": "Փորձություն {numeral}",
+  "@trialName": {
+    "placeholders": {
+      "numeral": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyTrialTitle": "Տիտանների օրական փորձություն"
 }

@@ -180,5 +180,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "trialName": "Prueba {numeral}",
+  "@trialName": {
+    "placeholders": {
+      "numeral": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyTrialTitle": "Prueba Diaria de Titanes"
 }

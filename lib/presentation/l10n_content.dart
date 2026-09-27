@@ -1,5 +1,6 @@
 import 'package:flutter_2048/content/trials.dart';
 import 'package:flutter_2048/domain/engine/objective.dart';
+import 'package:flutter_2048/domain/engine/trial.dart';
 import 'package:flutter_2048/domain/progress/achievements.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
 
@@ -54,6 +55,35 @@ class ContentStrings {
       default:
         return '';
     }
+  }
+
+  /// A trial's display name.
+  ///
+  /// Trials are authored as data and carry English names — "Trial IV" — which
+  /// were shown verbatim on every card and in every trial's app bar, in all
+  /// ten languages. The number is the only part that varies, so the name is
+  /// built from the trial's position rather than stored eighteen times per
+  /// language.
+  static String trialName(AppLocalizations l10n, Trial trial) {
+    final index = allTrials.indexWhere((t) => t.id == trial.id);
+    if (index < 0) return l10n.dailyTrialTitle; // the generated daily
+    return l10n.trialName(_roman(index + 1));
+  }
+
+  /// Roman numerals for 1..18, which is every trial there is.
+  static String _roman(int value) {
+    const numerals = <int, String>{
+      10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I',
+    };
+    final out = StringBuffer();
+    var left = value;
+    for (final entry in numerals.entries) {
+      while (left >= entry.key) {
+        out.write(entry.value);
+        left -= entry.key;
+      }
+    }
+    return out.toString();
   }
 
   /// An achievement's title, keyed on its stable id.
@@ -149,8 +179,4 @@ class ContentStrings {
         return rank.name;
     }
   }
-
-  /// Trial names stay as written — "Trial VII" is a Roman numeral and reads
-  /// the same in every language the app ships.
-  static String trialName(TrialChapter _, String name) => name;
 }

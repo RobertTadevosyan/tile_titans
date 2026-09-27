@@ -476,4 +476,12 @@ class AppLocalizationsHy extends AppLocalizations {
   String achDescGames(int count) {
     return 'Խաղացեք $count խաղ';
   }
+
+  @override
+  String trialName(String numeral) {
+    return 'Փորձություն $numeral';
+  }
+
+  @override
+  String get dailyTrialTitle => 'Տիտանների օրական փորձություն';
 }

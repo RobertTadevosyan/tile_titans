@@ -180,5 +180,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "trialName": "Prova {numeral}",
+  "@trialName": {
+    "placeholders": {
+      "numeral": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyTrialTitle": "Prova Diária dos Titãs"
 }

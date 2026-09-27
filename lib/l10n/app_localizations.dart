@@ -947,6 +947,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Play {count, plural, =1{1 game} other{{count} games}}'**
   String achDescGames(int count);
+
+  /// No description provided for @trialName.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial {numeral}'**
+  String trialName(String numeral);
+
+  /// No description provided for @dailyTrialTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Titan Trial'**
+  String get dailyTrialTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -180,5 +180,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "trialName": "試練 {numeral}",
+  "@trialName": {
+    "placeholders": {
+      "numeral": {
+        "type": "String"
+      }
+    }
+  },
+  "dailyTrialTitle": "デイリータイタン試練"
 }
