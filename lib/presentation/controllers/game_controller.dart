@@ -270,28 +270,46 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// Sends telemetry without letting it interrupt the game.
+  ///
+  /// These are Futures that nothing awaits, so a failure — which is what
+  /// happens whenever the device cannot reach Firebase — became an unhandled
+  /// async error. logMove runs on every swipe, so an offline session produced
+  /// one per move. Nothing the player does depends on the event arriving.
+  void _fire(Future<void> Function() call) {
+    unawaited(call().catchError((Object _) {}));
+  }
+
   void logMove(String direction) {
     totalMoves++;
-    String? id = FirebaseAuth.instance.currentUser?.uid;
-    analytics.setUserId(
-      id: id,
-      callOptions: AnalyticsCallOptions(global: true),
+    final id = FirebaseAuth.instance.currentUser?.uid;
+    _fire(
+      () => analytics.setUserId(
+        id: id,
+        callOptions: AnalyticsCallOptions(global: true),
+      ),
     );
-    analytics.logEvent(
-      name: 'move_tile',
-      parameters: {'direction': direction, 'score': score},
+    _fire(
+      () => analytics.logEvent(
+        name: 'move_tile',
+        parameters: {'direction': direction, 'score': score},
+      ),
     );
   }
 
   void logGameOver() {
-    String? id = FirebaseAuth.instance.currentUser?.uid;
-    analytics.setUserId(
-      id: id,
-      callOptions: AnalyticsCallOptions(global: true),
+    final id = FirebaseAuth.instance.currentUser?.uid;
+    _fire(
+      () => analytics.setUserId(
+        id: id,
+        callOptions: AnalyticsCallOptions(global: true),
+      ),
     );
-    analytics.logEvent(
-      name: 'game_over',
-      parameters: {'score': score, 'grid_size': gridSize},
+    _fire(
+      () => analytics.logEvent(
+        name: 'game_over',
+        parameters: {'score': score, 'grid_size': gridSize},
+      ),
     );
   }
 
