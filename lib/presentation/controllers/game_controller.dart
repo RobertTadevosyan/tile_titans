@@ -243,7 +243,6 @@ class GameController extends ChangeNotifier {
     return copy;
   }
 
-  final Set<Point<int>> _lockedTiles = {};
 
   /// Signs in anonymously so scores can be attributed to a stable id.
   ///
@@ -418,58 +417,19 @@ class GameController extends ChangeNotifier {
     }
   }
 
-  void _lockRandomTile() {
-    final unlocked = <Point<int>>[];
 
-    for (int y = 0; y < gridSize; y++) {
-      for (int x = 0; x < gridSize; x++) {
-        if (board[y][x] != 0 && !_lockedTiles.contains(Point(x, y))) {
-          unlocked.add(Point(x, y));
-        }
-      }
-    }
-
-    if (unlocked.isNotEmpty) {
-      _lockedTiles.add(unlocked[Random().nextInt(unlocked.length)]);
-    }
-  }
-
-  void _addEvilTile() {
-    if (score % 3 == 0) {
-      // every 3 moves?
-      final empty = <Point<int>>[];
-      for (int y = 0; y < gridSize; y++) {
-        for (int x = 0; x < gridSize; x++) {
-          if (board[y][x] == 0) empty.add(Point(x, y));
-        }
-      }
-      if (empty.isNotEmpty) {
-        final pos = empty[Random().nextInt(empty.length)];
-        board[pos.y][pos.x] = 1; // or 3
-      }
-    }
-  }
-
+  /// Rules that have to run after a move rather than being described by data.
+  ///
+  /// Only the clock is left. Zen's scoring and Hardcore's lack of undo are
+  /// properties of their RuleSet now, and the two modes that used to be
+  /// handled here — a locked tile and a hostile spawn — were removed: nothing
+  /// could start them, and neither worked. The lock was recorded in a set the
+  /// move logic never consulted, and the hostile spawn placed a 1 or a 3 on a
+  /// board where every tile is a power of two, so it could never merge with
+  /// anything.
   void _applyModeRules(BuildContext context, AppLocalizations appLocales) {
     if (isTimed) {
       _startTimer(context, appLocales);
-    }
-
-    if (mode == GameMode.challenge) {
-      _lockRandomTile();
-    }
-
-    if (mode == GameMode.evilAI) {
-      _addEvilTile();
-    }
-
-    if (mode == GameMode.hardcore) {
-      // No undo, disable it in UI
-    }
-
-    if (mode == GameMode.zen) {
-      score = 0;
-      // Disable score in UI
     }
   }
 
@@ -1121,19 +1081,6 @@ class GameController extends ChangeNotifier {
     );
   }
 
-  void update() async {
-    if (mode == GameMode.zen) {
-      score = 0;
-    }
-    _addRandomTile();
-    _updateTileList();
-    if (score > highScore) {
-      highScore = score;
-      await prefs.saveHighScore(score);
-      saveHighScoreToFirebase(score);
-    }
-    notifyListeners();
-  }
 
   // ---------------------------------------------------------------------------
   // Movement

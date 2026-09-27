@@ -109,10 +109,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get highScoreReset => '最高記録をリセット';
 
   @override
-  String get gameMode => 'ゲームモード';
-
-  @override
-  String get aiDifficulty => 'AIの強さ';
+  String get aiDifficulty => 'ヒントの方針';
 
   @override
   String get boardSize => '盤面サイズ';
@@ -133,22 +130,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get gameModeTimed => 'タイム';
 
   @override
-  String get gameModeChallenge => 'チャレンジ';
-
-  @override
-  String get gameModeEvilAI => 'イービルAI';
-
-  @override
   String get gameModeHardcore => 'ハードコア';
 
   @override
   String get gameModeZen => '禅';
 
   @override
-  String get aiDiffEasy => 'やさしい';
+  String get aiDiffEasy => '安全重視';
 
   @override
-  String get aiDiffSmart => 'かしこい';
+  String get aiDiffSmart => 'バランス';
 
   @override
   String get aiDiffAggressive => '攻撃的';
@@ -186,28 +177,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeContinue => 'つづきから';
 
   @override
-  String get homeNewGame => '新しいゲーム';
-
-  @override
-  String get homePlay => 'プレイ';
-
-  @override
   String get homeChooseChallenge => '挑戦を選ぶ';
 
   @override
   String get homeDailyTrial => 'デイリー試練';
 
   @override
-  String get homeTodaysChallenge => '今日の課題';
-
-  @override
   String get homeTitanTrials => 'タイタンの試練';
 
   @override
   String get homeHallOfTitans => 'タイタンの殿堂';
-
-  @override
-  String get homeGameModes => 'ゲームモード';
 
   @override
   String get homeBest => '最高';
@@ -269,9 +248,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get trialNoHints => 'ヒントなし';
 
   @override
-  String get trialLocked => 'ロック中';
-
-  @override
   String get trialObjective => '目標';
 
   @override
@@ -324,9 +300,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get statsDaily => 'デイリー';
-
-  @override
-  String get statsBestStreak => '連続';
 
   @override
   String get statsChapters => 'チャプター';

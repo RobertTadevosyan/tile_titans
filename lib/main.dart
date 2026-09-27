@@ -103,7 +103,7 @@ class _GameAppState extends State<GameApp> {
           theme:
               themeProvider.isInitialized
                   ? themeProvider.themeData
-                  : appThemeData[AppTheme.Classic],
+                  : appThemeData[kDefaultTheme],
           home: const HomeScreen(),
           navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
         );

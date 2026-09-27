@@ -109,10 +109,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get highScoreReset => 'Rekor sıfırlandı';
 
   @override
-  String get gameMode => 'Oyun modu';
-
-  @override
-  String get aiDifficulty => 'Yapay zekâ zorluğu';
+  String get aiDifficulty => 'İpucu tarzı';
 
   @override
   String get boardSize => 'Tahta boyutu';
@@ -133,22 +130,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gameModeTimed => 'Süreli';
 
   @override
-  String get gameModeChallenge => 'Meydan okuma';
-
-  @override
-  String get gameModeEvilAI => 'Kötü YZ';
-
-  @override
   String get gameModeHardcore => 'Zorlu';
 
   @override
   String get gameModeZen => 'Zen';
 
   @override
-  String get aiDiffEasy => 'Kolay';
+  String get aiDiffEasy => 'Temkinli';
 
   @override
-  String get aiDiffSmart => 'Akıllı';
+  String get aiDiffSmart => 'Dengeli';
 
   @override
   String get aiDiffAggressive => 'Saldırgan';
@@ -186,28 +177,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get homeContinue => 'Devam et';
 
   @override
-  String get homeNewGame => 'Yeni oyun';
-
-  @override
-  String get homePlay => 'Oyna';
-
-  @override
   String get homeChooseChallenge => 'Meydan okumanı seç';
 
   @override
   String get homeDailyTrial => 'Günlük sınav';
 
   @override
-  String get homeTodaysChallenge => 'Bugünün görevi';
-
-  @override
   String get homeTitanTrials => 'Titan Sınavları';
 
   @override
   String get homeHallOfTitans => 'Titanlar Salonu';
-
-  @override
-  String get homeGameModes => 'Oyun modları';
 
   @override
   String get homeBest => 'Rekor';
@@ -269,9 +248,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get trialNoHints => 'İpucu yok';
 
   @override
-  String get trialLocked => 'Kilitli';
-
-  @override
   String get trialObjective => 'Hedef';
 
   @override
@@ -324,9 +300,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get statsDaily => 'Günlük';
-
-  @override
-  String get statsBestStreak => 'Seri';
 
   @override
   String get statsChapters => 'Bölümler';

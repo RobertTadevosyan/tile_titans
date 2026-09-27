@@ -115,10 +115,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get highScoreReset => 'Recorde reposto';
 
   @override
-  String get gameMode => 'Modo de jogo';
-
-  @override
-  String get aiDifficulty => 'Dificuldade da IA';
+  String get aiDifficulty => 'Estilo das dicas';
 
   @override
   String get boardSize => 'Tamanho do tabuleiro';
@@ -139,25 +136,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get gameModeTimed => 'Cronometrado';
 
   @override
-  String get gameModeChallenge => 'Desafio';
-
-  @override
-  String get gameModeEvilAI => 'IA maligna';
-
-  @override
   String get gameModeHardcore => 'Extremo';
 
   @override
   String get gameModeZen => 'Zen';
 
   @override
-  String get aiDiffEasy => 'Fácil';
+  String get aiDiffEasy => 'Cauteloso';
 
   @override
-  String get aiDiffSmart => 'Inteligente';
+  String get aiDiffSmart => 'Equilibrado';
 
   @override
-  String get aiDiffAggressive => 'Agressiva';
+  String get aiDiffAggressive => 'Agressivo';
 
   @override
   String get appThemeClassic => 'Clássico';
@@ -192,28 +183,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get homeContinue => 'Continuar';
 
   @override
-  String get homeNewGame => 'Novo jogo';
-
-  @override
-  String get homePlay => 'Jogar';
-
-  @override
   String get homeChooseChallenge => 'Escolhe o teu desafio';
 
   @override
   String get homeDailyTrial => 'Prova diária';
 
   @override
-  String get homeTodaysChallenge => 'Desafio de hoje';
-
-  @override
   String get homeTitanTrials => 'Provas dos Titãs';
 
   @override
   String get homeHallOfTitans => 'Salão dos Titãs';
-
-  @override
-  String get homeGameModes => 'Modos de jogo';
 
   @override
   String get homeBest => 'Recorde';
@@ -275,9 +254,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get trialNoHints => 'Sem dicas';
 
   @override
-  String get trialLocked => 'Bloqueada';
-
-  @override
   String get trialObjective => 'Objetivo';
 
   @override
@@ -330,9 +306,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get statsDaily => 'Diária';
-
-  @override
-  String get statsBestStreak => 'Sequência';
 
   @override
   String get statsChapters => 'Capítulos';

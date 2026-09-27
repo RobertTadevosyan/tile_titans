@@ -115,10 +115,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get highScoreReset => 'Puntuación más alta restablecida';
 
   @override
-  String get gameMode => 'Modo de juego';
-
-  @override
-  String get aiDifficulty => 'Dificultad IA';
+  String get aiDifficulty => 'Estilo de pistas';
 
   @override
   String get boardSize => 'Tamaño del tablero';
@@ -139,22 +136,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gameModeTimed => 'Temporizado';
 
   @override
-  String get gameModeChallenge => 'Desafío';
-
-  @override
-  String get gameModeEvilAI => 'IA malvada';
-
-  @override
   String get gameModeHardcore => 'Extremo';
 
   @override
   String get gameModeZen => 'Zen';
 
   @override
-  String get aiDiffEasy => 'Fácil';
+  String get aiDiffEasy => 'Prudente';
 
   @override
-  String get aiDiffSmart => 'Inteligente';
+  String get aiDiffSmart => 'Equilibrado';
 
   @override
   String get aiDiffAggressive => 'Agresivo';
@@ -192,28 +183,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeContinue => 'Continuar';
 
   @override
-  String get homeNewGame => 'Partida nueva';
-
-  @override
-  String get homePlay => 'Jugar';
-
-  @override
   String get homeChooseChallenge => 'Elige tu desafío';
 
   @override
   String get homeDailyTrial => 'Prueba diaria';
 
   @override
-  String get homeTodaysChallenge => 'Desafío de hoy';
-
-  @override
   String get homeTitanTrials => 'Pruebas de Titán';
 
   @override
   String get homeHallOfTitans => 'Salón de los Titanes';
-
-  @override
-  String get homeGameModes => 'Modos de juego';
 
   @override
   String get homeBest => 'Mejor';
@@ -275,9 +254,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get trialNoHints => 'Sin pistas';
 
   @override
-  String get trialLocked => 'Bloqueado';
-
-  @override
   String get trialObjective => 'Objetivo';
 
   @override
@@ -330,9 +306,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statsDaily => 'Diarias';
-
-  @override
-  String get statsBestStreak => 'Racha';
 
   @override
   String get statsChapters => 'Capítulos';

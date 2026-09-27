@@ -3,10 +3,18 @@ import 'package:flutter_2048/domain/prefs.dart';
 import 'app_theme.dart';
 import 'themes.dart';
 
+/// The theme a player gets before they choose one.
+///
+/// Forge is the app's own palette — cold iron and ember — rather than the
+/// green a thousand other merge games open with. It is also the only theme
+/// designed for this app rather than inherited from the template it grew out
+/// of, so it is what the game should look like by default.
+const AppTheme kDefaultTheme = AppTheme.Forge;
+
 class ThemeProvider extends ChangeNotifier {
   late ThemeData themeData;
   bool isInitialized = false;
-  AppTheme currentTheme = AppTheme.Classic;
+  AppTheme currentTheme = kDefaultTheme;
 
   final Prefs prefs = Prefs();
 
@@ -18,7 +26,7 @@ class ThemeProvider extends ChangeNotifier {
     final saved = await prefs.getCurrentTheme(); // Async
     currentTheme = AppTheme.values.firstWhere(
       (theme) => theme.name == saved,
-      orElse: () => AppTheme.Classic,
+      orElse: () => kDefaultTheme,
     );
     themeData = appThemeData[currentTheme]!;
     isInitialized = true;

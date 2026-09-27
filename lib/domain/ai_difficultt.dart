@@ -1,9 +1,19 @@
 import 'package:flutter_2048/l10n/app_localizations.dart';
 
+/// How the hint button and auto-play pick their move.
+///
+/// Named for an AI opponent that does not exist: this tunes the assistance
+/// the player asks for, not a rival. The settings label used to promise
+/// "AI Difficulty", which is why it needed saying twice.
 enum AIDifficulty {
-  easy, // Choose move with most empty tiles
-  smart, // Balance empty + merge potential
-  aggressive, // Prioritize merges/score
+  /// Keeps the board open; the safe suggestion.
+  easy,
+
+  /// Weighs open space against merge potential.
+  smart,
+
+  /// Chases merges and score over safety.
+  aggressive,
 }
 
 String aiDifficultyToString(AIDifficulty diff, AppLocalizations appLocales) {

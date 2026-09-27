@@ -115,10 +115,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get highScoreReset => 'High score reset';
 
   @override
-  String get gameMode => 'Game Mode';
-
-  @override
-  String get aiDifficulty => 'AI Difficulty';
+  String get aiDifficulty => 'Hint style';
 
   @override
   String get boardSize => 'Board Size';
@@ -139,22 +136,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameModeTimed => 'Timed';
 
   @override
-  String get gameModeChallenge => 'Challenge';
-
-  @override
-  String get gameModeEvilAI => 'EvilAI';
-
-  @override
   String get gameModeHardcore => 'Hardcore';
 
   @override
   String get gameModeZen => 'Zen';
 
   @override
-  String get aiDiffEasy => 'Easy';
+  String get aiDiffEasy => 'Cautious';
 
   @override
-  String get aiDiffSmart => 'Smart';
+  String get aiDiffSmart => 'Balanced';
 
   @override
   String get aiDiffAggressive => 'Aggressive';
@@ -192,28 +183,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeContinue => 'Continue';
 
   @override
-  String get homeNewGame => 'New Game';
-
-  @override
-  String get homePlay => 'Play';
-
-  @override
   String get homeChooseChallenge => 'Choose Your Challenge';
 
   @override
   String get homeDailyTrial => 'Daily Titan Trial';
 
   @override
-  String get homeTodaysChallenge => 'Today\'s challenge';
-
-  @override
   String get homeTitanTrials => 'Titan Trials';
 
   @override
   String get homeHallOfTitans => 'Hall of Titans';
-
-  @override
-  String get homeGameModes => 'Game Modes';
 
   @override
   String get homeBest => 'Best';
@@ -275,9 +254,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trialNoHints => 'No hints';
 
   @override
-  String get trialLocked => 'Locked';
-
-  @override
   String get trialObjective => 'Objective';
 
   @override
@@ -330,9 +306,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsDaily => 'Daily';
-
-  @override
-  String get statsBestStreak => 'Streak';
 
   @override
   String get statsChapters => 'Chapters';

@@ -282,16 +282,10 @@ abstract class AppLocalizations {
   /// **'High score reset'**
   String get highScoreReset;
 
-  /// No description provided for @gameMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Game Mode'**
-  String get gameMode;
-
   /// No description provided for @aiDifficulty.
   ///
   /// In en, this message translates to:
-  /// **'AI Difficulty'**
+  /// **'Hint style'**
   String get aiDifficulty;
 
   /// No description provided for @boardSize.
@@ -330,18 +324,6 @@ abstract class AppLocalizations {
   /// **'Timed'**
   String get gameModeTimed;
 
-  /// No description provided for @gameModeChallenge.
-  ///
-  /// In en, this message translates to:
-  /// **'Challenge'**
-  String get gameModeChallenge;
-
-  /// No description provided for @gameModeEvilAI.
-  ///
-  /// In en, this message translates to:
-  /// **'EvilAI'**
-  String get gameModeEvilAI;
-
   /// No description provided for @gameModeHardcore.
   ///
   /// In en, this message translates to:
@@ -357,13 +339,13 @@ abstract class AppLocalizations {
   /// No description provided for @aiDiffEasy.
   ///
   /// In en, this message translates to:
-  /// **'Easy'**
+  /// **'Cautious'**
   String get aiDiffEasy;
 
   /// No description provided for @aiDiffSmart.
   ///
   /// In en, this message translates to:
-  /// **'Smart'**
+  /// **'Balanced'**
   String get aiDiffSmart;
 
   /// No description provided for @aiDiffAggressive.
@@ -432,18 +414,6 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get homeContinue;
 
-  /// No description provided for @homeNewGame.
-  ///
-  /// In en, this message translates to:
-  /// **'New Game'**
-  String get homeNewGame;
-
-  /// No description provided for @homePlay.
-  ///
-  /// In en, this message translates to:
-  /// **'Play'**
-  String get homePlay;
-
   /// No description provided for @homeChooseChallenge.
   ///
   /// In en, this message translates to:
@@ -456,12 +426,6 @@ abstract class AppLocalizations {
   /// **'Daily Titan Trial'**
   String get homeDailyTrial;
 
-  /// No description provided for @homeTodaysChallenge.
-  ///
-  /// In en, this message translates to:
-  /// **'Today\'s challenge'**
-  String get homeTodaysChallenge;
-
   /// No description provided for @homeTitanTrials.
   ///
   /// In en, this message translates to:
@@ -473,12 +437,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hall of Titans'**
   String get homeHallOfTitans;
-
-  /// No description provided for @homeGameModes.
-  ///
-  /// In en, this message translates to:
-  /// **'Game Modes'**
-  String get homeGameModes;
 
   /// No description provided for @homeBest.
   ///
@@ -581,12 +539,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No hints'**
   String get trialNoHints;
-
-  /// No description provided for @trialLocked.
-  ///
-  /// In en, this message translates to:
-  /// **'Locked'**
-  String get trialLocked;
 
   /// No description provided for @trialObjective.
   ///
@@ -695,12 +647,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily'**
   String get statsDaily;
-
-  /// No description provided for @statsBestStreak.
-  ///
-  /// In en, this message translates to:
-  /// **'Streak'**
-  String get statsBestStreak;
 
   /// No description provided for @statsChapters.
   ///

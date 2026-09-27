@@ -109,10 +109,7 @@ class AppLocalizationsHy extends AppLocalizations {
   String get highScoreReset => 'Բարձր միավորը վերականգնվել է';
 
   @override
-  String get gameMode => 'Խաղի ռեժիմ';
-
-  @override
-  String get aiDifficulty => 'ԱԲ դժվարություն';
+  String get aiDifficulty => 'Հուշումների ոճ';
 
   @override
   String get boardSize => 'Խաղատախտակի չափը';
@@ -133,25 +130,19 @@ class AppLocalizationsHy extends AppLocalizations {
   String get gameModeTimed => 'Ժամանակով';
 
   @override
-  String get gameModeChallenge => 'Մրցույթ';
-
-  @override
-  String get gameModeEvilAI => 'Չար ԱԲ';
-
-  @override
   String get gameModeHardcore => 'Դաժան';
 
   @override
   String get gameModeZen => 'Զեն';
 
   @override
-  String get aiDiffEasy => 'Հեշտ';
+  String get aiDiffEasy => 'Զգույշ';
 
   @override
-  String get aiDiffSmart => 'Խելացի';
+  String get aiDiffSmart => 'Հավասարակշռված';
 
   @override
-  String get aiDiffAggressive => 'Ագրեսիվ';
+  String get aiDiffAggressive => 'Հարձակողական';
 
   @override
   String get appThemeClassic => 'Դասական';
@@ -186,28 +177,16 @@ class AppLocalizationsHy extends AppLocalizations {
   String get homeContinue => 'Շարունակել';
 
   @override
-  String get homeNewGame => 'Նոր խաղ';
-
-  @override
-  String get homePlay => 'Խաղալ';
-
-  @override
   String get homeChooseChallenge => 'Ընտրիր մարտահրավերը';
 
   @override
   String get homeDailyTrial => 'Օրվա փորձություն';
 
   @override
-  String get homeTodaysChallenge => 'Այսօրվա մարտահրավերը';
-
-  @override
   String get homeTitanTrials => 'Տիտանների փորձություններ';
 
   @override
   String get homeHallOfTitans => 'Տիտանների դահլիճ';
-
-  @override
-  String get homeGameModes => 'Խաղի ռեժիմներ';
 
   @override
   String get homeBest => 'Լավագույն';
@@ -269,9 +248,6 @@ class AppLocalizationsHy extends AppLocalizations {
   String get trialNoHints => 'Առանց հուշումների';
 
   @override
-  String get trialLocked => 'Փակ է';
-
-  @override
   String get trialObjective => 'Նպատակ';
 
   @override
@@ -324,9 +300,6 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get statsDaily => 'Օրվա';
-
-  @override
-  String get statsBestStreak => 'Շարք';
 
   @override
   String get statsChapters => 'Գլուխներ';

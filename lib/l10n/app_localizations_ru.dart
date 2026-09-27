@@ -117,10 +117,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get highScoreReset => 'Рекорд сброшен';
 
   @override
-  String get gameMode => 'Режим игры';
-
-  @override
-  String get aiDifficulty => 'Сложность ИИ';
+  String get aiDifficulty => 'Стиль подсказок';
 
   @override
   String get boardSize => 'Размер поля';
@@ -141,22 +138,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get gameModeTimed => 'На время';
 
   @override
-  String get gameModeChallenge => 'Испытание';
-
-  @override
-  String get gameModeEvilAI => 'Злой ИИ';
-
-  @override
   String get gameModeHardcore => 'Хардкор';
 
   @override
   String get gameModeZen => 'Дзен';
 
   @override
-  String get aiDiffEasy => 'Лёгкий';
+  String get aiDiffEasy => 'Осторожный';
 
   @override
-  String get aiDiffSmart => 'Умный';
+  String get aiDiffSmart => 'Сбалансированный';
 
   @override
   String get aiDiffAggressive => 'Агрессивный';
@@ -194,28 +185,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeContinue => 'Продолжить';
 
   @override
-  String get homeNewGame => 'Новая игра';
-
-  @override
-  String get homePlay => 'Играть';
-
-  @override
   String get homeChooseChallenge => 'Выберите испытание';
 
   @override
   String get homeDailyTrial => 'Ежедневное испытание';
 
   @override
-  String get homeTodaysChallenge => 'Задача дня';
-
-  @override
   String get homeTitanTrials => 'Испытания титанов';
 
   @override
   String get homeHallOfTitans => 'Зал титанов';
-
-  @override
-  String get homeGameModes => 'Режимы игры';
 
   @override
   String get homeBest => 'Лучший';
@@ -277,9 +256,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get trialNoHints => 'Без подсказок';
 
   @override
-  String get trialLocked => 'Закрыто';
-
-  @override
   String get trialObjective => 'Цель';
 
   @override
@@ -332,9 +308,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get statsDaily => 'Ежедневные';
-
-  @override
-  String get statsBestStreak => 'Серия';
 
   @override
   String get statsChapters => 'Главы';

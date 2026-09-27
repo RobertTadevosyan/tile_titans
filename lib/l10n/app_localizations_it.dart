@@ -115,10 +115,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get highScoreReset => 'Record azzerato';
 
   @override
-  String get gameMode => 'Modalità';
-
-  @override
-  String get aiDifficulty => 'Difficoltà IA';
+  String get aiDifficulty => 'Stile dei suggerimenti';
 
   @override
   String get boardSize => 'Dimensione griglia';
@@ -139,25 +136,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get gameModeTimed => 'A tempo';
 
   @override
-  String get gameModeChallenge => 'Sfida';
-
-  @override
-  String get gameModeEvilAI => 'IA malvagia';
-
-  @override
   String get gameModeHardcore => 'Estrema';
 
   @override
   String get gameModeZen => 'Zen';
 
   @override
-  String get aiDiffEasy => 'Facile';
+  String get aiDiffEasy => 'Prudente';
 
   @override
-  String get aiDiffSmart => 'Astuta';
+  String get aiDiffSmart => 'Bilanciato';
 
   @override
-  String get aiDiffAggressive => 'Aggressiva';
+  String get aiDiffAggressive => 'Aggressivo';
 
   @override
   String get appThemeClassic => 'Classico';
@@ -192,28 +183,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get homeContinue => 'Continua';
 
   @override
-  String get homeNewGame => 'Nuova partita';
-
-  @override
-  String get homePlay => 'Gioca';
-
-  @override
   String get homeChooseChallenge => 'Scegli la tua sfida';
 
   @override
   String get homeDailyTrial => 'Prova del giorno';
 
   @override
-  String get homeTodaysChallenge => 'Sfida di oggi';
-
-  @override
   String get homeTitanTrials => 'Prove dei Titani';
 
   @override
   String get homeHallOfTitans => 'Sala dei Titani';
-
-  @override
-  String get homeGameModes => 'Modalità';
 
   @override
   String get homeBest => 'Record';
@@ -275,9 +254,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get trialNoHints => 'Senza aiuti';
 
   @override
-  String get trialLocked => 'Bloccata';
-
-  @override
   String get trialObjective => 'Obiettivo';
 
   @override
@@ -330,9 +306,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get statsDaily => 'Giornaliera';
-
-  @override
-  String get statsBestStreak => 'Serie';
 
   @override
   String get statsChapters => 'Capitoli';
