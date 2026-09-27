@@ -23,7 +23,7 @@
   "platform": "Plattform",
   "device": "Gerät",
   "user": "Spieler",
-  "points": "{p} Punkte",
+  "points": "{p, plural, =1{1 Punkt} other{{p} Punkte}}",
   "appSettings": "Einstellungen",
   "soundEffects": "Soundeffekte",
   "highScoreTitle": "Rekord",
@@ -102,8 +102,8 @@
   "appThemeForge": "Schmiede",
   "objReachTile": "Schmiede einen {tile}er-Stein",
   "objReachScore": "Erreiche {score} Punkte",
-  "objCreateTiles": "Halte {count} Steine mit {tile}",
-  "objSurvive": "Überstehe {moves} Züge",
+  "objCreateTiles": "Halte {count, plural, =1{1 Stein} other{{count} Steine}} mit {tile}",
+  "objSurvive": "Überstehe {moves, plural, =1{1 Zug} other{{moves} Züge}}",
   "objClearBoard": "Reduziere auf {count} Steine",
   "rankNovice": "Neuling",
   "rankWarrior": "Krieger",
@@ -131,7 +131,7 @@
   "achHoarder": "Hamsterer",
   "achIronhand": "Eisenhand",
   "achVeteran": "Veteran",
-  "achDescTrials": "Schließe {count} Titanenprüfungen ab",
+  "achDescTrials": "Schließe {count, plural, =1{1 Titanenprüfung} other{{count} Titanenprüfungen}} ab",
   "@achDescTrials": {
     "placeholders": {
       "count": {
@@ -141,7 +141,7 @@
   },
   "achDescAllTrials": "Schließe jede Titanenprüfung ab",
   "achDescChapter": "Schließe ein ganzes Kapitel ab",
-  "achDescCleanTrials": "Schließe {count} Prüfungen ohne Rückgängig ab",
+  "achDescCleanTrials": "Schließe {count, plural, =1{1 Prüfung} other{{count} Prüfungen}} ohne Rückgängig ab",
   "@achDescCleanTrials": {
     "placeholders": {
       "count": {
@@ -173,7 +173,7 @@
       }
     }
   },
-  "achDescGames": "Spiele {count} Partien",
+  "achDescGames": "Spiele {count, plural, =1{1 Partie} other{{count} Partien}}",
   "@achDescGames": {
     "placeholders": {
       "count": {

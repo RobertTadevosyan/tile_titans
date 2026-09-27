@@ -255,8 +255,8 @@ abstract class AppLocalizations {
   /// No description provided for @points.
   ///
   /// In en, this message translates to:
-  /// **'{p} points'**
-  String points(Object p);
+  /// **'{p, plural, =1{1 point} other{{p} points}}'**
+  String points(num p);
 
   /// No description provided for @appSettings.
   ///
@@ -729,13 +729,13 @@ abstract class AppLocalizations {
   /// No description provided for @objCreateTiles.
   ///
   /// In en, this message translates to:
-  /// **'Hold {count} tiles of {tile}'**
+  /// **'Hold {count, plural, =1{1 tile} other{{count} tiles}} of {tile}'**
   String objCreateTiles(int count, int tile);
 
   /// No description provided for @objSurvive.
   ///
   /// In en, this message translates to:
-  /// **'Survive {moves} moves'**
+  /// **'Survive {moves, plural, =1{1 move} other{{moves} moves}}'**
   String objSurvive(int moves);
 
   /// No description provided for @objClearBoard.
@@ -903,7 +903,7 @@ abstract class AppLocalizations {
   /// No description provided for @achDescTrials.
   ///
   /// In en, this message translates to:
-  /// **'Complete {count} Titan Trials'**
+  /// **'Complete {count, plural, =1{1 Titan Trial} other{{count} Titan Trials}}'**
   String achDescTrials(int count);
 
   /// No description provided for @achDescAllTrials.
@@ -921,7 +921,7 @@ abstract class AppLocalizations {
   /// No description provided for @achDescCleanTrials.
   ///
   /// In en, this message translates to:
-  /// **'Complete {count} trials without undo'**
+  /// **'Complete {count, plural, =1{1 trial} other{{count} trials}} without undo'**
   String achDescCleanTrials(int count);
 
   /// No description provided for @achDescStreak.
@@ -945,7 +945,7 @@ abstract class AppLocalizations {
   /// No description provided for @achDescGames.
   ///
   /// In en, this message translates to:
-  /// **'Play {count} games'**
+  /// **'Play {count, plural, =1{1 game} other{{count} games}}'**
   String achDescGames(int count);
 }
 

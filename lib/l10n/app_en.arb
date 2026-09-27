@@ -23,7 +23,7 @@
   "platform": "Platform",
   "device": "Device",
   "user": "User",
-  "points": "{p} points",
+  "points": "{p, plural, =1{1 point} other{{p} points}}",
   "appSettings": "App Settings",
   "soundEffects": "Sound Effects",
   "highScoreTitle": "High Score",
@@ -148,7 +148,7 @@
       }
     }
   },
-  "objCreateTiles": "Hold {count} tiles of {tile}",
+  "objCreateTiles": "Hold {count, plural, =1{1 tile} other{{count} tiles}} of {tile}",
   "@objCreateTiles": {
     "placeholders": {
       "count": {
@@ -159,7 +159,7 @@
       }
     }
   },
-  "objSurvive": "Survive {moves} moves",
+  "objSurvive": "Survive {moves, plural, =1{1 move} other{{moves} moves}}",
   "@objSurvive": {
     "placeholders": {
       "moves": {
@@ -201,7 +201,7 @@
   "achHoarder": "Hoarder",
   "achIronhand": "Ironhand",
   "achVeteran": "Veteran",
-  "achDescTrials": "Complete {count} Titan Trials",
+  "achDescTrials": "Complete {count, plural, =1{1 Titan Trial} other{{count} Titan Trials}}",
   "@achDescTrials": {
     "placeholders": {
       "count": {
@@ -211,7 +211,7 @@
   },
   "achDescAllTrials": "Complete every Titan Trial",
   "achDescChapter": "Complete a full chapter",
-  "achDescCleanTrials": "Complete {count} trials without undo",
+  "achDescCleanTrials": "Complete {count, plural, =1{1 trial} other{{count} trials}} without undo",
   "@achDescCleanTrials": {
     "placeholders": {
       "count": {
@@ -243,7 +243,7 @@
       }
     }
   },
-  "achDescGames": "Play {count} games",
+  "achDescGames": "Play {count, plural, =1{1 game} other{{count} games}}",
   "@achDescGames": {
     "placeholders": {
       "count": {

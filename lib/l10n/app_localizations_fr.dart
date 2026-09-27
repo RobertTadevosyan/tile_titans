@@ -92,8 +92,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get user => 'Joueur';
 
   @override
-  String points(Object p) {
-    return '$p points';
+  String points(num p) {
+    String _temp0 = intl.Intl.pluralLogic(
+      p,
+      locale: localeName,
+      other: '$p points',
+      one: '$p point',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -350,12 +356,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String objCreateTiles(int count, int tile) {
-    return 'Ayez $count tuiles de $tile';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tuiles',
+      one: '$count tuile',
+    );
+    return 'Ayez $_temp0 de $tile';
   }
 
   @override
   String objSurvive(int moves) {
-    return 'Tenez $moves coups';
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: '$moves coups',
+      one: '$moves coup',
+    );
+    return 'Tenez $_temp0';
   }
 
   @override
@@ -443,7 +461,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String achDescTrials(int count) {
-    return 'Terminez $count Épreuves des Titans';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Épreuves des Titans',
+      one: '$count Épreuve des Titans',
+    );
+    return 'Terminez $_temp0';
   }
 
   @override
@@ -454,7 +478,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String achDescCleanTrials(int count) {
-    return 'Terminez $count épreuves sans annuler';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count épreuves',
+      one: '$count épreuve',
+    );
+    return 'Terminez $_temp0 sans annuler';
   }
 
   @override
@@ -474,6 +504,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String achDescGames(int count) {
-    return 'Jouez $count parties';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count parties',
+      one: '$count partie',
+    );
+    return 'Jouez $_temp0';
   }
 }

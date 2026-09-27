@@ -23,7 +23,7 @@
   "platform": "Plataforma",
   "device": "Dispositivo",
   "user": "Usuario",
-  "points": "{p} puntos",
+  "points": "{p, plural, =1{1 punto} other{{p} puntos}}",
   "appSettings": "Configuración de la aplicación",
   "soundEffects": "Efectos de sonido",
   "highScoreTitle": "Puntuación más alta",
@@ -102,8 +102,8 @@
   "appThemeForge": "Forja",
   "objReachTile": "Forja una ficha {tile}",
   "objReachScore": "Consigue {score} puntos",
-  "objCreateTiles": "Ten {count} fichas de {tile}",
-  "objSurvive": "Sobrevive {moves} movimientos",
+  "objCreateTiles": "Ten {count, plural, =1{1 ficha} other{{count} fichas}} de {tile}",
+  "objSurvive": "Sobrevive {moves, plural, =1{1 movimiento} other{{moves} movimientos}}",
   "objClearBoard": "Reduce a {count} fichas",
   "rankNovice": "Novato",
   "rankWarrior": "Guerrero",
@@ -131,7 +131,7 @@
   "achHoarder": "Acaparador",
   "achIronhand": "Mano de Hierro",
   "achVeteran": "Veterano",
-  "achDescTrials": "Completa {count} Pruebas de Titanes",
+  "achDescTrials": "Completa {count, plural, =1{1 Prueba de Titanes} other{{count} Pruebas de Titanes}}",
   "@achDescTrials": {
     "placeholders": {
       "count": {
@@ -141,7 +141,7 @@
   },
   "achDescAllTrials": "Completa todas las Pruebas de Titanes",
   "achDescChapter": "Completa un capítulo entero",
-  "achDescCleanTrials": "Completa {count} pruebas sin deshacer",
+  "achDescCleanTrials": "Completa {count, plural, =1{1 prueba} other{{count} pruebas}} sin deshacer",
   "@achDescCleanTrials": {
     "placeholders": {
       "count": {
@@ -173,7 +173,7 @@
       }
     }
   },
-  "achDescGames": "Juega {count} partidas",
+  "achDescGames": "Juega {count, plural, =1{1 partida} other{{count} partidas}}",
   "@achDescGames": {
     "placeholders": {
       "count": {

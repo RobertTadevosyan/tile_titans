@@ -23,7 +23,7 @@
   "platform": "Платформа",
   "device": "Устройство",
   "user": "Пользователь",
-  "points": "{p} очков",
+  "points": "{p, plural, one{{p} очко} few{{p} очка} many{{p} очков} other{{p} очка}}",
   "appSettings": "Настройки приложения",
   "soundEffects": "Звуковые эффекты",
   "highScoreTitle": "Рекорд",
@@ -102,8 +102,8 @@
   "appThemeForge": "Горн",
   "objReachTile": "Создайте плитку {tile}",
   "objReachScore": "Наберите {score}",
-  "objCreateTiles": "Соберите {count} плиток по {tile}",
-  "objSurvive": "Продержитесь {moves} ходов",
+  "objCreateTiles": "Соберите {count, plural, one{{count} плитку} few{{count} плитки} many{{count} плиток} other{{count} плитки}} по {tile}",
+  "objSurvive": "Продержитесь {moves, plural, one{{moves} ход} few{{moves} хода} many{{moves} ходов} other{{moves} хода}}",
   "objClearBoard": "Сведите до {count} плиток",
   "rankNovice": "Новичок",
   "rankWarrior": "Воин",
@@ -131,7 +131,7 @@
   "achHoarder": "Скопидом",
   "achIronhand": "Железная рука",
   "achVeteran": "Ветеран",
-  "achDescTrials": "Пройдите {count} испытаний титанов",
+  "achDescTrials": "Пройдите {count, plural, one{{count} испытание} few{{count} испытания} many{{count} испытаний} other{{count} испытания}} титанов",
   "@achDescTrials": {
     "placeholders": {
       "count": {
@@ -141,7 +141,7 @@
   },
   "achDescAllTrials": "Пройдите все испытания титанов",
   "achDescChapter": "Пройдите главу целиком",
-  "achDescCleanTrials": "Пройдите {count} испытаний без отмены",
+  "achDescCleanTrials": "Пройдите {count, plural, one{{count} испытание} few{{count} испытания} many{{count} испытаний} other{{count} испытания}} без отмены",
   "@achDescCleanTrials": {
     "placeholders": {
       "count": {
@@ -173,7 +173,7 @@
       }
     }
   },
-  "achDescGames": "Сыграйте {count} партий",
+  "achDescGames": "Сыграйте {count, plural, one{{count} партию} few{{count} партии} many{{count} партий} other{{count} партии}}",
   "@achDescGames": {
     "placeholders": {
       "count": {

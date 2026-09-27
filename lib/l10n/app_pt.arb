@@ -23,7 +23,7 @@
   "platform": "Plataforma",
   "device": "Dispositivo",
   "user": "Jogador",
-  "points": "{p} pontos",
+  "points": "{p, plural, =1{1 ponto} other{{p} pontos}}",
   "appSettings": "Definições",
   "soundEffects": "Efeitos sonoros",
   "highScoreTitle": "Recorde",
@@ -102,8 +102,8 @@
   "appThemeForge": "Forja",
   "objReachTile": "Forja uma peça {tile}",
   "objReachScore": "Faz {score} pontos",
-  "objCreateTiles": "Tem {count} peças de {tile}",
-  "objSurvive": "Sobrevive {moves} jogadas",
+  "objCreateTiles": "Tem {count, plural, =1{1 peça} other{{count} peças}} de {tile}",
+  "objSurvive": "Sobrevive {moves, plural, =1{1 jogada} other{{moves} jogadas}}",
   "objClearBoard": "Reduz a {count} peças",
   "rankNovice": "Novato",
   "rankWarrior": "Guerreiro",
@@ -131,7 +131,7 @@
   "achHoarder": "Acumulador",
   "achIronhand": "Mão de Ferro",
   "achVeteran": "Veterano",
-  "achDescTrials": "Complete {count} Provas dos Titãs",
+  "achDescTrials": "Complete {count, plural, =1{1 Prova dos Titãs} other{{count} Provas dos Titãs}}",
   "@achDescTrials": {
     "placeholders": {
       "count": {
@@ -141,7 +141,7 @@
   },
   "achDescAllTrials": "Complete todas as Provas dos Titãs",
   "achDescChapter": "Complete um capítulo inteiro",
-  "achDescCleanTrials": "Complete {count} provas sem desfazer",
+  "achDescCleanTrials": "Complete {count, plural, =1{1 prova} other{{count} provas}} sem desfazer",
   "@achDescCleanTrials": {
     "placeholders": {
       "count": {
@@ -173,7 +173,7 @@
       }
     }
   },
-  "achDescGames": "Jogue {count} partidas",
+  "achDescGames": "Jogue {count, plural, =1{1 partida} other{{count} partidas}}",
   "@achDescGames": {
     "placeholders": {
       "count": {

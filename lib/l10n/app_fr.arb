@@ -23,7 +23,7 @@
   "platform": "Plateforme",
   "device": "Appareil",
   "user": "Joueur",
-  "points": "{p} points",
+  "points": "{p, plural, one{{p} point} other{{p} points}}",
   "appSettings": "Paramètres",
   "soundEffects": "Effets sonores",
   "highScoreTitle": "Record",
@@ -102,8 +102,8 @@
   "appThemeForge": "Forge",
   "objReachTile": "Forgez une tuile {tile}",
   "objReachScore": "Marquez {score} points",
-  "objCreateTiles": "Ayez {count} tuiles de {tile}",
-  "objSurvive": "Tenez {moves} coups",
+  "objCreateTiles": "Ayez {count, plural, one{{count} tuile} other{{count} tuiles}} de {tile}",
+  "objSurvive": "Tenez {moves, plural, one{{moves} coup} other{{moves} coups}}",
   "objClearBoard": "Réduisez à {count} tuiles",
   "rankNovice": "Novice",
   "rankWarrior": "Guerrier",
@@ -131,7 +131,7 @@
   "achHoarder": "Amasseur",
   "achIronhand": "Main de Fer",
   "achVeteran": "Vétéran",
-  "achDescTrials": "Terminez {count} Épreuves des Titans",
+  "achDescTrials": "Terminez {count, plural, one{{count} Épreuve des Titans} other{{count} Épreuves des Titans}}",
   "@achDescTrials": {
     "placeholders": {
       "count": {
@@ -141,7 +141,7 @@
   },
   "achDescAllTrials": "Terminez toutes les Épreuves des Titans",
   "achDescChapter": "Terminez un chapitre entier",
-  "achDescCleanTrials": "Terminez {count} épreuves sans annuler",
+  "achDescCleanTrials": "Terminez {count, plural, one{{count} épreuve} other{{count} épreuves}} sans annuler",
   "@achDescCleanTrials": {
     "placeholders": {
       "count": {
@@ -173,7 +173,7 @@
       }
     }
   },
-  "achDescGames": "Jouez {count} parties",
+  "achDescGames": "Jouez {count, plural, one{{count} partie} other{{count} parties}}",
   "@achDescGames": {
     "placeholders": {
       "count": {

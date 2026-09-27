@@ -92,8 +92,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get user => 'User';
 
   @override
-  String points(Object p) {
-    return '$p points';
+  String points(num p) {
+    String _temp0 = intl.Intl.pluralLogic(
+      p,
+      locale: localeName,
+      other: '$p points',
+      one: '1 point',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -350,12 +356,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String objCreateTiles(int count, int tile) {
-    return 'Hold $count tiles of $tile';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tiles',
+      one: '1 tile',
+    );
+    return 'Hold $_temp0 of $tile';
   }
 
   @override
   String objSurvive(int moves) {
-    return 'Survive $moves moves';
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: '$moves moves',
+      one: '1 move',
+    );
+    return 'Survive $_temp0';
   }
 
   @override
@@ -443,7 +461,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String achDescTrials(int count) {
-    return 'Complete $count Titan Trials';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Titan Trials',
+      one: '1 Titan Trial',
+    );
+    return 'Complete $_temp0';
   }
 
   @override
@@ -454,7 +478,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String achDescCleanTrials(int count) {
-    return 'Complete $count trials without undo';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trials',
+      one: '1 trial',
+    );
+    return 'Complete $_temp0 without undo';
   }
 
   @override
@@ -474,6 +504,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String achDescGames(int count) {
-    return 'Play $count games';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count games',
+      one: '1 game',
+    );
+    return 'Play $_temp0';
   }
 }

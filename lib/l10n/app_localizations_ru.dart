@@ -92,8 +92,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get user => 'Пользователь';
 
   @override
-  String points(Object p) {
-    return '$p очков';
+  String points(num p) {
+    String _temp0 = intl.Intl.pluralLogic(
+      p,
+      locale: localeName,
+      other: '$p очка',
+      many: '$p очков',
+      few: '$p очка',
+      one: '$p очко',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -350,12 +358,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String objCreateTiles(int count, int tile) {
-    return 'Соберите $count плиток по $tile';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count плитки',
+      many: '$count плиток',
+      few: '$count плитки',
+      one: '$count плитку',
+    );
+    return 'Соберите $_temp0 по $tile';
   }
 
   @override
   String objSurvive(int moves) {
-    return 'Продержитесь $moves ходов';
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: '$moves хода',
+      many: '$moves ходов',
+      few: '$moves хода',
+      one: '$moves ход',
+    );
+    return 'Продержитесь $_temp0';
   }
 
   @override
@@ -443,7 +467,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String achDescTrials(int count) {
-    return 'Пройдите $count испытаний титанов';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count испытания',
+      many: '$count испытаний',
+      few: '$count испытания',
+      one: '$count испытание',
+    );
+    return 'Пройдите $_temp0 титанов';
   }
 
   @override
@@ -454,7 +486,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String achDescCleanTrials(int count) {
-    return 'Пройдите $count испытаний без отмены';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count испытания',
+      many: '$count испытаний',
+      few: '$count испытания',
+      one: '$count испытание',
+    );
+    return 'Пройдите $_temp0 без отмены';
   }
 
   @override
@@ -474,6 +514,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String achDescGames(int count) {
-    return 'Сыграйте $count партий';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count партии',
+      many: '$count партий',
+      few: '$count партии',
+      one: '$count партию',
+    );
+    return 'Сыграйте $_temp0';
   }
 }

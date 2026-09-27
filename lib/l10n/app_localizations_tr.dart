@@ -92,7 +92,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get user => 'Oyuncu';
 
   @override
-  String points(Object p) {
+  String points(num p) {
     return '$p puan';
   }
 

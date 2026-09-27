@@ -92,8 +92,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get user => 'Giocatore';
 
   @override
-  String points(Object p) {
-    return '$p punti';
+  String points(num p) {
+    String _temp0 = intl.Intl.pluralLogic(
+      p,
+      locale: localeName,
+      other: '$p punti',
+      one: '1 punto',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -350,12 +356,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String objCreateTiles(int count, int tile) {
-    return 'Tieni $count tessere da $tile';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tessere',
+      one: '1 tessera',
+    );
+    return 'Tieni $_temp0 da $tile';
   }
 
   @override
   String objSurvive(int moves) {
-    return 'Resisti $moves mosse';
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: '$moves mosse',
+      one: '1 mossa',
+    );
+    return 'Resisti $_temp0';
   }
 
   @override
@@ -443,7 +461,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String achDescTrials(int count) {
-    return 'Completa $count Prove dei Titani';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Prove dei Titani',
+      one: '1 Prova dei Titani',
+    );
+    return 'Completa $_temp0';
   }
 
   @override
@@ -454,7 +478,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String achDescCleanTrials(int count) {
-    return 'Completa $count prove senza annullare';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count prove',
+      one: '1 prova',
+    );
+    return 'Completa $_temp0 senza annullare';
   }
 
   @override
@@ -474,6 +504,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String achDescGames(int count) {
-    return 'Gioca $count partite';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partite',
+      one: '1 partita',
+    );
+    return 'Gioca $_temp0';
   }
 }

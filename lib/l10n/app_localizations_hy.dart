@@ -92,7 +92,7 @@ class AppLocalizationsHy extends AppLocalizations {
   String get user => 'Օգտատեր';
 
   @override
-  String points(Object p) {
+  String points(num p) {
     return '$p միավոր';
   }
 
