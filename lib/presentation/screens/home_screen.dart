@@ -282,7 +282,7 @@ class _DailyTrialCard extends StatelessWidget {
           builder: (_) => TrialScreen(trial: trial, isDaily: true),
         ),
       ),
-      child: Column(
+      contentBuilder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -392,7 +392,7 @@ class _ModeGrid extends StatelessWidget {
               TitanCard(
                 onTap: () => _startMode(context, mode.rules),
                 padding: const EdgeInsets.all(TitanSpacing.md),
-                child: Column(
+                contentBuilder: (context) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -433,7 +433,7 @@ class _TrialsCard extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute<void>(builder: (_) => const TrialsScreen()),
       ),
-      child: Column(
+      contentBuilder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -523,7 +523,7 @@ class _SecondaryRow extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const LeaderboardScreen()),
             ),
-            child: _IconLabel(
+            contentBuilder: (context) => _IconLabel(
               icon: Icons.emoji_events_rounded,
               label: l10n.homeHallOfTitans,
             ),
@@ -539,7 +539,7 @@ class _SecondaryRow extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const StatsScreen()),
             ),
-            child: _IconLabel(
+            contentBuilder: (context) => _IconLabel(
               icon: Icons.insights_rounded,
               label: l10n.statistics,
             ),
@@ -553,7 +553,7 @@ class _SecondaryRow extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
             ),
-            child: Semantics(
+            contentBuilder: (context) => Semantics(
               label: l10n.settings,
               child: const Icon(Icons.settings_rounded),
             ),

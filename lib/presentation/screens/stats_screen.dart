@@ -140,7 +140,7 @@ class _ModeCard extends StatelessWidget {
     final scored = mode != ModeKeys.zen;
 
     return TitanCard(
-      child: Column(
+      contentBuilder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -266,7 +266,7 @@ class _MetricGrid extends StatelessWidget {
             for (final entry in entries)
               TitanCard(
                 padding: const EdgeInsets.all(TitanSpacing.md),
-                child: Center(
+                contentBuilder: (context) => Center(
                   child: TitanMetric(label: entry.label, value: entry.value),
                 ),
               ),
@@ -293,7 +293,7 @@ class _AchievementRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return TitanCard(
       padding: const EdgeInsets.all(TitanSpacing.md),
-      child: Row(
+      contentBuilder: (context) => Row(
         children: [
           Icon(
             unlocked ? Icons.military_tech_rounded : Icons.lock_outline_rounded,

@@ -239,7 +239,7 @@ class _ObjectiveBanner extends StatelessWidget {
         (secondsLeft != null && secondsLeft <= 10);
 
     return TitanCard(
-      child: Column(
+      contentBuilder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(

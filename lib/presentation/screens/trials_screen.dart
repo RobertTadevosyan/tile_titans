@@ -80,7 +80,7 @@ class _TrialTile extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute<void>(builder: (_) => TrialScreen(trial: trial)),
       ),
-      child: Column(
+      contentBuilder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(

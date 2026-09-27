@@ -308,17 +308,18 @@ class TitanSectionHeader extends StatelessWidget {
 /// of these, so touch targets and corner radii cannot drift between screens.
 class TitanCard extends StatelessWidget {
   final VoidCallback? onTap;
-  final Widget? child;
-
   /// The card's content, built against the card's own theme.
   ///
-  /// A prominent card overrides `onSurface` for its subtree, but a [child] the
-  /// caller already built sits *above* that override and keeps resolving
-  /// against the page. That is how the completion dialog ended up with dark
-  /// text on a dark green fill while its icon, resolved in place, turned white
-  /// — the card looked fixed and its heading was still unreadable. Prominent
-  /// cards must use this, which the constructor enforces.
-  final WidgetBuilder? contentBuilder;
+  /// A builder rather than a widget, because a card overrides `onSurface` and
+  /// `surface` for its subtree and a child the caller already built sits
+  /// *above* that override. Style arguments are evaluated eagerly in the
+  /// caller's build method, so `TitanText.cardBody(context)` there resolves
+  /// against the page and is then painted on the card. That produced the
+  /// completion dialog's dark heading on a dark green fill while its icon,
+  /// resolved in place, turned white, and Retro's card subtitle at 4.10:1 on
+  /// a surface it was never measured against. Taking a builder is what makes
+  /// the two agree.
+  final WidgetBuilder contentBuilder;
 
   final EdgeInsets padding;
   final Color? accent;
@@ -328,18 +329,12 @@ class TitanCard extends StatelessWidget {
 
   const TitanCard({
     super.key,
-    this.child,
-    this.contentBuilder,
+    required this.contentBuilder,
     this.onTap,
     this.padding = const EdgeInsets.all(TitanSpacing.lg),
     this.accent,
     this.prominent = false,
-  })  : assert(child != null || contentBuilder != null,
-            'TitanCard needs either child or contentBuilder'),
-        assert(!prominent || contentBuilder != null,
-            'A prominent TitanCard must use contentBuilder: its fill is the '
-            'accent colour, and a child built by the caller resolves its text '
-            'against the page theme instead of this card.');
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -388,10 +383,7 @@ class TitanCard extends StatelessWidget {
                     data: IconThemeData(color: foreground),
                     // Built here, below the scoped theme, so TitanText helpers
                     // resolve against this card rather than the page.
-                    child: Builder(
-                      builder: (context) =>
-                          contentBuilder?.call(context) ?? child!,
-                    ),
+                    child: Builder(builder: contentBuilder),
                   ),
                 ),
               ),

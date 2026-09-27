@@ -105,6 +105,24 @@ void main() {
       }
     });
 
+    test('secondary text on an ordinary card clears AA', () {
+      // Retro measured 4.10:1 on an iPad: the muted colour was computed
+      // against the page background and then painted on the slightly darker
+      // card. Both now come from the same surface.
+      for (final theme in AppTheme.values) {
+        final data = appThemeData[theme]!;
+        final surface = Color.alphaBlend(
+          data.primaryColor.withValues(alpha: 0.1),
+          data.scaffoldBackgroundColor,
+        );
+        final muted = titanMutedOn(surface, titanForegroundOn(surface));
+        final ratio = titanContrastRatio(surface, muted);
+        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
+            reason: '${theme.name} card subtitle is only '
+                '${ratio.toStringAsFixed(2)}:1');
+      }
+    });
+
     test('filled buttons are readable in every theme', () {
       // primaryColor and colorScheme.onPrimary were set independently, so the
       // pair produced Settings' restart button at 2.01:1 on Classic and
