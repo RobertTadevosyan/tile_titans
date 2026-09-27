@@ -18,7 +18,10 @@ android {
     namespace = "com.rob.tiles.flutter_2048"
     compileSdk = 36
     // ndkVersion = flutter.ndkVersion
-    ndkVersion = "27.0.12077973"
+    // Raised from 27.0.12077973 when integration_test was added: it requires
+    // 28.2, and a mismatch fails the release build. NDK versions are backward
+    // compatible, so the highest any plugin asks for is the one to use.
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
