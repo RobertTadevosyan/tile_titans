@@ -115,5 +115,70 @@
   "chapterSummit": "Zirve",
   "chapterForgeTheme": "Hedefleri öğren",
   "chapterProvingTheme": "Kapalı kareler, geri alma yok",
-  "chapterSummitTheme": "Zaman baskısı ve açık alan"
+  "chapterSummitTheme": "Zaman baskısı ve açık alan",
+  "achFirstBlood": "İlk Kan",
+  "achWarrior": "Savaşçı",
+  "achChampion": "Şampiyon",
+  "achTitanName": "Titan",
+  "achBeyondGods": "Tanrıların Ötesinde",
+  "achInitiate": "Aday",
+  "achProven": "Sınanmış",
+  "achTrialmaster": "Sınav Ustası",
+  "achForgedName": "Dövülmüş",
+  "achPerfectTrial": "Kusursuz Sınav",
+  "achDedicated": "Kararlı",
+  "achRelentless": "Amansız",
+  "achHoarder": "İstifçi",
+  "achIronhand": "Demir El",
+  "achVeteran": "Kıdemli",
+  "achDescTrials": "{count} Titan Sınavını tamamla",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Tüm Titan Sınavlarını tamamla",
+  "achDescChapter": "Bir bölümü tamamen bitir",
+  "achDescCleanTrials": "{count} sınavı geri alma olmadan tamamla",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "{days} günlük Günlük Sınav serisi",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Tek oyunda {score} puan yap",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Toplam {count} karo birleştir",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "{count} oyun oyna",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

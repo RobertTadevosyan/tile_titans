@@ -395,4 +395,85 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get chapterSummitTheme => 'Ժամանակ և բաց դաշտ';
+
+  @override
+  String get achFirstBlood => 'Առաջին արյուն';
+
+  @override
+  String get achWarrior => 'Մարտիկ';
+
+  @override
+  String get achChampion => 'Չեմպիոն';
+
+  @override
+  String get achTitanName => 'Տիտան';
+
+  @override
+  String get achBeyondGods => 'Աստվածներից վեր';
+
+  @override
+  String get achInitiate => 'Նորընծա';
+
+  @override
+  String get achProven => 'Փորձված';
+
+  @override
+  String get achTrialmaster => 'Փորձությունների վարպետ';
+
+  @override
+  String get achForgedName => 'Կոփված';
+
+  @override
+  String get achPerfectTrial => 'Կատարյալ փորձություն';
+
+  @override
+  String get achDedicated => 'Նվիրված';
+
+  @override
+  String get achRelentless => 'Անդրդվելի';
+
+  @override
+  String get achHoarder => 'Կուտակող';
+
+  @override
+  String get achIronhand => 'Երկաթե ձեռք';
+
+  @override
+  String get achVeteran => 'Վետերան';
+
+  @override
+  String achDescTrials(int count) {
+    return 'Անցեք տիտանների $count փորձություն';
+  }
+
+  @override
+  String get achDescAllTrials => 'Անցեք տիտանների բոլոր փորձությունները';
+
+  @override
+  String get achDescChapter => 'Անցեք մի ամբողջ գլուխ';
+
+  @override
+  String achDescCleanTrials(int count) {
+    return 'Անցեք $count փորձություն առանց հետարկման';
+  }
+
+  @override
+  String achDescStreak(int days) {
+    return 'Օրական փորձության $days օր անընդմեջ';
+  }
+
+  @override
+  String achDescScore(int score) {
+    return 'Հավաքեք $score միավոր մեկ խաղում';
+  }
+
+  @override
+  String achDescMerges(int count) {
+    return 'Միաձուլեք ընդամենը $count սալիկ';
+  }
+
+  @override
+  String achDescGames(int count) {
+    return 'Խաղացեք $count խաղ';
+  }
 }

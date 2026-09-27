@@ -115,5 +115,70 @@
   "chapterSummit": "頂",
   "chapterForgeTheme": "目標を学ぶ",
   "chapterProvingTheme": "封鎖マスと取り消し不可",
-  "chapterSummitTheme": "時間との勝負と広い盤面"
+  "chapterSummitTheme": "時間との勝負と広い盤面",
+  "achFirstBlood": "ファーストブラッド",
+  "achWarrior": "戦士",
+  "achChampion": "チャンピオン",
+  "achTitanName": "タイタン",
+  "achBeyondGods": "神を超えて",
+  "achInitiate": "入門者",
+  "achProven": "実証者",
+  "achTrialmaster": "試練の達人",
+  "achForgedName": "鍛えられし者",
+  "achPerfectTrial": "完璧な試練",
+  "achDedicated": "熱心",
+  "achRelentless": "不屈",
+  "achHoarder": "蓄積者",
+  "achIronhand": "鉄の手",
+  "achVeteran": "ベテラン",
+  "achDescTrials": "タイタンの試練を{count}回クリアする",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "すべてのタイタンの試練をクリアする",
+  "achDescChapter": "章をすべてクリアする",
+  "achDescCleanTrials": "取り消しなしで{count}回の試練をクリアする",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "デイリー試練を{days}日連続",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "1回のプレイで{score}点を獲得する",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "合計{count}個のタイルを合成する",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "{count}回プレイする",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

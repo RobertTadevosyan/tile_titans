@@ -395,4 +395,85 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get chapterSummitTheme => '時間との勝負と広い盤面';
+
+  @override
+  String get achFirstBlood => 'ファーストブラッド';
+
+  @override
+  String get achWarrior => '戦士';
+
+  @override
+  String get achChampion => 'チャンピオン';
+
+  @override
+  String get achTitanName => 'タイタン';
+
+  @override
+  String get achBeyondGods => '神を超えて';
+
+  @override
+  String get achInitiate => '入門者';
+
+  @override
+  String get achProven => '実証者';
+
+  @override
+  String get achTrialmaster => '試練の達人';
+
+  @override
+  String get achForgedName => '鍛えられし者';
+
+  @override
+  String get achPerfectTrial => '完璧な試練';
+
+  @override
+  String get achDedicated => '熱心';
+
+  @override
+  String get achRelentless => '不屈';
+
+  @override
+  String get achHoarder => '蓄積者';
+
+  @override
+  String get achIronhand => '鉄の手';
+
+  @override
+  String get achVeteran => 'ベテラン';
+
+  @override
+  String achDescTrials(int count) {
+    return 'タイタンの試練を$count回クリアする';
+  }
+
+  @override
+  String get achDescAllTrials => 'すべてのタイタンの試練をクリアする';
+
+  @override
+  String get achDescChapter => '章をすべてクリアする';
+
+  @override
+  String achDescCleanTrials(int count) {
+    return '取り消しなしで$count回の試練をクリアする';
+  }
+
+  @override
+  String achDescStreak(int days) {
+    return 'デイリー試練を$days日連続';
+  }
+
+  @override
+  String achDescScore(int score) {
+    return '1回のプレイで$score点を獲得する';
+  }
+
+  @override
+  String achDescMerges(int count) {
+    return '合計$count個のタイルを合成する';
+  }
+
+  @override
+  String achDescGames(int count) {
+    return '$count回プレイする';
+  }
 }

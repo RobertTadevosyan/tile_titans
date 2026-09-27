@@ -56,6 +56,82 @@ class ContentStrings {
     }
   }
 
+  /// An achievement's title, keyed on its stable id.
+  ///
+  /// Achievements shipped with English names and descriptions baked into the
+  /// data, so a French or Japanese player read "First Blood — Forge a 128
+  /// tile" in an otherwise translated app.
+  static String achievementName(AppLocalizations l10n, String id) {
+    switch (id) {
+      case 'tile_128':
+        return l10n.achFirstBlood;
+      case 'tile_512':
+        return l10n.achWarrior;
+      case 'tile_1024':
+        return l10n.achChampion;
+      case 'tile_2048':
+        return l10n.achTitanName;
+      case 'tile_4096':
+        return l10n.achBeyondGods;
+      case 'trial_first':
+        return l10n.achInitiate;
+      case 'trial_six':
+        return l10n.achProven;
+      case 'trial_all':
+        return l10n.achTrialmaster;
+      case 'chapter_one':
+        return l10n.achForgedName;
+      case 'trial_clean':
+        return l10n.achPerfectTrial;
+      case 'daily_3':
+        return l10n.achDedicated;
+      case 'daily_7':
+        return l10n.achRelentless;
+      case 'score_10k':
+        return l10n.achHoarder;
+      case 'merges_1000':
+        return l10n.achIronhand;
+      case 'games_50':
+        return l10n.achVeteran;
+      default:
+        return id;
+    }
+  }
+
+  /// What an achievement asks for, built from its metric and threshold.
+  ///
+  /// Describing the measurement rather than storing fifteen sentences per
+  /// language keeps the whole set localising from eight, and any achievement
+  /// added later is translated the moment it picks a metric.
+  static String achievementDescription(
+    AppLocalizations l10n,
+    Achievement achievement,
+  ) {
+    final n = achievement.threshold;
+    switch (achievement.metric) {
+      case AchievementMetric.highestTile:
+        return l10n.objReachTile(n);
+      case AchievementMetric.trialsCompleted:
+        // "Every trial" is its own sentence: a count would read as a
+        // coincidence rather than the whole set.
+        return n >= allTrials.length
+            ? l10n.achDescAllTrials
+            : l10n.achDescTrials(n);
+      case AchievementMetric.chaptersCompleted:
+        return l10n.achDescChapter;
+      case AchievementMetric.trialsWithoutUndo:
+        return l10n.achDescCleanTrials(n);
+      case AchievementMetric.dailyStreak:
+        return l10n.achDescStreak(n);
+      case AchievementMetric.bestScore:
+        return l10n.achDescScore(n);
+      case AchievementMetric.totalMerges:
+        return l10n.achDescMerges(n);
+      case AchievementMetric.gamesPlayed:
+        return l10n.achDescGames(n);
+    }
+  }
+
   /// Rank names on the Path of the Titans.
   static String rank(AppLocalizations l10n, Rank rank) {
     switch (rank.name) {

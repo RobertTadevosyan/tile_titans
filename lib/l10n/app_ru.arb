@@ -115,5 +115,70 @@
   "chapterSummit": "Вершина",
   "chapterForgeTheme": "Знакомство с целями",
   "chapterProvingTheme": "Закрытые клетки, без отмены",
-  "chapterSummitTheme": "Время и открытое поле"
+  "chapterSummitTheme": "Время и открытое поле",
+  "achFirstBlood": "Первая кровь",
+  "achWarrior": "Воин",
+  "achChampion": "Чемпион",
+  "achTitanName": "Титан",
+  "achBeyondGods": "Превыше богов",
+  "achInitiate": "Посвящённый",
+  "achProven": "Испытанный",
+  "achTrialmaster": "Мастер испытаний",
+  "achForgedName": "Закалённый",
+  "achPerfectTrial": "Безупречное испытание",
+  "achDedicated": "Преданный",
+  "achRelentless": "Неумолимый",
+  "achHoarder": "Скопидом",
+  "achIronhand": "Железная рука",
+  "achVeteran": "Ветеран",
+  "achDescTrials": "Пройдите {count} испытаний титанов",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Пройдите все испытания титанов",
+  "achDescChapter": "Пройдите главу целиком",
+  "achDescCleanTrials": "Пройдите {count} испытаний без отмены",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "Серия ежедневных испытаний: {days} дней",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Наберите {score} за одну партию",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Объедините {count} плиток всего",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Сыграйте {count} партий",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

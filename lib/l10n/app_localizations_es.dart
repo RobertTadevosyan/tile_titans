@@ -395,4 +395,85 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get chapterSummitTheme => 'Contrarreloj y campo abierto';
+
+  @override
+  String get achFirstBlood => 'Primera Sangre';
+
+  @override
+  String get achWarrior => 'Guerrero';
+
+  @override
+  String get achChampion => 'Campeón';
+
+  @override
+  String get achTitanName => 'Titán';
+
+  @override
+  String get achBeyondGods => 'Más Allá de los Dioses';
+
+  @override
+  String get achInitiate => 'Iniciado';
+
+  @override
+  String get achProven => 'Probado';
+
+  @override
+  String get achTrialmaster => 'Maestro de Pruebas';
+
+  @override
+  String get achForgedName => 'Forjado';
+
+  @override
+  String get achPerfectTrial => 'Prueba Perfecta';
+
+  @override
+  String get achDedicated => 'Constante';
+
+  @override
+  String get achRelentless => 'Implacable';
+
+  @override
+  String get achHoarder => 'Acaparador';
+
+  @override
+  String get achIronhand => 'Mano de Hierro';
+
+  @override
+  String get achVeteran => 'Veterano';
+
+  @override
+  String achDescTrials(int count) {
+    return 'Completa $count Pruebas de Titanes';
+  }
+
+  @override
+  String get achDescAllTrials => 'Completa todas las Pruebas de Titanes';
+
+  @override
+  String get achDescChapter => 'Completa un capítulo entero';
+
+  @override
+  String achDescCleanTrials(int count) {
+    return 'Completa $count pruebas sin deshacer';
+  }
+
+  @override
+  String achDescStreak(int days) {
+    return 'Racha de $days días en la Prueba Diaria';
+  }
+
+  @override
+  String achDescScore(int score) {
+    return 'Consigue $score en una sola partida';
+  }
+
+  @override
+  String achDescMerges(int count) {
+    return 'Fusiona $count fichas en total';
+  }
+
+  @override
+  String achDescGames(int count) {
+    return 'Juega $count partidas';
+  }
 }

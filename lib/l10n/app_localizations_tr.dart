@@ -395,4 +395,85 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chapterSummitTheme => 'Zaman baskısı ve açık alan';
+
+  @override
+  String get achFirstBlood => 'İlk Kan';
+
+  @override
+  String get achWarrior => 'Savaşçı';
+
+  @override
+  String get achChampion => 'Şampiyon';
+
+  @override
+  String get achTitanName => 'Titan';
+
+  @override
+  String get achBeyondGods => 'Tanrıların Ötesinde';
+
+  @override
+  String get achInitiate => 'Aday';
+
+  @override
+  String get achProven => 'Sınanmış';
+
+  @override
+  String get achTrialmaster => 'Sınav Ustası';
+
+  @override
+  String get achForgedName => 'Dövülmüş';
+
+  @override
+  String get achPerfectTrial => 'Kusursuz Sınav';
+
+  @override
+  String get achDedicated => 'Kararlı';
+
+  @override
+  String get achRelentless => 'Amansız';
+
+  @override
+  String get achHoarder => 'İstifçi';
+
+  @override
+  String get achIronhand => 'Demir El';
+
+  @override
+  String get achVeteran => 'Kıdemli';
+
+  @override
+  String achDescTrials(int count) {
+    return '$count Titan Sınavını tamamla';
+  }
+
+  @override
+  String get achDescAllTrials => 'Tüm Titan Sınavlarını tamamla';
+
+  @override
+  String get achDescChapter => 'Bir bölümü tamamen bitir';
+
+  @override
+  String achDescCleanTrials(int count) {
+    return '$count sınavı geri alma olmadan tamamla';
+  }
+
+  @override
+  String achDescStreak(int days) {
+    return '$days günlük Günlük Sınav serisi';
+  }
+
+  @override
+  String achDescScore(int score) {
+    return 'Tek oyunda $score puan yap';
+  }
+
+  @override
+  String achDescMerges(int count) {
+    return 'Toplam $count karo birleştir';
+  }
+
+  @override
+  String achDescGames(int count) {
+    return '$count oyun oyna';
+  }
 }

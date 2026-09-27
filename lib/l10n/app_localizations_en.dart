@@ -395,4 +395,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chapterSummitTheme => 'Time pressure and open ground';
+
+  @override
+  String get achFirstBlood => 'First Blood';
+
+  @override
+  String get achWarrior => 'Warrior';
+
+  @override
+  String get achChampion => 'Champion';
+
+  @override
+  String get achTitanName => 'Titan';
+
+  @override
+  String get achBeyondGods => 'Beyond the Gods';
+
+  @override
+  String get achInitiate => 'Initiate';
+
+  @override
+  String get achProven => 'Proven';
+
+  @override
+  String get achTrialmaster => 'Trialmaster';
+
+  @override
+  String get achForgedName => 'Forged';
+
+  @override
+  String get achPerfectTrial => 'Perfect Trial';
+
+  @override
+  String get achDedicated => 'Dedicated';
+
+  @override
+  String get achRelentless => 'Relentless';
+
+  @override
+  String get achHoarder => 'Hoarder';
+
+  @override
+  String get achIronhand => 'Ironhand';
+
+  @override
+  String get achVeteran => 'Veteran';
+
+  @override
+  String achDescTrials(int count) {
+    return 'Complete $count Titan Trials';
+  }
+
+  @override
+  String get achDescAllTrials => 'Complete every Titan Trial';
+
+  @override
+  String get achDescChapter => 'Complete a full chapter';
+
+  @override
+  String achDescCleanTrials(int count) {
+    return 'Complete $count trials without undo';
+  }
+
+  @override
+  String achDescStreak(int days) {
+    return 'A $days-day Daily Trial streak';
+  }
+
+  @override
+  String achDescScore(int score) {
+    return 'Score $score in a single run';
+  }
+
+  @override
+  String achDescMerges(int count) {
+    return 'Merge $count tiles in total';
+  }
+
+  @override
+  String achDescGames(int count) {
+    return 'Play $count games';
+  }
 }

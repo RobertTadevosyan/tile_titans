@@ -115,5 +115,70 @@
   "chapterSummit": "La Vetta",
   "chapterForgeTheme": "Impara gli obiettivi",
   "chapterProvingTheme": "Celle bloccate e niente annulla",
-  "chapterSummitTheme": "Tempo e campo aperto"
+  "chapterSummitTheme": "Tempo e campo aperto",
+  "achFirstBlood": "Primo Sangue",
+  "achWarrior": "Guerriero",
+  "achChampion": "Campione",
+  "achTitanName": "Titano",
+  "achBeyondGods": "Oltre gli Dèi",
+  "achInitiate": "Iniziato",
+  "achProven": "Provato",
+  "achTrialmaster": "Maestro delle Prove",
+  "achForgedName": "Forgiato",
+  "achPerfectTrial": "Prova Perfetta",
+  "achDedicated": "Costante",
+  "achRelentless": "Implacabile",
+  "achHoarder": "Accumulatore",
+  "achIronhand": "Mano di Ferro",
+  "achVeteran": "Veterano",
+  "achDescTrials": "Completa {count} Prove dei Titani",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Completa tutte le Prove dei Titani",
+  "achDescChapter": "Completa un capitolo intero",
+  "achDescCleanTrials": "Completa {count} prove senza annullare",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "Serie di {days} giorni nella Prova del Giorno",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Totalizza {score} in una sola partita",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Unisci {count} tessere in totale",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Gioca {count} partite",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

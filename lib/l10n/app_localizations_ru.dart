@@ -395,4 +395,85 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get chapterSummitTheme => 'Время и открытое поле';
+
+  @override
+  String get achFirstBlood => 'Первая кровь';
+
+  @override
+  String get achWarrior => 'Воин';
+
+  @override
+  String get achChampion => 'Чемпион';
+
+  @override
+  String get achTitanName => 'Титан';
+
+  @override
+  String get achBeyondGods => 'Превыше богов';
+
+  @override
+  String get achInitiate => 'Посвящённый';
+
+  @override
+  String get achProven => 'Испытанный';
+
+  @override
+  String get achTrialmaster => 'Мастер испытаний';
+
+  @override
+  String get achForgedName => 'Закалённый';
+
+  @override
+  String get achPerfectTrial => 'Безупречное испытание';
+
+  @override
+  String get achDedicated => 'Преданный';
+
+  @override
+  String get achRelentless => 'Неумолимый';
+
+  @override
+  String get achHoarder => 'Скопидом';
+
+  @override
+  String get achIronhand => 'Железная рука';
+
+  @override
+  String get achVeteran => 'Ветеран';
+
+  @override
+  String achDescTrials(int count) {
+    return 'Пройдите $count испытаний титанов';
+  }
+
+  @override
+  String get achDescAllTrials => 'Пройдите все испытания титанов';
+
+  @override
+  String get achDescChapter => 'Пройдите главу целиком';
+
+  @override
+  String achDescCleanTrials(int count) {
+    return 'Пройдите $count испытаний без отмены';
+  }
+
+  @override
+  String achDescStreak(int days) {
+    return 'Серия ежедневных испытаний: $days дней';
+  }
+
+  @override
+  String achDescScore(int score) {
+    return 'Наберите $score за одну партию';
+  }
+
+  @override
+  String achDescMerges(int count) {
+    return 'Объедините $count плиток всего';
+  }
+
+  @override
+  String achDescGames(int count) {
+    return 'Сыграйте $count партий';
+  }
 }

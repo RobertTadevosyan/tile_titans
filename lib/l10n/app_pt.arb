@@ -115,5 +115,70 @@
   "chapterSummit": "O Cume",
   "chapterForgeTheme": "Aprende os objetivos",
   "chapterProvingTheme": "Células bloqueadas e sem anular",
-  "chapterSummitTheme": "Tempo e campo aberto"
+  "chapterSummitTheme": "Tempo e campo aberto",
+  "achFirstBlood": "Primeiro Sangue",
+  "achWarrior": "Guerreiro",
+  "achChampion": "Campeão",
+  "achTitanName": "Titã",
+  "achBeyondGods": "Além dos Deuses",
+  "achInitiate": "Iniciado",
+  "achProven": "Provado",
+  "achTrialmaster": "Mestre das Provas",
+  "achForgedName": "Forjado",
+  "achPerfectTrial": "Prova Perfeita",
+  "achDedicated": "Dedicado",
+  "achRelentless": "Implacável",
+  "achHoarder": "Acumulador",
+  "achIronhand": "Mão de Ferro",
+  "achVeteran": "Veterano",
+  "achDescTrials": "Complete {count} Provas dos Titãs",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Complete todas as Provas dos Titãs",
+  "achDescChapter": "Complete um capítulo inteiro",
+  "achDescCleanTrials": "Complete {count} provas sem desfazer",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "Sequência de {days} dias na Prova Diária",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Marque {score} numa única partida",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Funda {count} peças no total",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Jogue {count} partidas",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -115,5 +115,70 @@
   "chapterSummit": "Le Sommet",
   "chapterForgeTheme": "Apprenez les objectifs",
   "chapterProvingTheme": "Cases bloquées, sans annuler",
-  "chapterSummitTheme": "Le temps et le terrain ouvert"
+  "chapterSummitTheme": "Le temps et le terrain ouvert",
+  "achFirstBlood": "Premier Sang",
+  "achWarrior": "Guerrier",
+  "achChampion": "Champion",
+  "achTitanName": "Titan",
+  "achBeyondGods": "Au-delà des Dieux",
+  "achInitiate": "Initié",
+  "achProven": "Éprouvé",
+  "achTrialmaster": "Maître des Épreuves",
+  "achForgedName": "Forgé",
+  "achPerfectTrial": "Épreuve Parfaite",
+  "achDedicated": "Assidu",
+  "achRelentless": "Implacable",
+  "achHoarder": "Amasseur",
+  "achIronhand": "Main de Fer",
+  "achVeteran": "Vétéran",
+  "achDescTrials": "Terminez {count} Épreuves des Titans",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Terminez toutes les Épreuves des Titans",
+  "achDescChapter": "Terminez un chapitre entier",
+  "achDescCleanTrials": "Terminez {count} épreuves sans annuler",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "Série de {days} jours d'Épreuve du Jour",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Marquez {score} en une seule partie",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Fusionnez {count} tuiles au total",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Jouez {count} parties",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

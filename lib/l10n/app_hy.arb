@@ -115,5 +115,70 @@
   "chapterSummit": "Գագաթը",
   "chapterForgeTheme": "Սովորիր նպատակները",
   "chapterProvingTheme": "Փակ վանդակներ, առանց հետարկման",
-  "chapterSummitTheme": "Ժամանակ և բաց դաշտ"
+  "chapterSummitTheme": "Ժամանակ և բաց դաշտ",
+  "achFirstBlood": "Առաջին արյուն",
+  "achWarrior": "Մարտիկ",
+  "achChampion": "Չեմպիոն",
+  "achTitanName": "Տիտան",
+  "achBeyondGods": "Աստվածներից վեր",
+  "achInitiate": "Նորընծա",
+  "achProven": "Փորձված",
+  "achTrialmaster": "Փորձությունների վարպետ",
+  "achForgedName": "Կոփված",
+  "achPerfectTrial": "Կատարյալ փորձություն",
+  "achDedicated": "Նվիրված",
+  "achRelentless": "Անդրդվելի",
+  "achHoarder": "Կուտակող",
+  "achIronhand": "Երկաթե ձեռք",
+  "achVeteran": "Վետերան",
+  "achDescTrials": "Անցեք տիտանների {count} փորձություն",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Անցեք տիտանների բոլոր փորձությունները",
+  "achDescChapter": "Անցեք մի ամբողջ գլուխ",
+  "achDescCleanTrials": "Անցեք {count} փորձություն առանց հետարկման",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "Օրական փորձության {days} օր անընդմեջ",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Հավաքեք {score} միավոր մեկ խաղում",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Միաձուլեք ընդամենը {count} սալիկ",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Խաղացեք {count} խաղ",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

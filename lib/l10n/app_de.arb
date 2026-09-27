@@ -115,5 +115,70 @@
   "chapterSummit": "Der Gipfel",
   "chapterForgeTheme": "Lerne die Ziele",
   "chapterProvingTheme": "Blockierte Felder, kein Rückgängig",
-  "chapterSummitTheme": "Zeitdruck und offenes Feld"
+  "chapterSummitTheme": "Zeitdruck und offenes Feld",
+  "achFirstBlood": "Erstes Blut",
+  "achWarrior": "Krieger",
+  "achChampion": "Champion",
+  "achTitanName": "Titan",
+  "achBeyondGods": "Jenseits der Götter",
+  "achInitiate": "Eingeweihter",
+  "achProven": "Bewährt",
+  "achTrialmaster": "Prüfungsmeister",
+  "achForgedName": "Geschmiedet",
+  "achPerfectTrial": "Perfekte Prüfung",
+  "achDedicated": "Beharrlich",
+  "achRelentless": "Unerbittlich",
+  "achHoarder": "Hamsterer",
+  "achIronhand": "Eisenhand",
+  "achVeteran": "Veteran",
+  "achDescTrials": "Schließe {count} Titanenprüfungen ab",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Schließe jede Titanenprüfung ab",
+  "achDescChapter": "Schließe ein ganzes Kapitel ab",
+  "achDescCleanTrials": "Schließe {count} Prüfungen ohne Rückgängig ab",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "{days} Tage Tagesprüfung in Folge",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Erziele {score} in einer Partie",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Verschmelze insgesamt {count} Steine",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Spiele {count} Partien",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

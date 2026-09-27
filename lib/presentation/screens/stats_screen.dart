@@ -290,6 +290,7 @@ class _AchievementRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return TitanCard(
       padding: const EdgeInsets.all(TitanSpacing.md),
       child: Row(
@@ -304,9 +305,10 @@ class _AchievementRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(achievement.name, style: TitanText.cardTitle(context)),
+                Text(ContentStrings.achievementName(l10n, achievement.id),
+                    style: TitanText.cardTitle(context)),
                 Text(
-                  achievement.description,
+                  ContentStrings.achievementDescription(l10n, achievement),
                   style: TitanText.cardBody(context),
                 ),
                 if (!unlocked) ...[

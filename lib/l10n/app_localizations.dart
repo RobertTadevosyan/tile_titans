@@ -809,6 +809,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time pressure and open ground'**
   String get chapterSummitTheme;
+
+  /// No description provided for @achFirstBlood.
+  ///
+  /// In en, this message translates to:
+  /// **'First Blood'**
+  String get achFirstBlood;
+
+  /// No description provided for @achWarrior.
+  ///
+  /// In en, this message translates to:
+  /// **'Warrior'**
+  String get achWarrior;
+
+  /// No description provided for @achChampion.
+  ///
+  /// In en, this message translates to:
+  /// **'Champion'**
+  String get achChampion;
+
+  /// No description provided for @achTitanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Titan'**
+  String get achTitanName;
+
+  /// No description provided for @achBeyondGods.
+  ///
+  /// In en, this message translates to:
+  /// **'Beyond the Gods'**
+  String get achBeyondGods;
+
+  /// No description provided for @achInitiate.
+  ///
+  /// In en, this message translates to:
+  /// **'Initiate'**
+  String get achInitiate;
+
+  /// No description provided for @achProven.
+  ///
+  /// In en, this message translates to:
+  /// **'Proven'**
+  String get achProven;
+
+  /// No description provided for @achTrialmaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Trialmaster'**
+  String get achTrialmaster;
+
+  /// No description provided for @achForgedName.
+  ///
+  /// In en, this message translates to:
+  /// **'Forged'**
+  String get achForgedName;
+
+  /// No description provided for @achPerfectTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Trial'**
+  String get achPerfectTrial;
+
+  /// No description provided for @achDedicated.
+  ///
+  /// In en, this message translates to:
+  /// **'Dedicated'**
+  String get achDedicated;
+
+  /// No description provided for @achRelentless.
+  ///
+  /// In en, this message translates to:
+  /// **'Relentless'**
+  String get achRelentless;
+
+  /// No description provided for @achHoarder.
+  ///
+  /// In en, this message translates to:
+  /// **'Hoarder'**
+  String get achHoarder;
+
+  /// No description provided for @achIronhand.
+  ///
+  /// In en, this message translates to:
+  /// **'Ironhand'**
+  String get achIronhand;
+
+  /// No description provided for @achVeteran.
+  ///
+  /// In en, this message translates to:
+  /// **'Veteran'**
+  String get achVeteran;
+
+  /// No description provided for @achDescTrials.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {count} Titan Trials'**
+  String achDescTrials(int count);
+
+  /// No description provided for @achDescAllTrials.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete every Titan Trial'**
+  String get achDescAllTrials;
+
+  /// No description provided for @achDescChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a full chapter'**
+  String get achDescChapter;
+
+  /// No description provided for @achDescCleanTrials.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {count} trials without undo'**
+  String achDescCleanTrials(int count);
+
+  /// No description provided for @achDescStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'A {days}-day Daily Trial streak'**
+  String achDescStreak(int days);
+
+  /// No description provided for @achDescScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Score {score} in a single run'**
+  String achDescScore(int score);
+
+  /// No description provided for @achDescMerges.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge {count} tiles in total'**
+  String achDescMerges(int count);
+
+  /// No description provided for @achDescGames.
+  ///
+  /// In en, this message translates to:
+  /// **'Play {count} games'**
+  String achDescGames(int count);
 }
 
 class _AppLocalizationsDelegate

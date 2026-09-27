@@ -115,5 +115,70 @@
   "chapterSummit": "La Cumbre",
   "chapterForgeTheme": "Aprende los objetivos",
   "chapterProvingTheme": "Celdas bloqueadas y sin deshacer",
-  "chapterSummitTheme": "Contrarreloj y campo abierto"
+  "chapterSummitTheme": "Contrarreloj y campo abierto",
+  "achFirstBlood": "Primera Sangre",
+  "achWarrior": "Guerrero",
+  "achChampion": "Campeón",
+  "achTitanName": "Titán",
+  "achBeyondGods": "Más Allá de los Dioses",
+  "achInitiate": "Iniciado",
+  "achProven": "Probado",
+  "achTrialmaster": "Maestro de Pruebas",
+  "achForgedName": "Forjado",
+  "achPerfectTrial": "Prueba Perfecta",
+  "achDedicated": "Constante",
+  "achRelentless": "Implacable",
+  "achHoarder": "Acaparador",
+  "achIronhand": "Mano de Hierro",
+  "achVeteran": "Veterano",
+  "achDescTrials": "Completa {count} Pruebas de Titanes",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Completa todas las Pruebas de Titanes",
+  "achDescChapter": "Completa un capítulo entero",
+  "achDescCleanTrials": "Completa {count} pruebas sin deshacer",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "Racha de {days} días en la Prueba Diaria",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Consigue {score} en una sola partida",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Fusiona {count} fichas en total",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Juega {count} partidas",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

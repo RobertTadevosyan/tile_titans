@@ -185,5 +185,70 @@
   "chapterSummit": "The Summit",
   "chapterForgeTheme": "Learn the objectives",
   "chapterProvingTheme": "Blocked cells and no undo",
-  "chapterSummitTheme": "Time pressure and open ground"
+  "chapterSummitTheme": "Time pressure and open ground",
+  "achFirstBlood": "First Blood",
+  "achWarrior": "Warrior",
+  "achChampion": "Champion",
+  "achTitanName": "Titan",
+  "achBeyondGods": "Beyond the Gods",
+  "achInitiate": "Initiate",
+  "achProven": "Proven",
+  "achTrialmaster": "Trialmaster",
+  "achForgedName": "Forged",
+  "achPerfectTrial": "Perfect Trial",
+  "achDedicated": "Dedicated",
+  "achRelentless": "Relentless",
+  "achHoarder": "Hoarder",
+  "achIronhand": "Ironhand",
+  "achVeteran": "Veteran",
+  "achDescTrials": "Complete {count} Titan Trials",
+  "@achDescTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescAllTrials": "Complete every Titan Trial",
+  "achDescChapter": "Complete a full chapter",
+  "achDescCleanTrials": "Complete {count} trials without undo",
+  "@achDescCleanTrials": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescStreak": "A {days}-day Daily Trial streak",
+  "@achDescStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescScore": "Score {score} in a single run",
+  "@achDescScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescMerges": "Merge {count} tiles in total",
+  "@achDescMerges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achDescGames": "Play {count} games",
+  "@achDescGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
