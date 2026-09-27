@@ -29,6 +29,28 @@ void main() {
     });
   });
 
+  group('the global record stays Classic-only', () {
+    // The stored global high score is the legacy Classic record, and startup
+    // republishes it to the Classic ladder. When any scored mode could write
+    // it, a Time Attack run leaked onto the main board one launch later: a
+    // 24-point 90-second run appeared beside six-figure Classic scores.
+    bool writesGlobal(String mode, int score, int globalHigh) =>
+        mode == ModeKeys.classic && score > globalHigh;
+
+    test('a Classic record still updates the global figure', () {
+      expect(writesGlobal(ModeKeys.classic, 200000, 153532), isTrue);
+    });
+
+    test('Time Attack never touches it', () {
+      expect(writesGlobal(ModeKeys.timeAttack, 24, 0), isFalse);
+      expect(writesGlobal(ModeKeys.timeAttack, 999999, 153532), isFalse);
+    });
+
+    test('Hardcore never touches it', () {
+      expect(writesGlobal(ModeKeys.hardcore, 50000, 0), isFalse);
+    });
+  });
+
   group('publishing is gated per mode, not globally', () {
     // Reproduces the reported bug: the Time Attack and Hardcore boards were
     // empty because a run only published when it beat the single global high

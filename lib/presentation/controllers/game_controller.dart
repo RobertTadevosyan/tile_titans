@@ -1264,13 +1264,19 @@ class GameController extends ChangeNotifier {
     // It did, and that is why the Time Attack and Hardcore boards were empty:
     // a player holding a 153,532 Classic record would have to beat it in a
     // 90-second run before their first Time Attack score ever posted.
+    final mode = _modeName;
     final previousGlobal = highScore;
-    if (score > highScore) {
+
+    // The stored global figure is the legacy *Classic* record, and _initialize
+    // republishes it to the Classic ladder on the next launch. Letting any
+    // scored mode write it meant a Time Attack run leaked onto the main board
+    // a launch later: a 24-point 90-second run posted itself next to six-figure
+    // Classic scores. Other modes keep their record in per-mode statistics.
+    if (mode == ModeKeys.classic && score > highScore) {
       highScore = score;
       unawaited(prefs.saveHighScore(score));
     }
 
-    final mode = _modeName;
     final modeBest = progressStore?.stats.forMode(mode).bestScore ?? 0;
     // Classic shares the legacy ladder, so until it has per-mode statistics of
     // its own it is measured against the global figure rather than zero —
