@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/presentation/models/leaderboard_entry.dart';
@@ -364,9 +365,20 @@ class GameController extends ChangeNotifier {
           'os': device['os'],
         });
       });
-    } catch (_) {
+    } catch (error, stack) {
       // A failed leaderboard write must never interrupt play; the next
-      // qualifying score will try again.
+      // qualifying score will try again. But it must not vanish either: this
+      // catch is what hid the per-mode boards being rejected with permission
+      // denied on every single write, for as long as they existed. Recording
+      // it non-fatally keeps play uninterrupted and the failure visible.
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          error,
+          stack,
+          reason: 'leaderboard write failed for $mode',
+          fatal: false,
+        ),
+      );
     }
   }
 
