@@ -611,6 +611,10 @@ class GameController extends ChangeNotifier {
 
   void _resetSessionCounters() {
     _sessionStart = DateTime.now();
+    // Show the round's real length before the first move. The field defaults
+    // to 60, so a 90-second round opened reading "60s" with the bar two
+    // thirds full, then jumped up once the clock actually started.
+    timeLeft = timeLimitSeconds;
     movesUsed = 0;
     secondsElapsed = 0;
     objectiveMet = false;
@@ -1138,7 +1142,14 @@ class GameController extends ChangeNotifier {
     // Time Attack pays seconds for merges, so chaining is the strategy rather
     // than raw speed.
     if (rules.secondsPerMerge > 0 && result.merges.isNotEmpty) {
-      timeLeft += rules.secondsPerMerge * result.merges.length;
+      // Capped at the round's own length. Uncapped, merging pays for itself:
+      // at +2s a merge, anyone playing competently banks time faster than it
+      // drains, and the round never ends — measured on device, a run climbed
+      // from 84s to 190s while being played. A round that cannot end cannot
+      // post a score either. Merging now staves the clock off rather than
+      // banking it, which keeps the pressure the mode exists for.
+      final bonus = rules.secondsPerMerge * result.merges.length;
+      timeLeft = min(timeLeft + bonus, timeLimitSeconds);
     }
 
     unawaited(prefs.saveGame(score, gridSize, board));

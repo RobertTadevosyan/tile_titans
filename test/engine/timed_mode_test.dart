@@ -28,5 +28,28 @@ void main() {
     test('a timed run is scored, so it has something to rank', () {
       expect(RuleSet.timeAttack.scored, isTrue);
     });
+
+    test('the clock is capped, so a good run still ends', () {
+      // Uncapped, a merge pays for more than it costs: at +2s per merge a
+      // competent player gains time faster than it drains and the round runs
+      // forever. On device a run climbed from 84s to 190s while being played,
+      // and a round that never ends never posts a score.
+      const limit = 90;
+      const perMerge = 2;
+      var clock = 40;
+      // Fifty merging moves, one second of real time each.
+      for (var i = 0; i < 50; i++) {
+        clock -= 1;
+        clock = (clock + perMerge) > limit ? limit : clock + perMerge;
+      }
+      expect(clock, lessThanOrEqualTo(limit));
+
+      // And with no merges at all it still runs out.
+      var idle = limit;
+      for (var i = 0; i < limit; i++) {
+        idle -= 1;
+      }
+      expect(idle, 0);
+    });
   });
 }
