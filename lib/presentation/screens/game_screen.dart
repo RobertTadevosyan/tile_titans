@@ -263,8 +263,8 @@ class _GameScreenState extends State<GameScreen> {
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme.primaryColor,
-            foregroundColor: theme.colorScheme.onPrimary,
+            backgroundColor: titanButtonFill(context),
+            foregroundColor: titanButtonLabel(context),
             padding: EdgeInsets.symmetric(
               horizontal: isTablet ? 32 : 24,
               vertical: isTablet ? 20 : 16,
@@ -284,8 +284,8 @@ class _GameScreenState extends State<GameScreen> {
         if (controller.undoAllowed)
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: theme.primaryColor,
-              foregroundColor: theme.colorScheme.onPrimary,
+              backgroundColor: titanButtonFill(context),
+              foregroundColor: titanButtonLabel(context),
               padding: EdgeInsets.symmetric(
                 horizontal: isTablet ? 32 : 24,
                 vertical: isTablet ? 20 : 16,
@@ -304,8 +304,8 @@ class _GameScreenState extends State<GameScreen> {
 
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme.primaryColor,
-            foregroundColor: theme.colorScheme.onPrimary,
+            backgroundColor: titanButtonFill(context),
+            foregroundColor: titanButtonLabel(context),
             padding: EdgeInsets.symmetric(
               horizontal: isTablet ? 32 : 24,
               vertical: isTablet ? 20 : 16,
@@ -348,8 +348,8 @@ class _GameScreenState extends State<GameScreen> {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: theme.primaryColor,
-                foregroundColor: theme.colorScheme.onPrimary,
+                backgroundColor: titanButtonFill(context),
+                foregroundColor: titanButtonLabel(context),
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 shape: RoundedRectangleBorder(
@@ -363,8 +363,8 @@ class _GameScreenState extends State<GameScreen> {
             if (controller.undoAllowed)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
-                  foregroundColor: theme.colorScheme.onPrimary,
+                  backgroundColor: titanButtonFill(context),
+                  foregroundColor: titanButtonLabel(context),
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   textStyle: TextStyle(
                     fontSize: 16,
@@ -381,8 +381,8 @@ class _GameScreenState extends State<GameScreen> {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme.primaryColor,
-            foregroundColor: theme.colorScheme.onPrimary,
+            backgroundColor: titanButtonFill(context),
+            foregroundColor: titanButtonLabel(context),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             shape: RoundedRectangleBorder(
@@ -412,8 +412,8 @@ class _GameScreenState extends State<GameScreen> {
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme.primaryColor,
-            foregroundColor: theme.colorScheme.onPrimary,
+            backgroundColor: titanButtonFill(context),
+            foregroundColor: titanButtonLabel(context),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             shape: RoundedRectangleBorder(
@@ -427,8 +427,8 @@ class _GameScreenState extends State<GameScreen> {
         if (controller.undoAllowed)
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: theme.primaryColor,
-              foregroundColor: theme.colorScheme.onPrimary,
+              backgroundColor: titanButtonFill(context),
+              foregroundColor: titanButtonLabel(context),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               shape: RoundedRectangleBorder(
@@ -441,8 +441,8 @@ class _GameScreenState extends State<GameScreen> {
         const SizedBox(width: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theme.primaryColor,
-            foregroundColor: theme.colorScheme.onPrimary,
+            backgroundColor: titanButtonFill(context),
+            foregroundColor: titanButtonLabel(context),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             shape: RoundedRectangleBorder(
@@ -502,17 +502,21 @@ class _GameScreenState extends State<GameScreen> {
                 isTablet: false,
               ),
               const SizedBox(height: 16),
-              Card(
-                child: SwitchListTile(
-                  title: Text(
-                    appLocales.autoPlay,
-                    style: TextStyle(fontSize: 14),
+              // Auto play finishes the game for you, so it is a stronger
+              // assist than a hint. Hardcore advertises "no help" and still
+              // offered it, which made the mode's promise untrue.
+              if (controller.rules.allowHints)
+                Card(
+                  child: SwitchListTile(
+                    title: Text(
+                      appLocales.autoPlay,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    value: controller.autoPlay,
+                    onChanged:
+                        (_) => controller.toggleAutoPlay(context, appLocales),
                   ),
-                  value: controller.autoPlay,
-                  onChanged:
-                      (_) => controller.toggleAutoPlay(context, appLocales),
                 ),
-              ),
             ],
           ),
         ),
@@ -570,20 +574,21 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                       if (kIsWeb) SizedBox(height: 100),
                       if(!kIsWeb) const SizedBox(height: 6),
-                      Card(
-                        child: SwitchListTile(
-                          title: Text(
-                            appLocales.autoPlay,
-                            style: TextStyle(fontSize: 14),
+                      if (controller.rules.allowHints)
+                        Card(
+                          child: SwitchListTile(
+                            title: Text(
+                              appLocales.autoPlay,
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            value: controller.autoPlay,
+                            onChanged:
+                                (_) => controller.toggleAutoPlay(
+                                  context,
+                                  appLocales,
+                                ),
                           ),
-                          value: controller.autoPlay,
-                          onChanged:
-                              (_) => controller.toggleAutoPlay(
-                                context,
-                                appLocales,
-                              ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -699,17 +704,19 @@ class _GameScreenState extends State<GameScreen> {
                     isTablet: true,
                   ),
                   const SizedBox(height: 16),
-                  Card(
-                    child: SwitchListTile(
-                      title: Text(
-                        appLocales.autoPlay,
-                        style: TextStyle(fontSize: 14),
+                  if (controller.rules.allowHints)
+                    Card(
+                      child: SwitchListTile(
+                        title: Text(
+                          appLocales.autoPlay,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        value: controller.autoPlay,
+                        onChanged:
+                            (_) =>
+                                controller.toggleAutoPlay(context, appLocales),
                       ),
-                      value: controller.autoPlay,
-                      onChanged:
-                          (_) => controller.toggleAutoPlay(context, appLocales),
                     ),
-                  ),
                 ],
               ),
             ),

@@ -95,6 +95,31 @@ void main() {
     });
   });
 
+  group('the board shows the record it actually has', () {
+    // The score panel read 0 for Classic while the player's Classic record was
+    // 1124 — in settings, and at #120 on the ladder they were looking at.
+    int shown({required String mode, required int modeBest, required int globalHigh}) {
+      if (modeBest > 0) return modeBest;
+      return mode == ModeKeys.classic ? globalHigh : 0;
+    }
+
+    test('Classic falls back to the legacy global record', () {
+      expect(shown(mode: ModeKeys.classic, modeBest: 0, globalHigh: 1124), 1124);
+    });
+
+    test('once Classic has its own statistics those win', () {
+      expect(
+          shown(mode: ModeKeys.classic, modeBest: 5000, globalHigh: 1124), 5000);
+    });
+
+    test('a mode with no history of its own starts at zero', () {
+      // The global figure was earned in Classic, so it is not this mode's
+      // record and must not be shown as one.
+      expect(shown(mode: ModeKeys.timeAttack, modeBest: 0, globalHigh: 1124), 0);
+      expect(shown(mode: ModeKeys.hardcore, modeBest: 0, globalHigh: 1124), 0);
+    });
+  });
+
   group('publishing is gated per mode, not globally', () {
     // Reproduces the reported bug: the Time Attack and Hardcore boards were
     // empty because a run only published when it beat the single global high

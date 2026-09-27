@@ -553,7 +553,13 @@ class GameController extends ChangeNotifier {
     final store = progressStore;
     if (store == null) return highScore;
     final best = store.stats.forMode(_modeName).bestScore;
-    return best > 0 ? best : 0;
+    if (best > 0) return best;
+    // Classic inherits the legacy global record until it has per-mode
+    // statistics of its own. Returning 0 instead contradicted the fallback this
+    // getter documents and showed "RECORD 0" to a player whose Classic record
+    // was on the board in front of them — 1124, visible in settings and at
+    // #120 on the ladder.
+    return _modeName == ModeKeys.classic ? highScore : 0;
   }
 
   Constraints get constraints =>

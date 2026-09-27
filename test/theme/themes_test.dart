@@ -105,6 +105,19 @@ void main() {
       }
     });
 
+    test('filled buttons are readable in every theme', () {
+      // primaryColor and colorScheme.onPrimary were set independently, so the
+      // pair produced Settings' restart button at 2.01:1 on Classic and
+      // 1.22:1 on Dark — a dark purple label on a near-black fill.
+      for (final theme in AppTheme.values) {
+        final fill = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final ratio = titanContrastRatio(fill, titanForegroundOn(fill));
+        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
+            reason: '${theme.name} button label is only '
+                '${ratio.toStringAsFixed(2)}:1');
+      }
+    });
+
     test('the app bar title is readable in every theme', () {
       // Each theme hardcoded its bar foreground and two of them picked one
       // that loses against their own fill: Classic's white on #66BB6A was

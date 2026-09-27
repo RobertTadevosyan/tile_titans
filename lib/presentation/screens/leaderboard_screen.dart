@@ -29,99 +29,33 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   List<LeaderboardEntry> leaderboardEntries = [];
   final GlobalKey _itemKey = GlobalKey();
 
-  late final Future<InterstitialAdLoader> _adLoader;
-  InterstitialAd? _ad;
-
   @override
   void initState() {
     super.initState();
     currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (isMobile()) {
-      _adLoader = _createInterstitialAdLoader();
-      _loadInterstitialAd();
-    }
   }
 
-  Future<InterstitialAdLoader> _createInterstitialAdLoader() {
-    return InterstitialAdLoader.create(
-      onAdLoaded: (InterstitialAd interstitialAd) {
-        // The ad was loaded successfully. Now you can show loaded ad
-        _ad = interstitialAd;
-      },
-      onAdFailedToLoad: (error) {
-        // Ad failed to load with AdRequestError.
-        // Attempting to load a new ad from the onAdFailedToLoad() method is strongly discouraged.
-      },
-    );
-  }
 
-  Future<void> _loadInterstitialAd() async {
-    if (!isMobile()) return;
-    final adLoader = await _adLoader;
-    await adLoader.loadAd(
-      adRequestConfiguration: AdRequestConfiguration(
-        adUnitId: AdsConfig.getInterstitialID(),
-      ),
-    ); // for debug you can use 'demo-interstitial-yandex'
-  }
 
-  _showIntestitialAd() async {
-    if (!isMobile()) return;
-    _ad?.setAdEventListener(
-      eventListener: InterstitialAdEventListener(
-        onAdShown: () {
-          // Called when ad is shown.
-        },
-        onAdFailedToShow: (error) {
-          // Called when an InterstitialAd failed to show.
-          // Destroy the ad so you don't show the ad a second time.
-          _ad?.destroy();
-          _ad = null;
-
-          // Now you can preload the next interstitial ad.
-          _loadInterstitialAd();
-        },
-        onAdClicked: () {
-          // Called when a click is recorded for an ad.
-        },
-        onAdDismissed: () {
-          // Called when ad is dismissed.
-          // Destroy the ad so you don't show the ad a second time.
-          _ad?.destroy();
-          _ad = null;
-
-          // Now you can preload the next interstitial ad.
-          _loadInterstitialAd();
-        },
-        onAdImpression: (impressionData) {
-          // Called when an impression is recorded for an ad.
-        },
-      ),
-    );
-    await _ad?.show();
-    await _ad?.waitForDismiss();
-  }
 
   void _scrollToUser() {
-    print("_scrollToUser");
     if (!_scrollController.hasClients) return;
-    print("hasClients");
     final index = leaderboardEntries.indexWhere(
       (entry) => entry.userId == currentUserUid,
     );
-    print("index: $index");
-    if (index != -1) {
-      print("scrolling: $index");
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        print("addPostFrameCallback: $index");
-        _scrollController.animateTo(
-          index * itemHeight,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-        _showIntestitialAd();
-      });
-    }
+    if (index == -1) return;
+
+    // Deliberately no interstitial here. This screen used to show one every
+    // time the player asked where they ranked — a full-screen ad on a
+    // navigation tap, bypassing the cooldown and the ad-free first sessions
+    // that InterstitialService exists to enforce.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        index * itemHeight,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   Future<void> _checkAdConfigAndLoadAd() async {
@@ -132,14 +66,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     final adsEnabledConfig = config['leaderboard_screen_ads_enabled'];
     final enabled = adsEnabledConfig == true || adsEnabledConfig == 'true';
 
-    print("CONFIG: main_page_ads_enabled: $adsEnabledConfig");
     if (enabled && isMobile()) {
       adRequest = const AdRequest(
         contextQuery: 'puzzle, games, mobile apps, games',
       );
       _loadBanner(); // Your existing banner loading method
     } else {
-      print("🚫 Ads disabled in remote config.");
     }
   }
 
@@ -163,7 +95,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("CONFIG MAIN_PAGE: didChangeDependencies: $isBannerAlreadyCreated");
     if (!isBannerAlreadyCreated) {
       _checkAdConfigAndLoadAd(); // ✅ Now it's safe to use MediaQuery
     }

@@ -33,6 +33,20 @@ Color titanMutedOn(Color surface, Color foreground) {
   return foreground;
 }
 
+/// The fill for a filled button, from the same rule as every other surface.
+///
+/// The themes set `primaryColor` and `colorScheme.onPrimary` independently, so
+/// pairing them produced buttons that could not be read. Settings' restart
+/// button measured 2.01:1 on Classic and 1.22:1 on Dark, where a dark purple
+/// label sat on a near-black fill — present, invisible, and never caught
+/// because nothing measured it.
+Color titanButtonFill(BuildContext context) =>
+    titanProminentSurface(Theme.of(context).primaryColor);
+
+/// The label colour that goes with [titanButtonFill].
+Color titanButtonLabel(BuildContext context) =>
+    titanForegroundOn(titanButtonFill(context));
+
 /// An app bar whose title is guaranteed to be readable on it.
 ///
 /// Every theme hardcoded its bar's foreground, and two of them chose a colour

@@ -1,6 +1,7 @@
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
@@ -325,8 +326,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Center(
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: titanButtonFill(context),
+              foregroundColor: titanButtonLabel(context),
               padding: EdgeInsets.symmetric(
                 horizontal: isTablet ? 32 : 24,
                 vertical: isTablet ? 18 : 14,
