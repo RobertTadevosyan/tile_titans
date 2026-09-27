@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
@@ -39,7 +38,6 @@ class _GameScreenState extends State<GameScreen> {
   GameController? _controller;
   BannerAd? _banner;
 
-
   /// Guards against showing more than one interstitial per game over.
   ///
   /// The game-over listener rebuilds for as long as `isOver` stays true, and
@@ -51,7 +49,6 @@ class _GameScreenState extends State<GameScreen> {
   /// tapping Continue after a loss does — otherwise looked exactly like the
   /// game ending, and fired an ad for a game the player had already finished.
   bool _interstitialShownThisGame = false;
-
 
   @override
   void initState() {
@@ -68,9 +65,6 @@ class _GameScreenState extends State<GameScreen> {
     _interstitialShownThisGame = context.read<GameController>().gameOver.value;
   }
 
-
-
-
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -81,8 +75,6 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
   }
 
-
-
   /// Loads the board banner.
   ///
   /// Mirrors the home screen: the slot is sized from the calculated ad size and
@@ -90,36 +82,46 @@ class _GameScreenState extends State<GameScreen> {
   /// MissingPluginException, because this SDK only registers a banner's
   /// platform channel once its widget is in the tree.
   Future<void> _loadGameBanner() async {
-    if (!isMobile() || _banner != null) return;
+    try {
+      // The ad SDK is a platform channel: this throws when the SDK is
+      // unavailable or the request fails, and every caller fires it from
+      // didChangeDependencies without awaiting it, so the throw had nobody
+      // to catch it. A banner is the least important thing on any of these
+      // screens; without one they simply show no banner.
 
-    final width = MediaQuery.sizeOf(context).width.toInt();
-    final size = BannerAdSize.sticky(width: width);
-    final calculated = await size.getCalculatedBannerAdSize();
-    if (!mounted) return;
+      if (!isMobile() || _banner != null) return;
 
-    final ad = BannerAd(
-      adUnitId: AdsConfig.getGameBannerID(),
-      adSize: size,
-      adRequest: adRequest,
-      onAdLoaded: () {},
-      onAdFailedToLoad: (_) {
-        if (!mounted) return;
-        setState(() {
-          bannerHeight = 0;
-          isBannerAlreadyCreated = false;
-        });
-      },
-      onAdClicked: () {},
-      onLeftApplication: () {},
-      onReturnedToApplication: () {},
-      onImpression: (_) {},
-    );
+      final width = MediaQuery.sizeOf(context).width.toInt();
+      final size = BannerAdSize.sticky(width: width);
+      final calculated = await size.getCalculatedBannerAdSize();
+      if (!mounted) return;
 
-    setState(() {
-      _banner = ad;
-      bannerHeight = calculated.height;
-      isBannerAlreadyCreated = true;
-    });
+      final ad = BannerAd(
+        adUnitId: AdsConfig.getGameBannerID(),
+        adSize: size,
+        adRequest: adRequest,
+        onAdLoaded: () {},
+        onAdFailedToLoad: (_) {
+          if (!mounted) return;
+          setState(() {
+            bannerHeight = 0;
+            isBannerAlreadyCreated = false;
+          });
+        },
+        onAdClicked: () {},
+        onLeftApplication: () {},
+        onReturnedToApplication: () {},
+        onImpression: (_) {},
+      );
+
+      setState(() {
+        _banner = ad;
+        bannerHeight = calculated.height;
+        isBannerAlreadyCreated = true;
+      });
+    } catch (_) {
+      // No banner.
+    }
   }
 
   @override
@@ -136,7 +138,6 @@ class _GameScreenState extends State<GameScreen> {
     // loading one would request inventory that is never rendered — a wasted
     // fill and an impression nobody can see.
   }
-
 
   void _handleSwipe(
     Offset delta,
@@ -203,9 +204,10 @@ class _GameScreenState extends State<GameScreen> {
               // swiping surface, and an ad flush against it invites mis-taps —
               // the separation is what keeps the placement safe.
               Positioned.fill(
-                bottom: isBannerAlreadyCreated
-                    ? bannerHeight.toDouble() + _bannerGap
-                    : 0,
+                bottom:
+                    isBannerAlreadyCreated
+                        ? bannerHeight.toDouble() + _bannerGap
+                        : 0,
                 child: screenContent(
                   appLocales,
                   controller,
@@ -326,14 +328,19 @@ class _GameScreenState extends State<GameScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: !controller.hintsAllowed ? null : () {
-            final hint = directionToEmoji(controller.getHint());
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(appLocales.hintMessage(hint ?? '🤷🤔🛑 -> 🔄')),
-              ),
-            );
-          },
+          onPressed:
+              !controller.hintsAllowed
+                  ? null
+                  : () {
+                    final hint = directionToEmoji(controller.getHint());
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          appLocales.hintMessage(hint ?? '🤷🤔🛑 -> 🔄'),
+                        ),
+                      ),
+                    );
+                  },
           child: Text(appLocales.hint),
         ),
       ],
@@ -397,12 +404,17 @@ class _GameScreenState extends State<GameScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: !controller.hintsAllowed ? null : () {
-            final hint = controller.getHint();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(appLocales.hintMessage(hint ?? ''))),
-            );
-          },
+          onPressed:
+              !controller.hintsAllowed
+                  ? null
+                  : () {
+                    final hint = controller.getHint();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(appLocales.hintMessage(hint ?? '')),
+                      ),
+                    );
+                  },
           child: Text(appLocales.hint),
         ),
       ],
@@ -457,12 +469,17 @@ class _GameScreenState extends State<GameScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: !controller.hintsAllowed ? null : () {
-            final hint = controller.getHint();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(appLocales.hintMessage(hint ?? ''))),
-            );
-          },
+          onPressed:
+              !controller.hintsAllowed
+                  ? null
+                  : () {
+                    final hint = controller.getHint();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(appLocales.hintMessage(hint ?? '')),
+                      ),
+                    );
+                  },
           child: Text(appLocales.hint),
         ),
       ],
@@ -581,7 +598,7 @@ class _GameScreenState extends State<GameScreen> {
                         context,
                       ),
                       if (kIsWeb) SizedBox(height: 100),
-                      if(!kIsWeb) const SizedBox(height: 6),
+                      if (!kIsWeb) const SizedBox(height: 6),
                       if (controller.rules.allowHints)
                         Card(
                           child: SwitchListTile(
@@ -741,8 +758,10 @@ class _GameScreenState extends State<GameScreen> {
     bool isTablet,
   ) {
     // Merges add seconds, so the bar can be asked to show more than full.
-    final percent =
-        (controller.timeLeft / controller.timeLimitSeconds).clamp(0.0, 1.0);
+    final percent = (controller.timeLeft / controller.timeLimitSeconds).clamp(
+      0.0,
+      1.0,
+    );
     return Column(
       children: [
         LinearProgressIndicator(

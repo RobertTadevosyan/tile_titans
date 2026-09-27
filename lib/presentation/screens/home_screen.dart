@@ -53,36 +53,46 @@ class _HomeScreenState extends State<HomeScreen> {
   /// The home screen is browsed rather than played, so a banner here cannot
   /// cause a mis-tap mid-swipe the way one under the board could.
   Future<void> _loadBanner() async {
-    final width = MediaQuery.sizeOf(context).width.toInt();
-    final size = BannerAdSize.sticky(width: width);
-    final calculated = await size.getCalculatedBannerAdSize();
-    if (!mounted) return;
+    try {
+      // The ad SDK is a platform channel: this throws when the SDK is
+      // unavailable or the request fails, and every caller fires it from
+      // didChangeDependencies without awaiting it, so the throw had nobody
+      // to catch it. A banner is the least important thing on any of these
+      // screens; without one they simply show no banner.
 
-    final ad = BannerAd(
-      adUnitId: AdsConfig.getHomeBannerID(),
-      adSize: size,
-      adRequest: _adRequest,
-      onAdLoaded: () {},
-      // Collapse the slot if nothing fills, so the page never shows a gap.
-      onAdFailedToLoad: (_) {
-        if (!mounted) return;
-        setState(() => _bannerHeight = 0);
-      },
-      onAdClicked: () {},
-      onLeftApplication: () {},
-      onReturnedToApplication: () {},
-      onImpression: (_) {},
-    );
+      final width = MediaQuery.sizeOf(context).width.toInt();
+      final size = BannerAdSize.sticky(width: width);
+      final calculated = await size.getCalculatedBannerAdSize();
+      if (!mounted) return;
 
-    // Do not call loadAd() here. This SDK registers the banner's platform
-    // channel only when its AdWidget is mounted, so loading first throws
-    // MissingPluginException — and because the slot was sized from onAdLoaded,
-    // the widget never mounted and the ad could never load. Size the slot from
-    // the calculated size and let mounting drive the request.
-    setState(() {
-      _banner = ad;
-      _bannerHeight = calculated.height;
-    });
+      final ad = BannerAd(
+        adUnitId: AdsConfig.getHomeBannerID(),
+        adSize: size,
+        adRequest: _adRequest,
+        onAdLoaded: () {},
+        // Collapse the slot if nothing fills, so the page never shows a gap.
+        onAdFailedToLoad: (_) {
+          if (!mounted) return;
+          setState(() => _bannerHeight = 0);
+        },
+        onAdClicked: () {},
+        onLeftApplication: () {},
+        onReturnedToApplication: () {},
+        onImpression: (_) {},
+      );
+
+      // Do not call loadAd() here. This SDK registers the banner's platform
+      // channel only when its AdWidget is mounted, so loading first throws
+      // MissingPluginException — and because the slot was sized from onAdLoaded,
+      // the widget never mounted and the ad could never load. Size the slot from
+      // the calculated size and let mounting drive the request.
+      setState(() {
+        _banner = ad;
+        _bannerHeight = calculated.height;
+      });
+    } catch (_) {
+      // No banner.
+    }
   }
 
   @override
@@ -98,14 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final daily = dailyTrialFor(DateTime.now());
 
     return Scaffold(
-      bottomNavigationBar: _bannerHeight > 0 && _banner != null
-          ? SafeArea(
-              child: SizedBox(
-                height: _bannerHeight.toDouble(),
-                child: AdWidget(bannerAd: _banner!),
-              ),
-            )
-          : null,
+      bottomNavigationBar:
+          _bannerHeight > 0 && _banner != null
+              ? SafeArea(
+                child: SizedBox(
+                  height: _bannerHeight.toDouble(),
+                  child: AdWidget(bannerAd: _banner!),
+                ),
+              )
+              : null,
       body: SafeArea(
         child: TitanPage(
           child: CustomScrollView(
@@ -182,8 +193,9 @@ class _Masthead extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: fraction,
                     minHeight: 6,
-                    backgroundColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.18),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).primaryColor.withValues(alpha: 0.18),
                   ),
                 ),
               ],
@@ -231,31 +243,33 @@ class _PrimaryAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return TitanCard(
       prominent: true,
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const GameScreen()),
-      ),
+      onTap:
+          () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (_) => const GameScreen())),
       padding: const EdgeInsets.symmetric(
         horizontal: TitanSpacing.lg,
         vertical: TitanSpacing.xl,
       ),
-      contentBuilder: (context) => Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.homeContinue.toUpperCase(),
-                  style: TitanText.display(context).copyWith(fontSize: 24),
+      contentBuilder:
+          (context) => Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.homeContinue.toUpperCase(),
+                      style: TitanText.display(context).copyWith(fontSize: 24),
+                    ),
+                    const SizedBox(height: TitanSpacing.xs),
+                    Text(l10n.homePlayed, style: TitanText.cardBody(context)),
+                  ],
                 ),
-                const SizedBox(height: TitanSpacing.xs),
-                Text(l10n.homePlayed, style: TitanText.cardBody(context)),
-              ],
-            ),
+              ),
+              const Icon(Icons.play_arrow_rounded, size: 40),
+            ],
           ),
-          const Icon(Icons.play_arrow_rounded, size: 40),
-        ],
-      ),
     );
   }
 }
@@ -277,60 +291,67 @@ class _DailyTrialCard extends StatelessWidget {
     final streak = progress.dailyStreak;
 
     return TitanCard(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => TrialScreen(trial: trial, isDaily: true),
-        ),
-      ),
-      contentBuilder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      onTap:
+          () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => TrialScreen(trial: trial, isDaily: true),
+            ),
+          ),
+      contentBuilder:
+          (context) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                Icons.local_fire_department_rounded,
-                size: 18,
-                color: Theme.of(context).primaryColor,
+              Row(
+                children: [
+                  Icon(
+                    Icons.local_fire_department_rounded,
+                    size: 18,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(width: TitanSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      l10n.homeDailyTrial.toUpperCase(),
+                      style: TitanText.sectionLabel(context),
+                    ),
+                  ),
+                  if (streak > 0)
+                    Text(
+                      l10n.homeStreakDays(streak),
+                      style: TitanText.cardBody(context),
+                    ),
+                ],
               ),
-              const SizedBox(width: TitanSpacing.sm),
-              Expanded(
-                child: Text(
-                  l10n.homeDailyTrial.toUpperCase(),
-                  style: TitanText.sectionLabel(context),
-                ),
+              const SizedBox(height: TitanSpacing.sm),
+              Text(
+                ContentStrings.objective(l10n, trial.objective),
+                style: TitanText.cardTitle(context),
               ),
-              if (streak > 0)
-                Text(
-                  l10n.homeStreakDays(streak),
-                  style: TitanText.cardBody(context),
-                ),
+              const SizedBox(height: TitanSpacing.sm),
+              Wrap(
+                spacing: TitanSpacing.sm,
+                runSpacing: TitanSpacing.xs,
+                children: [
+                  if (trial.constraints.moveLimit != null)
+                    _Chip(
+                      label: l10n.trialMoveLimit(trial.constraints.moveLimit!),
+                    ),
+                  if (trial.constraints.timeLimit != null)
+                    _Chip(
+                      label: l10n.trialTimeLimit(trial.constraints.timeLimit!),
+                    ),
+                  if (!trial.constraints.allowUndo)
+                    _Chip(label: l10n.trialNoUndo),
+                  _Chip(label: '${trial.gridSize}×${trial.gridSize}'),
+                  if (record?.completed == true)
+                    _Chip(
+                      label: '${l10n.homeBest}: ${record!.bestMoves}',
+                      highlighted: true,
+                    ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: TitanSpacing.sm),
-          Text(
-            ContentStrings.objective(l10n, trial.objective),
-            style: TitanText.cardTitle(context),
-          ),
-          const SizedBox(height: TitanSpacing.sm),
-          Wrap(
-            spacing: TitanSpacing.sm,
-            runSpacing: TitanSpacing.xs,
-            children: [
-              if (trial.constraints.moveLimit != null)
-                _Chip(label: l10n.trialMoveLimit(trial.constraints.moveLimit!)),
-              if (trial.constraints.timeLimit != null)
-                _Chip(label: l10n.trialTimeLimit(trial.constraints.timeLimit!)),
-              if (!trial.constraints.allowUndo) _Chip(label: l10n.trialNoUndo),
-              _Chip(label: '${trial.gridSize}×${trial.gridSize}'),
-              if (record?.completed == true)
-                _Chip(
-                  label: '${l10n.homeBest}: ${record!.bestMoves}',
-                  highlighted: true,
-                ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -342,37 +363,33 @@ class _ModeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modes = <({
-      String name,
-      String description,
-      IconData icon,
-      RuleSet rules
-    })>[
-      (
-        name: l10n.modeClassic,
-        description: l10n.modeClassicDesc,
-        icon: Icons.grid_4x4_rounded,
-        rules: RuleSet.classic
-      ),
-      (
-        name: l10n.modeZen,
-        description: l10n.modeZenDesc,
-        icon: Icons.spa_rounded,
-        rules: RuleSet.zen
-      ),
-      (
-        name: l10n.modeTimeAttack,
-        description: l10n.modeTimeAttackDesc,
-        icon: Icons.timer_rounded,
-        rules: RuleSet.timeAttack
-      ),
-      (
-        name: l10n.modeHardcore,
-        description: l10n.modeHardcoreDesc,
-        icon: Icons.whatshot_rounded,
-        rules: RuleSet.hardcore
-      ),
-    ];
+    final modes =
+        <({String name, String description, IconData icon, RuleSet rules})>[
+          (
+            name: l10n.modeClassic,
+            description: l10n.modeClassicDesc,
+            icon: Icons.grid_4x4_rounded,
+            rules: RuleSet.classic,
+          ),
+          (
+            name: l10n.modeZen,
+            description: l10n.modeZenDesc,
+            icon: Icons.spa_rounded,
+            rules: RuleSet.zen,
+          ),
+          (
+            name: l10n.modeTimeAttack,
+            description: l10n.modeTimeAttackDesc,
+            icon: Icons.timer_rounded,
+            rules: RuleSet.timeAttack,
+          ),
+          (
+            name: l10n.modeHardcore,
+            description: l10n.modeHardcoreDesc,
+            icon: Icons.whatshot_rounded,
+            rules: RuleSet.hardcore,
+          ),
+        ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -392,24 +409,25 @@ class _ModeGrid extends StatelessWidget {
               TitanCard(
                 onTap: () => _startMode(context, mode.rules),
                 padding: const EdgeInsets.all(TitanSpacing.md),
-                contentBuilder: (context) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(mode.icon, size: 22),
-                    const SizedBox(height: TitanSpacing.sm),
-                    Text(mode.name, style: TitanText.cardTitle(context)),
-                    const SizedBox(height: 2),
-                    // The rule difference must be understandable before you
-                    // start, without reading a paragraph.
-                    Text(
-                      mode.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TitanText.cardBody(context),
+                contentBuilder:
+                    (context) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(mode.icon, size: 22),
+                        const SizedBox(height: TitanSpacing.sm),
+                        Text(mode.name, style: TitanText.cardTitle(context)),
+                        const SizedBox(height: 2),
+                        // The rule difference must be understandable before you
+                        // start, without reading a paragraph.
+                        Text(
+                          mode.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TitanText.cardBody(context),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
               ),
           ],
         );
@@ -430,31 +448,33 @@ class _TrialsCard extends StatelessWidget {
     final done = progress.trialsCompleted;
 
     return TitanCard(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const TrialsScreen()),
-      ),
-      contentBuilder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      onTap:
+          () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (_) => const TrialsScreen())),
+      contentBuilder:
+          (context) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  l10n.homeCompleted(done, total),
-                  style: TitanText.cardTitle(context),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.homeCompleted(done, total),
+                      style: TitanText.cardTitle(context),
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded),
+                ],
               ),
-              const Icon(Icons.chevron_right_rounded),
+              const SizedBox(height: TitanSpacing.md),
+              for (final chapter in trialChapters) ...[
+                _ChapterRow(chapter: chapter, progress: progress),
+                if (chapter != trialChapters.last)
+                  const SizedBox(height: TitanSpacing.sm),
+              ],
             ],
           ),
-          const SizedBox(height: TitanSpacing.md),
-          for (final chapter in trialChapters) ...[
-            _ChapterRow(chapter: chapter, progress: progress),
-            if (chapter != trialChapters.last)
-              const SizedBox(height: TitanSpacing.sm),
-          ],
-        ],
-      ),
     );
   }
 }
@@ -468,9 +488,10 @@ class _ChapterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final done = chapter.trials
-        .where((t) => progress.recordFor(t.id)?.completed == true)
-        .length;
+    final done =
+        chapter.trials
+            .where((t) => progress.recordFor(t.id)?.completed == true)
+            .length;
     final fraction = done / chapter.trials.length;
 
     return Row(
@@ -492,14 +513,17 @@ class _ChapterRow extends StatelessWidget {
             child: LinearProgressIndicator(
               value: fraction,
               minHeight: 5,
-              backgroundColor:
-                  Theme.of(context).primaryColor.withValues(alpha: 0.18),
+              backgroundColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.18),
             ),
           ),
         ),
         const SizedBox(width: TitanSpacing.sm),
-        Text('$done/${chapter.trials.length}',
-            style: TitanText.cardBody(context)),
+        Text(
+          '$done/${chapter.trials.length}',
+          style: TitanText.cardBody(context),
+        ),
       ],
     );
   }
@@ -520,13 +544,17 @@ class _SecondaryRow extends StatelessWidget {
               vertical: TitanSpacing.md,
               horizontal: TitanSpacing.md,
             ),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const LeaderboardScreen()),
-            ),
-            contentBuilder: (context) => _IconLabel(
-              icon: Icons.emoji_events_rounded,
-              label: l10n.homeHallOfTitans,
-            ),
+            onTap:
+                () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const LeaderboardScreen(),
+                  ),
+                ),
+            contentBuilder:
+                (context) => _IconLabel(
+                  icon: Icons.emoji_events_rounded,
+                  label: l10n.homeHallOfTitans,
+                ),
           ),
         ),
         const SizedBox(width: TitanSpacing.md),
@@ -536,13 +564,15 @@ class _SecondaryRow extends StatelessWidget {
               vertical: TitanSpacing.md,
               horizontal: TitanSpacing.md,
             ),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const StatsScreen()),
-            ),
-            contentBuilder: (context) => _IconLabel(
-              icon: Icons.insights_rounded,
-              label: l10n.statistics,
-            ),
+            onTap:
+                () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const StatsScreen()),
+                ),
+            contentBuilder:
+                (context) => _IconLabel(
+                  icon: Icons.insights_rounded,
+                  label: l10n.statistics,
+                ),
           ),
         ),
         const SizedBox(width: TitanSpacing.md),
@@ -550,13 +580,17 @@ class _SecondaryRow extends StatelessWidget {
           width: 56,
           child: TitanCard(
             padding: const EdgeInsets.symmetric(vertical: TitanSpacing.md),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
-            ),
-            contentBuilder: (context) => Semantics(
-              label: l10n.settings,
-              child: const Icon(Icons.settings_rounded),
-            ),
+            onTap:
+                () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const SettingsScreen(),
+                  ),
+                ),
+            contentBuilder:
+                (context) => Semantics(
+                  label: l10n.settings,
+                  child: const Icon(Icons.settings_rounded),
+                ),
           ),
         ),
       ],
@@ -619,8 +653,7 @@ class _Chip extends StatelessWidget {
 /// Starts free play under a rule set and opens the board.
 void _startMode(BuildContext context, RuleSet rules) {
   context.read<GameController>().startMode(rules);
-  Navigator.of(context).push(
-    MaterialPageRoute<void>(builder: (_) => const GameScreen()),
-  );
+  Navigator.of(
+    context,
+  ).push(MaterialPageRoute<void>(builder: (_) => const GameScreen()));
 }
-

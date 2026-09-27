@@ -43,32 +43,42 @@ class _ScreenBannerState extends State<ScreenBanner> {
   }
 
   Future<void> _load() async {
-    final width = MediaQuery.sizeOf(context).width.toInt();
-    final size = BannerAdSize.sticky(width: width);
-    final calculated = await size.getCalculatedBannerAdSize();
-    if (!mounted) return;
+    try {
+      // The ad SDK is a platform channel: this throws when the SDK is
+      // unavailable or the request fails, and every caller fires it from
+      // didChangeDependencies without awaiting it, so the throw had nobody
+      // to catch it. A banner is the least important thing on any of these
+      // screens; without one they simply show no banner.
 
-    final ad = BannerAd(
-      adUnitId: widget.adUnitId,
-      adSize: size,
-      adRequest: _request,
-      onAdLoaded: () {},
-      onAdFailedToLoad: (_) {
-        if (!mounted) return;
-        setState(() => _height = 0);
-        widget.onHeight?.call(0);
-      },
-      onAdClicked: () {},
-      onLeftApplication: () {},
-      onReturnedToApplication: () {},
-      onImpression: (_) {},
-    );
+      final width = MediaQuery.sizeOf(context).width.toInt();
+      final size = BannerAdSize.sticky(width: width);
+      final calculated = await size.getCalculatedBannerAdSize();
+      if (!mounted) return;
 
-    setState(() {
-      _ad = ad;
-      _height = calculated.height;
-    });
-    widget.onHeight?.call(calculated.height);
+      final ad = BannerAd(
+        adUnitId: widget.adUnitId,
+        adSize: size,
+        adRequest: _request,
+        onAdLoaded: () {},
+        onAdFailedToLoad: (_) {
+          if (!mounted) return;
+          setState(() => _height = 0);
+          widget.onHeight?.call(0);
+        },
+        onAdClicked: () {},
+        onLeftApplication: () {},
+        onReturnedToApplication: () {},
+        onImpression: (_) {},
+      );
+
+      setState(() {
+        _ad = ad;
+        _height = calculated.height;
+      });
+      widget.onHeight?.call(calculated.height);
+    } catch (_) {
+      // No banner.
+    }
   }
 
   @override
