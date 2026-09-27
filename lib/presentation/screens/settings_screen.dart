@@ -1,4 +1,3 @@
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
@@ -34,22 +33,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
   var isBannerAlreadyCreated = false;
   var bannerHeight = 0;
 
+  /// Turns the banner on only if the remote config says so.
+  ///
+  /// Both the read and the cast could throw, and this is fired from
+  /// didChangeDependencies without an await or a catch, so on a device that
+  /// cannot reach the database — offline, or simply slow — opening this screen
+  /// raised an unhandled async error. `snapshot.value as Map` threw the same
+  /// way whenever the config node was missing. Ads are the least important
+  /// thing on the screen: if the config cannot be read, they stay off and the
+  /// screen works.
   Future<void> _checkAdConfigAndLoadAd() async {
-    final configRef = FirebaseDatabase.instance.ref().child('config');
-    // configRef.keepSynced(true);
-    final snapshot = await configRef.get();
-    final config = (snapshot.value as Map);
-    final adsEnabledConfig = config['settings_screen_ads_enabled'];
-    final enabled = adsEnabledConfig == true || adsEnabledConfig == 'true';
+    if (!isMobile()) return;
+    try {
+      final snapshot =
+          await FirebaseDatabase.instance.ref().child('config').get();
+      final config = snapshot.value;
+      if (config is! Map) return;
+      final enabled = config['settings_screen_ads_enabled'];
+      if (enabled != true && enabled != 'true') return;
+      if (!mounted) return;
 
-    print("CONFIG: main_page_ads_enabled: $adsEnabledConfig");
-    if (enabled && isMobile()) {
       adRequest = const AdRequest(
         contextQuery: 'puzzle, games, mobile apps, games',
       );
-      _loadBanner(); // Your existing banner loading method
-    } else {
-      print("🚫 Ads disabled in remote config.");
+      await _loadBanner();
+    } catch (_) {
+      // No banner, and nothing else changes.
     }
   }
 
@@ -220,7 +229,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // states its rule difference — and the picker could contradict the
         // rule set actually in play, since it set a different field. Removed
         // rather than kept in sync.
-
         Card(
           child: Consumer<GameController>(
             builder: (context, controller, _) {

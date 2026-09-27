@@ -34,6 +34,9 @@ class _GameScreenState extends State<GameScreen> {
   var isLoading = false;
   var isBannerAlreadyCreated = false;
   var bannerHeight = 0;
+
+  /// Captured while the element is still live; see didChangeDependencies.
+  GameController? _controller;
   BannerAd? _banner;
 
 
@@ -71,8 +74,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    final controller = context.read<GameController>();
-    controller.cancelTimers(); //
+    _controller?.cancelTimers();
     // Release the native banner view; leaving it attached leaks a platform
     // view every time the board is opened and closed.
     _banner?.destroy();
@@ -123,6 +125,12 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // Held for dispose(): looking an ancestor up there throws, because by then
+    // the element is deactivated and the tree is no longer stable. Reading it
+    // in dispose meant cancelTimers() could fail to run at all — leaving a
+    // timed game's clock ticking after the screen was gone, and skipping the
+    // flush of the debounced leaderboard write.
+    _controller = context.read<GameController>();
     _loadGameBanner();
     // No banner is requested here any more. The board carries no ad, so
     // loading one would request inventory that is never rendered — a wasted

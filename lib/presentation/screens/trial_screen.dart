@@ -39,6 +39,18 @@ class _TrialScreenState extends State<TrialScreen> {
   TrialResult? _result;
   List<Achievement> _unlocked = const [];
 
+  /// Captured while the element is still live; see didChangeDependencies.
+  GameController? _controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // dispose() cannot look this up: the element is deactivated by then and
+    // the lookup throws, so exitTrial() could fail to run and the board would
+    // stay on the trial's rules after the player had left it.
+    _controller = context.read<GameController>();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +83,7 @@ class _TrialScreenState extends State<TrialScreen> {
   void dispose() {
     _clock?.cancel();
     // Hand the board back to the player's own settings.
-    context.read<GameController>().exitTrial();
+    _controller?.exitTrial();
     super.dispose();
   }
 
