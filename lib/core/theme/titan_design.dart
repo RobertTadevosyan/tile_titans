@@ -16,6 +16,23 @@ import 'package:flutter/material.dart';
 /// against black is (L + 0.05) / 0.05, equal at L ≈ 0.179.
 const double kContrastCrossover = 0.179;
 
+/// A softened [foreground] that still clears AA against [surface].
+///
+/// Secondary text is dimmed so it sits below the heading, but dimming costs
+/// contrast. A flat 65% alpha put the CONTINUE card's subtitle at 3.54:1 on
+/// the deep green fill — visible, under the floor for 13px text. The fade now
+/// stops as soon as it would become unreadable rather than at a fixed alpha.
+Color titanMutedOn(Color surface, Color foreground) {
+  for (var alpha = 0.65; alpha < 1.0; alpha += 0.05) {
+    final blended =
+        Color.alphaBlend(foreground.withValues(alpha: alpha), surface);
+    if (titanContrastRatio(surface, blended) >= kMinBodyContrast) {
+      return blended;
+    }
+  }
+  return foreground;
+}
+
 /// The fill and text colour for a dialog that is filled with the theme accent.
 ///
 /// The end-of-game dialogs used the app bar colour as their background and then
@@ -192,8 +209,10 @@ class TitanText {
       );
 
   static Color _muted(BuildContext context) {
-    final onSurface = Theme.of(context).colorScheme.onSurface;
-    return onSurface.withValues(alpha: 0.65);
+    // Inside a TitanCard both of these are scoped to that card, so secondary
+    // text is measured against the fill it actually sits on.
+    final scheme = Theme.of(context).colorScheme;
+    return titanMutedOn(scheme.surface, scheme.onSurface);
   }
 }
 
@@ -257,7 +276,18 @@ class TitanSectionHeader extends StatelessWidget {
 /// of these, so touch targets and corner radii cannot drift between screens.
 class TitanCard extends StatelessWidget {
   final VoidCallback? onTap;
-  final Widget child;
+  final Widget? child;
+
+  /// The card's content, built against the card's own theme.
+  ///
+  /// A prominent card overrides `onSurface` for its subtree, but a [child] the
+  /// caller already built sits *above* that override and keeps resolving
+  /// against the page. That is how the completion dialog ended up with dark
+  /// text on a dark green fill while its icon, resolved in place, turned white
+  /// — the card looked fixed and its heading was still unreadable. Prominent
+  /// cards must use this, which the constructor enforces.
+  final WidgetBuilder? contentBuilder;
+
   final EdgeInsets padding;
   final Color? accent;
 
@@ -266,12 +296,18 @@ class TitanCard extends StatelessWidget {
 
   const TitanCard({
     super.key,
-    required this.child,
+    this.child,
+    this.contentBuilder,
     this.onTap,
     this.padding = const EdgeInsets.all(TitanSpacing.lg),
     this.accent,
     this.prominent = false,
-  });
+  })  : assert(child != null || contentBuilder != null,
+            'TitanCard needs either child or contentBuilder'),
+        assert(!prominent || contentBuilder != null,
+            'A prominent TitanCard must use contentBuilder: its fill is the '
+            'accent colour, and a child built by the caller resolves its text '
+            'against the page theme instead of this card.');
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +327,10 @@ class TitanCard extends StatelessWidget {
     // pick a foreground that actually contrasts with this card.
     final foreground = titanForegroundOn(surface);
     final scoped = theme.copyWith(
-      colorScheme: theme.colorScheme.copyWith(onSurface: foreground),
+      // `surface` travels with `onSurface` so anything inside the card that
+      // softens text can measure the fade against this fill.
+      colorScheme: theme.colorScheme
+          .copyWith(onSurface: foreground, surface: surface),
       iconTheme: theme.iconTheme.copyWith(color: foreground),
     );
 
@@ -315,7 +354,12 @@ class TitanCard extends StatelessWidget {
                   style: TextStyle(color: foreground),
                   child: IconTheme.merge(
                     data: IconThemeData(color: foreground),
-                    child: child,
+                    // Built here, below the scoped theme, so TitanText helpers
+                    // resolve against this card rather than the page.
+                    child: Builder(
+                      builder: (context) =>
+                          contentBuilder?.call(context) ?? child!,
+                    ),
                   ),
                 ),
               ),

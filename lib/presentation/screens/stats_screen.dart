@@ -210,7 +210,7 @@ class _RankCard extends StatelessWidget {
 
     return TitanCard(
       prominent: true,
-      child: Column(
+      contentBuilder: (context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(

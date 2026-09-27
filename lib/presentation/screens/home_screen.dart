@@ -238,7 +238,7 @@ class _PrimaryAction extends StatelessWidget {
         horizontal: TitanSpacing.lg,
         vertical: TitanSpacing.xl,
       ),
-      child: Row(
+      contentBuilder: (context) => Row(
         children: [
           Expanded(
             child: Column(

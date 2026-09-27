@@ -120,6 +120,19 @@ void main() {
       }
     });
 
+    test('secondary text on a prominent card still clears AA', () {
+      // The subtitle under CONTINUE was 3.54:1: a flat 65% alpha applied to a
+      // foreground that had already been chosen for a dark fill.
+      for (final theme in AppTheme.values) {
+        final surface = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final muted = titanMutedOn(surface, titanForegroundOn(surface));
+        final ratio = titanContrastRatio(surface, muted);
+        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
+            reason: '${theme.name} muted text is only '
+                '${ratio.toStringAsFixed(2)}:1');
+      }
+    });
+
     test('accent-filled cards get a readable foreground in every theme', () {
       // A prominent TitanCard is filled with the theme's primary colour. The
       // win overlay, rank card and Continue button all use one, and on Forge

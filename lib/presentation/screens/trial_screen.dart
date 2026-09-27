@@ -380,7 +380,7 @@ class _ResultOverlay extends StatelessWidget {
             children: [
               TitanCard(
                 prominent: won,
-                child: Column(
+                contentBuilder: (context) => Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
