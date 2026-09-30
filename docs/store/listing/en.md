@@ -1,4 +1,4 @@
-# Google Play listing — en (en-US)
+# Google Play listing — en (en-GB)
 
 **Title** (25/30)
 

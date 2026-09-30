@@ -289,7 +289,10 @@ L['hy'] = dict(
 Աշխատում է օֆլայն։ Անվճար։""")
 
 LIMITS = {'title': 30, 'short': 80, 'full': 4000}
-PLAY_LOCALE = {'en':'en-US','ru':'ru-RU','de':'de-DE','fr':'fr-FR','es':'es-ES',
+# en-GB, not en-US: the live listing's default language is en-GB, and uploading
+# to en-US would add a second English listing while leaving the live one as it
+# is. Checked against the API, not assumed.
+PLAY_LOCALE = {'en':'en-GB','ru':'ru-RU','de':'de-DE','fr':'fr-FR','es':'es-ES',
                'it':'it-IT','pt':'pt-PT','tr':'tr-TR','ja':'ja-JP','hy':'hy-AM'}
 
 def main():
