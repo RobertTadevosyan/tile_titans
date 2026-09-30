@@ -1,0 +1,45 @@
+<!doctype html>
+<meta charset="utf-8">
+<!--
+  Play feature graphic, 1024x500. No screenshot inside it: Play crops and
+  overlays this behind the install button on some surfaces, so anything small
+  is lost. Icon, name, one line, and the app's own palette.
+-->
+<style>
+  html,body{margin:0;padding:0;width:1024px;height:500px;overflow:hidden;
+            font-family:"Helvetica Neue",Arial,sans-serif;background:#0E1013}
+  #bg{position:absolute;inset:0;
+      background:radial-gradient(90% 140% at 20% 20%, #4A2614 0%, #191D22 55%, #0D0F12 100%)}
+  .glow{position:absolute;border-radius:50%;filter:blur(110px)}
+  #g1{width:520px;height:520px;background:#E2703A;opacity:.34;left:-90px;top:-150px}
+  #g2{width:420px;height:420px;background:#8A3B12;opacity:.30;right:-90px;bottom:-140px}
+  /* A row of forged tiles receding to the right: the merge idea, no numerals. */
+  .t{position:absolute;border-radius:22px;
+     background:linear-gradient(140deg,#4C5764,#2C333C);
+     border:3px solid rgba(255,138,76,.45)}
+  #icon{position:absolute;left:78px;top:118px;width:264px;height:264px;border-radius:58px;
+        box-shadow:0 24px 60px rgba(0,0,0,.55)}
+  #name{position:absolute;left:392px;top:158px;color:#F7F4F0;
+        font-size:74px;font-weight:800;letter-spacing:3px}
+  #line{position:absolute;left:396px;top:252px;color:#C6A48E;font-size:31px;letter-spacing:1px}
+  #chip{position:absolute;left:396px;top:316px;padding:13px 28px;border-radius:32px;
+        border:2px solid rgba(255,138,76,.55);color:#FFC49A;font-size:25px;font-weight:700}
+</style>
+<div id="bg"><div class="glow" id="g1"></div><div class="glow" id="g2"></div></div>
+<div class="t" style="width:96px;height:96px;right:64px;top:36px;opacity:.75"></div>
+<div class="t" style="width:70px;height:70px;right:178px;top:24px;opacity:.5"></div>
+<div class="t" style="width:74px;height:74px;right:74px;bottom:52px;opacity:.5"></div>
+<div class="t" style="width:56px;height:56px;right:186px;bottom:96px;opacity:.35"></div>
+<img id="icon">
+<div id="name">TILE TITANS</div>
+<div id="line" data-en="Merge puzzles with a purpose"></div>
+<div id="chip" data-en="18 trials · 4 modes · daily"></div>
+<script>
+  const q=new URLSearchParams(location.search);
+  document.getElementById('icon').src=q.get('icon');
+  const L={en:['Merge puzzles with a purpose','18 trials · 4 modes · daily'],
+           ru:['Головоломка со смыслом','18 испытаний · 4 режима · ежедневно']};
+  const s=L[q.get('lang')||'en']||L.en;
+  document.getElementById('line').textContent=s[0];
+  document.getElementById('chip').textContent=s[1];
+</script>

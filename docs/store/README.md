@@ -8,7 +8,9 @@ nothing is hand-edited in place.
 | Path | What | Rebuild with |
 |---|---|---|
 | `listing/<lang>.md` | Title, short and full description, 10 languages | `python3 tool/store/listings.py` |
-| `../../build/store/icon/icon_512.png` | Play listing icon, 512×512 | `flutter test test/store_icon_test.dart --tags store` |
+| `icon_512.png` | Play listing icon, 512×512 | `flutter test test/store_icon_test.dart --tags store` |
+| `feature_graphic_<lang>.png` | Play feature graphic, 1024×500 | see **Feature graphic** |
+| `screenshots/*.png` | Six framed phone screenshots, 1080×1920 | see **Screenshots** |
 | `video/gameplay_1080x2404.mp4` | Raw gameplay, no frame, no ads | see **Gameplay capture** |
 
 The launcher icon itself lives in the app (`assets/icons/app_icon.png` plus the
@@ -48,11 +50,32 @@ ffmpeg -i gp.mp4 -r 30 -c:v libx264 -pix_fmt yuv420p -profile:v high \
   docs/store/video/gameplay_1080x2404.mp4
 ```
 
-## Still to produce
+## Screenshots
 
-- Feature graphic 1024×500
-- Phone screenshots, framed, with captions
-- Promo video (device frame, animated) for the YouTube link on the listing
+Captured from the emulator running the **capture build** (no ads), then framed
+by headless Chrome. Raw captures go in one directory, the framer reads them:
+
+```sh
+./tool/store/shots/build.sh <raw-dir> docs/store/screenshots
+```
+
+`frame.html` takes everything as query parameters, so no image is hand-placed
+and re-running it after a UI change reproduces the set. Captions describe what
+is on that exact screen — a caption promising something the screen does not
+show is the fastest way to look like every other merge game.
+
+## Feature graphic
+
+Play requires 1024×500. It carries no screenshot: Play crops this and overlays
+it behind the install button on some surfaces, so small detail is lost.
+
+```sh
+CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+"$CHROME" --headless=new --screenshot=docs/store/feature_graphic_en.png \
+  --window-size=1024,500 --hide-scrollbars --force-device-scale-factor=1 \
+  --virtual-time-budget=3000 \
+  "file://$PWD/tool/store/shots/feature.html?icon=file://$PWD/docs/store/icon_512.png&lang=en"
+```
 
 ## Only you can do these
 

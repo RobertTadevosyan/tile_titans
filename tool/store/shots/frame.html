@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8">
+<!--
+  One framed store screenshot. Driven entirely by query parameters so the same
+  page renders every image and nothing is hand-placed:
+    ?img=...&kicker=...&head=...&sub=...&note=...
+  Colours are the app's Forge palette: cold iron #15181C, ember #E2703A.
+-->
+<style>
+  html,body{margin:0;padding:0;width:1080px;height:1920px;overflow:hidden;
+            font-family:"Helvetica Neue",Arial,sans-serif;background:#0E1013}
+  #bg{position:absolute;inset:0;
+      background:radial-gradient(120% 80% at 18% 8%, #3A2116 0%, #15181C 52%, #0C0E11 100%)}
+  .glow{position:absolute;border-radius:50%;filter:blur(140px);opacity:.30}
+  #ga{width:760px;height:760px;background:#E2703A;left:-180px;top:-140px}
+  #gb{width:620px;height:620px;background:#7A3210;right:-160px;bottom:80px}
+  #kicker{position:absolute;top:96px;left:0;right:0;text-align:center;
+          color:#E2703A;font-size:30px;font-weight:800;letter-spacing:7px}
+  #head{position:absolute;top:158px;left:64px;right:64px;text-align:center;
+        color:#F7F4F0;font-size:66px;font-weight:800;line-height:1.1;letter-spacing:.5px}
+  #sub{position:absolute;top:262px;left:80px;right:80px;text-align:center;
+       color:#C6A48E;font-size:34px;line-height:1.3}
+  /* Device shell: the screenshot keeps its own aspect, the shell hugs it. */
+  #shell{position:absolute;left:50%;top:372px;transform:translateX(-50%);
+         border-radius:62px;background:#05070A;border:11px solid #242A31;
+         box-shadow:0 46px 110px rgba(0,0,0,.72);overflow:hidden;line-height:0}
+  #shot{display:block;border-radius:52px}
+  #note{position:absolute;bottom:52px;left:0;right:0;text-align:center;
+        color:#6E6560;font-size:24px;letter-spacing:1px}
+</style>
+<div id="bg"><div class="glow" id="ga"></div><div class="glow" id="gb"></div></div>
+<div id="kicker"></div><div id="head"></div><div id="sub"></div>
+<div id="shell"><img id="shot"></div>
+<div id="note"></div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const set = (id, v) => { if (v) document.getElementById(id).textContent = v; };
+  set('kicker', q.get('kicker') || 'TILE TITANS');
+  set('head', q.get('head'));
+  set('sub', q.get('sub'));
+  set('note', q.get('note') || '');
+  const img = document.getElementById('shot');
+  img.onload = () => {
+    // Fit the capture into the space under the text, keeping its aspect.
+    const maxH = 1920 - 372 - 120, maxW = 1080 - 150;
+    const s = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+    img.style.width = Math.round(img.naturalWidth * s) + 'px';
+    img.style.height = Math.round(img.naturalHeight * s) + 'px';
+    document.title = 'ready';
+  };
+  img.src = q.get('img');
+</script>
