@@ -18,6 +18,19 @@ class LeaderboardScreen extends StatefulWidget {
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
   final ScrollController _scrollController = ScrollController();
   final double itemHeight = 72.0;
+
+  /// The height of the divider between two rows, so the scroll maths matches
+  /// what is actually laid out.
+  static const double _separatorHeight = 1.0;
+
+  /// The board being shown, fetched once.
+  ///
+  /// This used to be `future: fetchLeaderboard()` inside build(), so every
+  /// rebuild — the ad banner reporting its height, the loading flag, a chip
+  /// tap — started a fresh network read and dropped the list back to a
+  /// spinner. The read is only 20 KB but takes about half a second, and it was
+  /// being paid several times per visit.
+  Future<List<LeaderboardEntry>>? _board;
   late BannerAd banner;
   var adRequest = const AdRequest(
     contextQuery: 'puzzle, games, mobile apps, games',
@@ -33,22 +46,65 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   void initState() {
     super.initState();
     currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    _board = fetchLeaderboard();
   }
 
-  void _scrollToUser() {
-    if (!_scrollController.hasClients) return;
+  /// Switches boards, fetching the new one once.
+  void _selectBoard(String mode) {
+    if (mode == boardMode) return;
+    setState(() {
+      boardMode = mode;
+      _board = fetchLeaderboard();
+    });
+  }
+
+  /// Re-reads the current board on a pull-to-refresh.
+  Future<void> _refresh() async {
+    final next = fetchLeaderboard();
+    setState(() => _board = next);
+    await next;
+  }
+
+  /// Scrolls to the player's own row, or says why it cannot.
+  ///
+  /// This silently did nothing in three separate cases, which is why it looked
+  /// like it worked only sometimes:
+  ///
+  ///  * the player has no row on *this* board — likely on Time Attack or
+  ///    Hardcore, and on every board after a reinstall, since the anonymous
+  ///    id changes and the old row stays behind under the old id. It now says
+  ///    so instead of ignoring the tap.
+  ///  * the offset assumed a 72px row, but each row is 72px plus a 1px
+  ///    divider. By row 120 that is 120px of drift — nearly two rows short.
+  ///  * nothing clamped the target, so a row near the end asked to scroll
+  ///    past the end.
+  void _scrollToUser(AppLocalizations appLocales, bool isTablet) {
     final index = leaderboardEntries.indexWhere(
       (entry) => entry.userId == currentUserUid,
     );
-    if (index == -1) return;
+    if (index == -1) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(appLocales.findMeNoEntry)));
+      return;
+    }
+    if (!_scrollController.hasClients) return;
 
-    // Deliberately no interstitial here. This screen used to show one every
-    // time the player asked where they ranked — a full-screen ad on a
-    // navigation tap, bypassing the cooldown and the ad-free first sessions
-    // that InterstitialService exists to enforce.
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      final max = _scrollController.position.maxScrollExtent;
+
+      // The tablet layout is a DataTable whose rows are not itemHeight tall,
+      // so there is no pitch to multiply by; place the row proportionally.
+      final target =
+          isTablet
+              ? (leaderboardEntries.isEmpty
+                  ? 0.0
+                  : max * (index / leaderboardEntries.length))
+              : index * (itemHeight + _separatorHeight);
+
       _scrollController.animateTo(
-        index * itemHeight,
+        target.clamp(0.0, max),
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
@@ -192,7 +248,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         ),
         actions: [
           TextButton.icon(
-            onPressed: () => _scrollToUser(),
+            onPressed: () => _scrollToUser(appLocales, isTablet),
             icon: Icon(
               Icons.search,
               color: Colors.white,
@@ -237,7 +293,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               child: ChoiceChip(
                 label: Text(entry.value),
                 selected: boardMode == entry.key,
-                onSelected: (_) => setState(() => boardMode = entry.key),
+                onSelected: (_) => _selectBoard(entry.key),
               ),
             ),
         ],
@@ -247,9 +303,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
   Widget _buildBoard(AppLocalizations appLocales, bool isTablet) {
     return FutureBuilder<List<LeaderboardEntry>>(
-      // Keyed on the board so switching modes refetches.
       key: ValueKey(boardMode),
-      future: fetchLeaderboard(),
+      future: _board,
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
@@ -348,32 +403,36 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             ),
           );
         } else {
-          // Use ListView for phones
-          return ListView.separated(
-            controller: _scrollController,
-            itemCount: entries.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final entry = entries[index];
-              return Container(
-                height: itemHeight,
-                color:
-                    entry.userId == currentUserUid
-                        ? Theme.of(
-                          context,
-                        ).colorScheme.secondary.withValues(alpha: 0.2)
-                        : Colors.transparent,
-                child: ListTile(
-                  leading: Text(
-                    '#${index + 1}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+          // Use ListView for phones. The board is fetched once, so pulling
+          // down is how a player asks for fresh standings.
+          return RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.separated(
+              controller: _scrollController,
+              itemCount: entries.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (context, index) {
+                final entry = entries[index];
+                return Container(
+                  height: itemHeight,
+                  color:
+                      entry.userId == currentUserUid
+                          ? Theme.of(
+                            context,
+                          ).colorScheme.secondary.withValues(alpha: 0.2)
+                          : Colors.transparent,
+                  child: ListTile(
+                    leading: Text(
+                      '#${index + 1}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    title: Text(appLocales.points(entry.score)),
+                    subtitle: Text('${entry.platform} • ${entry.device}'),
+                    trailing: Text(entry.userId.substring(0, 6)),
                   ),
-                  title: Text(appLocales.points(entry.score)),
-                  subtitle: Text('${entry.platform} • ${entry.device}'),
-                  trailing: Text(entry.userId.substring(0, 6)),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         }
       },

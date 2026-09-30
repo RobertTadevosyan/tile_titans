@@ -457,4 +457,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'デイリータイタン試練';
+
+  @override
+  String get findMeNoEntry => 'このランキングにはまだスコアがありません';
 }

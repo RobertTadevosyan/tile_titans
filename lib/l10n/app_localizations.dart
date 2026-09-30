@@ -905,6 +905,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily Titan Trial'**
   String get dailyTrialTitle;
+
+  /// No description provided for @findMeNoEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no score on this board yet'**
+  String get findMeNoEntry;
 }
 
 class _AppLocalizationsDelegate

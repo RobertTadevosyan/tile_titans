@@ -505,4 +505,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'Ежедневное испытание титанов';
+
+  @override
+  String get findMeNoEntry => 'У вас пока нет результата в этой таблице';
 }

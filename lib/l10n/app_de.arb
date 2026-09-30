@@ -180,5 +180,6 @@
       }
     }
   },
-  "dailyTrialTitle": "Tägliche Titanenprüfung"
+  "dailyTrialTitle": "Tägliche Titanenprüfung",
+  "findMeNoEntry": "Du hast noch keinen Eintrag in dieser Rangliste"
 }

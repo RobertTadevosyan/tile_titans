@@ -250,5 +250,6 @@
       }
     }
   },
-  "dailyTrialTitle": "Daily Titan Trial"
+  "dailyTrialTitle": "Daily Titan Trial",
+  "findMeNoEntry": "You have no score on this board yet"
 }

@@ -493,4 +493,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'Daily Titan Trial';
+
+  @override
+  String get findMeNoEntry => 'You have no score on this board yet';
 }

@@ -180,5 +180,6 @@
       }
     }
   },
-  "dailyTrialTitle": "Prueba Diaria de Titanes"
+  "dailyTrialTitle": "Prueba Diaria de Titanes",
+  "findMeNoEntry": "Aún no tienes puntuación en esta tabla"
 }

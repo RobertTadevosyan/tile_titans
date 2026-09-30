@@ -493,4 +493,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'Épreuve du Jour des Titans';
+
+  @override
+  String get findMeNoEntry =>
+      'Vous n\'avez pas encore de score dans ce classement';
 }

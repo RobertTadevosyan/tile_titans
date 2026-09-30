@@ -457,4 +457,7 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'Տիտանների օրական փորձություն';
+
+  @override
+  String get findMeNoEntry => 'Այս աղյուսակում դեռ արդյունք չունեք';
 }

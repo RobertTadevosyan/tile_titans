@@ -493,4 +493,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'Prova Diária dos Titãs';
+
+  @override
+  String get findMeNoEntry => 'Ainda não tens pontuação nesta tabela';
 }

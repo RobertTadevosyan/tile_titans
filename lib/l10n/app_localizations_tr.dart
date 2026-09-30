@@ -457,4 +457,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get dailyTrialTitle => 'Günlük Titan Sınavı';
+
+  @override
+  String get findMeNoEntry => 'Bu sıralamada henüz puanın yok';
 }
