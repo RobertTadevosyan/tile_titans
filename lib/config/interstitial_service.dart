@@ -23,7 +23,7 @@ class InterstitialService {
 
   /// Fetches an ad ahead of time so the eventual show is instant.
   Future<void> preload() async {
-    if (!isMobile() || _ad != null || _loading) return;
+    if (!adsEnabled() || _ad != null || _loading) return;
     _loading = true;
 
     try {
@@ -62,7 +62,7 @@ class InterstitialService {
   }
 
   Future<void> _show() async {
-    if (!isMobile() || _showing) return;
+    if (!adsEnabled() || _showing) return;
     final ad = _ad;
     if (ad == null) {
       // Nothing loaded: skip rather than block the player behind a fetch.

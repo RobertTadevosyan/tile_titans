@@ -89,7 +89,7 @@ class _GameScreenState extends State<GameScreen> {
       // to catch it. A banner is the least important thing on any of these
       // screens; without one they simply show no banner.
 
-      if (!isMobile() || _banner != null) return;
+      if (!adsEnabled() || _banner != null) return;
 
       final width = MediaQuery.sizeOf(context).width.toInt();
       final size = BannerAdSize.sticky(width: width);

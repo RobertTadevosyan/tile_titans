@@ -43,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// thing on the screen: if the config cannot be read, they stay off and the
   /// screen works.
   Future<void> _checkAdConfigAndLoadAd() async {
-    if (!isMobile()) return;
+    if (!adsEnabled()) return;
     try {
       final snapshot =
           await FirebaseDatabase.instance.ref().child('config').get();
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         // This will stretch to fill space *above the banner*
         Positioned.fill(
-          bottom: isMobile() ? bannerHeight.toDouble() : 0,
+          bottom: adsEnabled() ? bannerHeight.toDouble() : 0,
           child: createContent(appLocales, controller, themeProvider, isTablet),
         ),
         SafeArea(

@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_banner == null && isMobile()) {
+    if (_banner == null && adsEnabled()) {
       _loadBanner();
     }
   }
