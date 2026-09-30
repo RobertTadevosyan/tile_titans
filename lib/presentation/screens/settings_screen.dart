@@ -22,7 +22,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late int _selectedSize = 0;
-  AppTheme currentTheme = AppTheme.Classic;
+  AppTheme currentTheme = kDefaultTheme;
   final prefs = Prefs();
 
   late BannerAd banner;
@@ -82,7 +82,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     init();
-    print("CONFIG MAIN_PAGE: didChangeDependencies: $isBannerAlreadyCreated");
     if (!isBannerAlreadyCreated) {
       _checkAdConfigAndLoadAd(); // ✅ Now it's safe to use MediaQuery
     }
@@ -120,10 +119,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     final theme = AppTheme.values.firstWhere(
       (th) => th.name == currentThemeName,
-      orElse: () {
-        print("⚠️ Theme not found: $currentThemeName, using fallback.");
-        return AppTheme.Classic;
-      },
+      // A saved name that matches no theme — a renamed or removed one — falls
+      // back to the app's default, not to Classic. Hardcoding Classic here
+      // quietly contradicted kDefaultTheme.
+      orElse: () => kDefaultTheme,
     );
 
     setState(() {
