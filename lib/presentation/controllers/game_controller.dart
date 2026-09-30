@@ -22,9 +22,16 @@ import 'package:flutter_2048/utils/device_info.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
 
 class GameController extends ChangeNotifier {
-  final analytics = FirebaseAnalytics.instance;
-  final db = FirebaseDatabase.instance.ref();
-  final userId = FirebaseAuth.instance.currentUser?.uid;
+  /// Resolved on use, not at construction.
+  ///
+  /// As a field initialiser this ran `FirebaseAnalytics.instance` the moment a
+  /// GameController was created, which throws without Firebase.initializeApp().
+  /// That made the controller impossible to build in a test, and with it every
+  /// screen that depends on it — no widget tests, no goldens, and the
+  /// leaderboard logic untestable. Two sibling fields, `db` and `userId`, were
+  /// never read at all: every call site reaches for FirebaseDatabase.instance
+  /// and FirebaseAuth.instance directly. They are gone.
+  FirebaseAnalytics get analytics => FirebaseAnalytics.instance;
   late List<List<int>> board;
   List<Tile> tiles = [];
   int score = 0;
