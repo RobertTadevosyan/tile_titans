@@ -73,6 +73,12 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icons/app_icon.png"
+  # Android masks the outer third of an adaptive icon, so the sigil is supplied
+  # separately inside the safe zone over the app's own iron background. Without
+  # this the launcher letterboxes the legacy bitmap into a white circle.
+  adaptive_icon_background: "#15181C"
+  adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
+  remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
