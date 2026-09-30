@@ -61,3 +61,37 @@ ffmpeg -i gp.mp4 -r 30 -c:v libx264 -pix_fmt yuv420p -profile:v high \
 - Answer the Data safety form
 - **Bump the version** — `pubspec.yaml` is still `4.0.4+3009`, which is live on
   Play; Play rejects a duplicate `versionCode`
+
+## Promo video
+
+`tool/store/video/promo.html` is a deterministic storyboard: no CSS transition
+or animation anywhere, every position and opacity computed from `t` inside
+`seek(t)`. Any moment can be inspected on its own, which is how the scene
+timings were checked:
+
+```sh
+open "tool/store/video/promo.html?lang=en&t=8.5"
+```
+
+Render and encode:
+
+```sh
+cd tool/store/video && npm i puppeteer-core
+node render.js --lang en --out ../../../docs/store/video/promo_en_1080x1920.mp4 \
+  --fps 30 --w 1080 --h 1920
+node render.js --lang ru --out ../../../docs/store/video/promo_ru_1080x1920.mp4 \
+  --fps 30 --w 1080 --h 1920
+```
+
+Scenes: tiles fly in and forge into the sigil with a spark burst (0-4 s), the
+phone rises carrying real recorded gameplay (4-22 s) under three captions, the
+four modes appear as chips (15-20 s), outro (22-26 s). The gameplay inside the
+frame is the real recording, sliced to PNGs by `prep`-style extraction and
+stepped by `t`, so the video stays frame-reproducible while showing actual play.
+
+Regenerate the gameplay frames if the UI changes:
+
+```sh
+ffmpeg -ss 2 -t 7 -i gameplay.mp4 -vf "fps=25,scale=430:-1" \
+  tool/store/video/assets/play_%03d.png
+```

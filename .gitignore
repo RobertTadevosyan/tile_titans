@@ -227,3 +227,6 @@ node_modules/
 *.iml
 *.tmp
 *.swp
+# Store video tooling: regenerable, and large
+tool/store/video/node_modules/
+tool/store/video/assets/play_*.png

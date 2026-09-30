@@ -1,0 +1,228 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tile Titans promo</title>
+<!--
+  Deterministic storyboard. Nothing here uses a CSS transition or animation:
+  every property is computed from t inside seek(t), so a frame at t=8.5 is
+  identical on every machine and any moment can be inspected with ?t=8.5.
+
+  Design canvas is 1080x1920. Everything that matters stays inside the middle
+  880px so a narrower export only crops margin.
+-->
+<style>
+  html,body{margin:0;padding:0;background:#0E1013;overflow:hidden}
+  #stage{position:relative;width:1080px;height:1920px;transform-origin:top left;
+         font-family:"Helvetica Neue",Arial,sans-serif;overflow:hidden}
+  .glow{position:absolute;border-radius:50%;filter:blur(120px);will-change:transform}
+  #g1{width:900px;height:900px;background:#E2703A;opacity:.22}
+  #g2{width:700px;height:700px;background:#8A3B12;opacity:.20}
+  #forge{position:absolute;inset:0}
+  .tile{position:absolute;width:150px;height:150px;border-radius:26px;
+        background:linear-gradient(140deg,#4C5764,#2C333C);
+        border:3px solid rgba(255,138,76,.55);
+        display:flex;align-items:center;justify-content:center;
+        color:#F2EDE7;font-weight:800;font-size:54px;will-change:transform,opacity}
+  .spark{position:absolute;width:12px;height:12px;border-radius:50%;
+         background:#FFB070;will-change:transform,opacity}
+  #sigil{position:absolute;left:50%;top:640px;width:300px;height:300px;
+         margin-left:-150px;will-change:transform,opacity}
+  #sigil img{width:100%;height:100%;border-radius:64px}
+  #wordmark{position:absolute;left:0;right:0;top:980px;text-align:center;
+            color:#F7F4F0;font-size:96px;font-weight:800;letter-spacing:6px;
+            will-change:transform,opacity}
+  #tagline{position:absolute;left:0;right:0;top:1105px;text-align:center;
+           color:#C6A48E;font-size:40px;letter-spacing:2px;will-change:opacity}
+  /* Device frame: a real phone shell, so the gameplay reads as a phone. */
+  #phone{position:absolute;left:50%;top:120px;width:530px;height:1140px;
+         margin-left:-265px;border-radius:58px;background:#05070A;
+         border:10px solid #22272E;box-shadow:0 40px 90px rgba(0,0,0,.65);
+         overflow:hidden;will-change:transform,opacity}
+  #screen{position:absolute;left:10px;top:10px;width:490px;height:1090px;
+          border-radius:44px;overflow:hidden;background:#15181C}
+  #screen img{position:absolute;left:0;top:-30px;width:490px;display:block}
+  .cap{position:absolute;left:60px;right:60px;text-align:center;will-change:transform,opacity}
+  #capH{top:1270px;color:#F7F4F0;font-size:62px;font-weight:800;letter-spacing:1px}
+  #capS{top:1362px;color:#C9BDB4;font-size:36px;letter-spacing:1px}
+  .chip{position:absolute;padding:18px 34px;border-radius:40px;
+        background:rgba(226,112,58,.16);border:2px solid rgba(255,138,76,.5);
+        color:#FFC49A;font-size:34px;font-weight:700;white-space:nowrap;
+        will-change:transform,opacity}
+  #outro{position:absolute;inset:0;display:flex;flex-direction:column;
+         align-items:center;justify-content:center;will-change:opacity}
+  #outIcon{width:260px;height:260px;border-radius:56px}
+  #outName{margin-top:44px;color:#F7F4F0;font-size:86px;font-weight:800;letter-spacing:5px}
+  #outLine{margin-top:26px;color:#C6A48E;font-size:38px;letter-spacing:1px}
+  #free{margin-top:56px;padding:20px 44px;border-radius:44px;
+        border:2px solid rgba(255,138,76,.6);color:#FFC49A;font-size:36px;font-weight:700}
+</style>
+
+<div id="stage">
+  <div class="glow" id="g1"></div>
+  <div class="glow" id="g2"></div>
+
+  <div id="forge">
+    <div class="tile" id="t0">2</div>
+    <div class="tile" id="t1">4</div>
+    <div class="tile" id="t2">8</div>
+    <div class="tile" id="t3">16</div>
+  </div>
+  <div id="sigil"><img id="sigilImg"></div>
+  <div id="wordmark">TILE TITANS</div>
+  <div id="tagline"></div>
+
+  <div id="phone"><div id="screen"><img id="play"></div></div>
+
+  <div class="cap" id="capH"></div>
+  <div class="cap" id="capS"></div>
+
+  <div class="chip" id="c0"></div>
+  <div class="chip" id="c1"></div>
+  <div class="chip" id="c2"></div>
+  <div class="chip" id="c3"></div>
+
+  <div id="outro">
+    <img id="outIcon">
+    <div id="outName">TILE TITANS</div>
+    <div id="outLine"></div>
+    <div id="free"></div>
+  </div>
+</div>
+
+<script>
+const DURATION = 26;
+window.DURATION = DURATION;
+
+const P = new URLSearchParams(location.search);
+const LANG = P.get('lang') || 'en';
+
+const STR = {
+  en: { tagline:'FORGE THE TITANS',
+        caps:[['18 built trials','Each one a designed puzzle'],
+              ['A new trial daily','The same board for everyone'],
+              ['Four ways to play','Rules that really differ']],
+        chips:['Classic','Zen','Time Attack','Hardcore'],
+        outLine:'Merge puzzles with a purpose', free:'Free · Plays offline' },
+  ru: { tagline:'СКУЙ ТИТАНОВ',
+        caps:[['18 испытаний','Каждое — продуманная головоломка'],
+              ['Новое каждый день','Одно поле для всех'],
+              ['Четыре режима','Правила и правда разные']],
+        chips:['Классика','Дзен','На время','Хардкор'],
+        outLine:'Головоломка со смыслом', free:'Бесплатно · Офлайн' },
+};
+const S = STR[LANG] || STR.en;
+
+// ---- easing -----------------------------------------------------------------
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const seg=(t,t0,t1)=>clamp((t-t0)/(t1-t0),0,1);
+const easeOut=x=>1-Math.pow(1-x,3);
+const easeInOut=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const backOut=(x,c=1.70158)=>1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2);
+const lerp=(a,b,x)=>a+(b-a)*x;
+
+const el=id=>document.getElementById(id);
+const PLAY_FRAMES=175, PLAY_FPS=25;
+
+el('sigilImg').src='assets/icon.png';
+el('outIcon').src='assets/icon.png';
+el('tagline').textContent=S.tagline;
+el('outLine').textContent=S.outLine;
+el('free').textContent=S.free;
+S.chips.forEach((c,i)=>el('c'+i).textContent=c);
+
+// Where each forge tile starts: off-canvas, each from its own direction.
+const START=[{x:-520,y:-380,r:-38},{x:560,y:-300,r:42},
+             {x:-560,y:420,r:30},{x:540,y:460,r:-34}];
+// Sparks are deterministic: a fixed ring, no randomness.
+const SPARKS=[];
+for(let i=0;i<18;i++){
+  const d=document.createElement('div');
+  d.className='spark'; el('forge').appendChild(d);
+  SPARKS.push({el:d, a:(i/18)*Math.PI*2, dist:200+((i*37)%120)});
+}
+
+function seek(t){
+  // --- living background --------------------------------------------------
+  el('g1').style.transform=`translate(${120+Math.sin(t*.42)*90}px,${260+Math.cos(t*.33)*70}px)`;
+  el('g2').style.transform=`translate(${560+Math.cos(t*.29)*80}px,${1180+Math.sin(t*.37)*90}px)`;
+
+  // --- scene 1: four tiles fly in and forge into the sigil (0 - 4.2) ------
+  const inA=seg(t,0.15,1.5), slam=seg(t,1.5,2.05), fade=seg(t,2.05,2.5);
+  for(let i=0;i<4;i++){
+    const e=el('t'+i), s=START[i];
+    const fly=easeOut(inA);
+    // converge on the centre, then collapse into it on the slam
+    const cx=540, cy=690;
+    const x=lerp(s.x, cx-75+(i%2?95:-95), fly);
+    const y=lerp(s.y, cy-75+(i<2?-95:95), fly);
+    const k=1-easeInOut(slam);           // collapse toward the centre
+    const px=lerp(cx-75,x,k), py=lerp(cy-75,y,k);
+    const rot=lerp(s.r,0,fly)*k;
+    const sc=lerp(1,.35,easeInOut(slam));
+    e.style.transform=`translate(${px}px,${py}px) rotate(${rot}deg) scale(${sc})`;
+    e.style.opacity = (t<0.15?0: 1-fade);
+  }
+  // sparks burst outward exactly at the slam
+  const burst=seg(t,1.95,2.75);
+  SPARKS.forEach((s,i)=>{
+    const d=easeOut(burst)*s.dist;
+    s.el.style.transform=`translate(${534+Math.cos(s.a)*d}px,${684+Math.sin(s.a)*d}px) scale(${lerp(2.4,0,burst)})`;
+    s.el.style.opacity=burst<=0?0:(1-burst);
+  });
+
+  // sigil emerges from the collapse
+  const sig=seg(t,2.0,2.9), sigOut=seg(t,3.7,4.3);
+  el('sigil').style.opacity=(sig>0?1:0)*(1-sigOut);
+  el('sigil').style.transform=`translateY(${lerp(40,0,easeOut(sig))}px) scale(${backOut(sig)*0.9+0.1})`;
+
+  const wm=seg(t,2.5,3.3), wmOut=seg(t,3.7,4.3);
+  el('wordmark').style.opacity=wm*(1-wmOut);
+  el('wordmark').style.transform=`translateY(${lerp(50,0,easeOut(wm))}px)`;
+  const tg=seg(t,2.9,3.7);
+  el('tagline').style.opacity=tg*(1-wmOut);
+
+  // --- scene 2: the phone rises and real gameplay plays (4.2 - 20) --------
+  const rise=seg(t,4.2,5.4), phoneOut=seg(t,22.0,23.0);
+  const phoneIn=easeOut(rise);
+  el('phone').style.opacity=phoneIn*(1-phoneOut);
+  el('phone').style.transform=
+    `translateY(${lerp(320,0,phoneIn)}px) scale(${lerp(.86,1,phoneIn)*lerp(1,.7,easeInOut(phoneOut))})`;
+
+  // Real footage, stepped by t. Held on the first frame until play starts.
+  const playT=clamp(t-5.2,0,PLAY_FRAMES/PLAY_FPS);
+  const idx=clamp(Math.floor(playT*PLAY_FPS)+1,1,PLAY_FRAMES);
+  el('play').src='assets/play_'+String(idx).padStart(3,'0')+'.png';
+
+  // --- captions -----------------------------------------------------------
+  const SCHED=[[6.0,10.2],[10.6,14.8],[15.2,19.6]];
+  let hi=-1;
+  SCHED.forEach((w,i)=>{ if(t>=w[0]&&t<w[1]) hi=i; });
+  if(hi<0){ el('capH').style.opacity=0; el('capS').style.opacity=0; }
+  else{
+    const [a,b]=SCHED[hi];
+    const o=Math.min(seg(t,a,a+0.5),1-seg(t,b-0.35,b));
+    el('capH').textContent=S.caps[hi][0];
+    el('capS').textContent=S.caps[hi][1];
+    el('capH').style.opacity=o; el('capS').style.opacity=o;
+    const r=lerp(26,0,easeOut(seg(t,a,a+0.55)));
+    el('capH').style.transform=`translateY(${r}px)`;
+    el('capS').style.transform=`translateY(${r}px)`;
+  }
+
+  // --- mode chips, staggered, during the third caption --------------------
+  const CHIP=[[150,1478],[560,1478],[150,1572],[560,1572]];
+  for(let i=0;i<4;i++){
+    const a=15.4+i*0.16, o=Math.min(seg(t,a,a+0.45),1-seg(t,19.4,19.8));
+    const e=el('c'+i);
+    e.style.left=CHIP[i][0]+'px'; e.style.top=CHIP[i][1]+'px';
+    e.style.opacity=o;
+    e.style.transform=`translateY(${lerp(34,0,backOut(seg(t,a,a+0.5)))}px)`;
+  }
+
+  // --- outro ---------------------------------------------------------------
+  const out=seg(t,22.4,23.4);
+  el('outro').style.opacity=out;
+  el('outIcon').style.transform=`scale(${backOut(seg(t,22.6,23.6))})`;
+}
+window.seek=seek;
+seek(parseFloat(P.get('t')||'0'));
+</script>
