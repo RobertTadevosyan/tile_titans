@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/domain/game_settings.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Prefs extends ChangeNotifier{
+class Prefs extends ChangeNotifier {
   Future<int> loadHighScore() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt('high_score') ?? 0;

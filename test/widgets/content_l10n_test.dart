@@ -40,10 +40,16 @@ void main() {
 
       for (final trial in allTrials) {
         final text = ContentStrings.objective(l10n, trial.objective);
-        expect(text.trim(), isNotEmpty,
-            reason: '${trial.id} has no objective text in $code');
-        expect(text, isNot(contains('{')),
-            reason: '${trial.id} left a placeholder unfilled in $code');
+        expect(
+          text.trim(),
+          isNotEmpty,
+          reason: '${trial.id} has no objective text in $code',
+        );
+        expect(
+          text,
+          isNot(contains('{')),
+          reason: '${trial.id} left a placeholder unfilled in $code',
+        );
       }
     });
 
@@ -62,8 +68,10 @@ void main() {
 
       for (final chapter in trialChapters) {
         expect(ContentStrings.chapter(l10n, chapter.id).trim(), isNotEmpty);
-        expect(ContentStrings.chapterTheme(l10n, chapter.id).trim(),
-            isNotEmpty);
+        expect(
+          ContentStrings.chapterTheme(l10n, chapter.id).trim(),
+          isNotEmpty,
+        );
       }
       for (final rank in ranks) {
         expect(ContentStrings.rank(l10n, rank).trim(), isNotEmpty);
@@ -78,14 +86,21 @@ void main() {
       // which would catch a locale that silently fell through to the default.
       final translatedRanks =
           ranks.where((r) => ContentStrings.rank(l10n, r) != r.name).length;
-      expect(translatedRanks, greaterThan(0),
-          reason: '$code ranks all fell back to English');
+      expect(
+        translatedRanks,
+        greaterThan(0),
+        reason: '$code ranks all fell back to English',
+      );
 
-      final translatedChapters = trialChapters
-          .where((c) => ContentStrings.chapter(l10n, c.id) != c.name)
-          .length;
-      expect(translatedChapters, greaterThan(0),
-          reason: '$code chapters all fell back to English');
+      final translatedChapters =
+          trialChapters
+              .where((c) => ContentStrings.chapter(l10n, c.id) != c.name)
+              .length;
+      expect(
+        translatedChapters,
+        greaterThan(0),
+        reason: '$code chapters all fell back to English',
+      );
     });
   }
 }

@@ -154,27 +154,33 @@ List<int> _collapseLineTracked(
         final value = compacted[i].value * 2;
         mergesOut.add(_LineMerge(destination, value));
         // Both tiles travel to the destination; the second one merges away.
-        movesOut.add(_LineMove(
-          from: compacted[i].index,
-          to: destination,
-          value: compacted[i].value,
-          merged: false,
-        ));
-        movesOut.add(_LineMove(
-          from: compacted[i + 1].index,
-          to: destination,
-          value: compacted[i + 1].value,
-          merged: true,
-        ));
+        movesOut.add(
+          _LineMove(
+            from: compacted[i].index,
+            to: destination,
+            value: compacted[i].value,
+            merged: false,
+          ),
+        );
+        movesOut.add(
+          _LineMove(
+            from: compacted[i + 1].index,
+            to: destination,
+            value: compacted[i + 1].value,
+            merged: true,
+          ),
+        );
         merged.add(value);
         i += 2;
       } else {
-        movesOut.add(_LineMove(
-          from: compacted[i].index,
-          to: destination,
-          value: compacted[i].value,
-          merged: false,
-        ));
+        movesOut.add(
+          _LineMove(
+            from: compacted[i].index,
+            to: destination,
+            value: compacted[i].value,
+            merged: false,
+          ),
+        );
         merged.add(compacted[i].value);
         i++;
       }
@@ -259,7 +265,12 @@ void _writeLine(
 }
 
 /// Maps a position within a collapsed line back to board coordinates.
-({int x, int y}) _lineIndexToCell(Direction direction, int i, int index, int size) {
+({int x, int y}) _lineIndexToCell(
+  Direction direction,
+  int i,
+  int index,
+  int size,
+) {
   switch (direction) {
     case Direction.left:
       return (x: index, y: i);
@@ -299,14 +310,16 @@ MoveResult applyMove(List<List<int>> board, Direction direction) {
     for (final m in lineMoves) {
       final from = _lineIndexToCell(direction, i, m.from, size);
       final to = _lineIndexToCell(direction, i, m.to, size);
-      moves.add(TileMove(
-        fromX: from.x,
-        fromY: from.y,
-        toX: to.x,
-        toY: to.y,
-        value: m.value,
-        merged: m.merged,
-      ));
+      moves.add(
+        TileMove(
+          fromX: from.x,
+          fromY: from.y,
+          toX: to.x,
+          toY: to.y,
+          value: m.value,
+          merged: m.merged,
+        ),
+      );
     }
     _writeLine(next, direction, i, collapsed);
   }

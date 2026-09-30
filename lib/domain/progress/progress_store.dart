@@ -78,26 +78,26 @@ class ModeStats {
   }
 
   Map<String, dynamic> toJson() => {
-        'gamesPlayed': gamesPlayed,
-        'bestScore': bestScore,
-        'highestTile': highestTile,
-        'totalMerges': totalMerges,
-        'totalMoves': totalMoves,
-        'totalScore': totalScore,
-        'longestGameMoves': longestGameMoves,
-        'playTimeSeconds': playTimeSeconds,
-      };
+    'gamesPlayed': gamesPlayed,
+    'bestScore': bestScore,
+    'highestTile': highestTile,
+    'totalMerges': totalMerges,
+    'totalMoves': totalMoves,
+    'totalScore': totalScore,
+    'longestGameMoves': longestGameMoves,
+    'playTimeSeconds': playTimeSeconds,
+  };
 
   static ModeStats fromJson(Map<String, dynamic> json) => ModeStats(
-        gamesPlayed: json['gamesPlayed'] as int? ?? 0,
-        bestScore: json['bestScore'] as int? ?? 0,
-        highestTile: json['highestTile'] as int? ?? 0,
-        totalMerges: json['totalMerges'] as int? ?? 0,
-        totalMoves: json['totalMoves'] as int? ?? 0,
-        totalScore: json['totalScore'] as int? ?? 0,
-        longestGameMoves: json['longestGameMoves'] as int? ?? 0,
-        playTimeSeconds: json['playTimeSeconds'] as int? ?? 0,
-      );
+    gamesPlayed: json['gamesPlayed'] as int? ?? 0,
+    bestScore: json['bestScore'] as int? ?? 0,
+    highestTile: json['highestTile'] as int? ?? 0,
+    totalMerges: json['totalMerges'] as int? ?? 0,
+    totalMoves: json['totalMoves'] as int? ?? 0,
+    totalScore: json['totalScore'] as int? ?? 0,
+    longestGameMoves: json['longestGameMoves'] as int? ?? 0,
+    playTimeSeconds: json['playTimeSeconds'] as int? ?? 0,
+  );
 }
 
 /// Player statistics, held per mode with lifetime figures derived.
@@ -115,8 +115,10 @@ class PlayerStats {
   int _sum(int Function(ModeStats) field) =>
       byMode.values.fold<int>(0, (total, stats) => total + field(stats));
 
-  int _max(int Function(ModeStats) field) => byMode.values
-      .fold<int>(0, (best, stats) => field(stats) > best ? field(stats) : best);
+  int _max(int Function(ModeStats) field) => byMode.values.fold<int>(
+    0,
+    (best, stats) => field(stats) > best ? field(stats) : best,
+  );
 
   int get gamesPlayed => _sum((s) => s.gamesPlayed);
   int get totalMerges => _sum((s) => s.totalMerges);
@@ -167,9 +169,9 @@ class PlayerStats {
   }
 
   Map<String, dynamic> toJson() => {
-        'version': 2,
-        'byMode': byMode.map((mode, stats) => MapEntry(mode, stats.toJson())),
-      };
+    'version': 2,
+    'byMode': byMode.map((mode, stats) => MapEntry(mode, stats.toJson())),
+  };
 
   static PlayerStats fromJson(Map<String, dynamic> json) {
     final modes = json['byMode'];
@@ -214,11 +216,11 @@ class TrialRecord {
   });
 
   Map<String, dynamic> toJson() => {
-        'completed': completed,
-        'bestMoves': bestMoves,
-        'bestScore': bestScore,
-        'cleanWin': cleanWin,
-      };
+    'completed': completed,
+    'bestMoves': bestMoves,
+    'bestScore': bestScore,
+    'cleanWin': cleanWin,
+  };
 
   static TrialRecord fromJson(String id, Map<String, dynamic> json) =>
       TrialRecord(
@@ -258,16 +260,20 @@ class ProgressStore extends ChangeNotifier {
   /// Trials finished, capped at the size of the library so a removed trial
   /// cannot inflate the count.
   int get trialsCompleted =>
-      _records.values.where((r) => r.completed && trialById(r.trialId) != null)
+      _records.values
+          .where((r) => r.completed && trialById(r.trialId) != null)
           .length;
 
   int get trialsWonWithoutUndo =>
       _records.values.where((r) => r.completed && r.cleanWin).length;
 
   /// Chapters where every trial is complete.
-  int get chaptersCompleted => trialChapters
-      .where((c) => c.trials.every((t) => _records[t.id]?.completed == true))
-      .length;
+  int get chaptersCompleted =>
+      trialChapters
+          .where(
+            (c) => c.trials.every((t) => _records[t.id]?.completed == true),
+          )
+          .length;
 
   /// Achievement points earned.
   int get points => achievements
@@ -287,7 +293,8 @@ class ProgressStore extends ChangeNotifier {
     if (statsRaw != null) {
       try {
         _stats = PlayerStats.fromJson(
-            jsonDecode(statsRaw) as Map<String, dynamic>);
+          jsonDecode(statsRaw) as Map<String, dynamic>,
+        );
       } catch (_) {
         // Corrupt payload: start clean rather than crash on launch.
         _stats = const PlayerStats();
@@ -298,8 +305,12 @@ class ProgressStore extends ChangeNotifier {
     if (trialsRaw != null) {
       try {
         final decoded = jsonDecode(trialsRaw) as Map<String, dynamic>;
-        _records = decoded.map((id, value) => MapEntry(
-            id, TrialRecord.fromJson(id, value as Map<String, dynamic>)));
+        _records = decoded.map(
+          (id, value) => MapEntry(
+            id,
+            TrialRecord.fromJson(id, value as Map<String, dynamic>),
+          ),
+        );
       } catch (_) {
         _records = {};
       }
@@ -352,26 +363,29 @@ class ProgressStore extends ChangeNotifier {
   }
 
   /// Records a trial attempt, keeping the best result.
-  Future<List<Achievement>> recordTrial(TrialResult result,
-      {required bool usedUndo}) async {
+  Future<List<Achievement>> recordTrial(
+    TrialResult result, {
+    required bool usedUndo,
+  }) async {
     final existing = _records[result.trialId];
     final wasCompleted = existing?.completed ?? false;
-    final cleanWin =
-        (existing?.cleanWin ?? false) || (result.won && !usedUndo);
+    final cleanWin = (existing?.cleanWin ?? false) || (result.won && !usedUndo);
 
     _records[result.trialId] = TrialRecord(
       trialId: result.trialId,
       completed: wasCompleted || result.won,
-      bestMoves: result.won
-          ? (existing == null || existing.bestMoves == 0
-              ? result.movesUsed
-              : (result.movesUsed < existing.bestMoves
+      bestMoves:
+          result.won
+              ? (existing == null || existing.bestMoves == 0
                   ? result.movesUsed
-                  : existing.bestMoves))
-          : (existing?.bestMoves ?? 0),
-      bestScore: result.score > (existing?.bestScore ?? 0)
-          ? result.score
-          : (existing?.bestScore ?? 0),
+                  : (result.movesUsed < existing.bestMoves
+                      ? result.movesUsed
+                      : existing.bestMoves))
+              : (existing?.bestMoves ?? 0),
+      bestScore:
+          result.score > (existing?.bestScore ?? 0)
+              ? result.score
+              : (existing?.bestScore ?? 0),
       cleanWin: cleanWin,
     );
 
@@ -394,11 +408,14 @@ class ProgressStore extends ChangeNotifier {
     final today = dailyTrialFor(date).id;
     if (_lastDailyId == today) return const []; // already counted
 
-    final yesterday = dailyTrialFor(
-      DateTime(date.year, date.month, date.day).subtract(
-        const Duration(days: 1),
-      ),
-    ).id;
+    final yesterday =
+        dailyTrialFor(
+          DateTime(
+            date.year,
+            date.month,
+            date.day,
+          ).subtract(const Duration(days: 1)),
+        ).id;
 
     _dailyStreak = (_lastDailyId == yesterday) ? _dailyStreak + 1 : 1;
     _lastDailyId = today;

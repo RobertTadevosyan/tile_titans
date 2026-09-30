@@ -32,36 +32,32 @@ class Objective {
   /// [ObjectiveKind.clearBoard].
   final int count;
 
-  const Objective({
-    required this.kind,
-    required this.target,
-    this.count = 1,
-  });
+  const Objective({required this.kind, required this.target, this.count = 1});
 
   const Objective.reachTile(int tile)
-      : kind = ObjectiveKind.reachTile,
-        target = tile,
-        count = 1;
+    : kind = ObjectiveKind.reachTile,
+      target = tile,
+      count = 1;
 
   const Objective.reachScore(int score)
-      : kind = ObjectiveKind.reachScore,
-        target = score,
-        count = 1;
+    : kind = ObjectiveKind.reachScore,
+      target = score,
+      count = 1;
 
   const Objective.createTiles(int tile, int howMany)
-      : kind = ObjectiveKind.createTiles,
-        target = tile,
-        count = howMany;
+    : kind = ObjectiveKind.createTiles,
+      target = tile,
+      count = howMany;
 
   const Objective.survive(int moves)
-      : kind = ObjectiveKind.survive,
-        target = moves,
-        count = 1;
+    : kind = ObjectiveKind.survive,
+      target = moves,
+      count = 1;
 
   const Objective.clearBoard(int tilesRemaining)
-      : kind = ObjectiveKind.clearBoard,
-        target = 0,
-        count = tilesRemaining;
+    : kind = ObjectiveKind.clearBoard,
+      target = 0,
+      count = tilesRemaining;
 
   /// True when the objective has been met by this snapshot.
   bool isMet({

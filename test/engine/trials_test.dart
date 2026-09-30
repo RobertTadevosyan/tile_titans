@@ -28,11 +28,17 @@ void main() {
             test('board is square and matches the declared grid size', () {
               expect(trial.startBoard, isNotEmpty);
               for (final row in trial.startBoard) {
-                expect(row.length, trial.startBoard.length,
-                    reason: '${trial.id} board is not square');
+                expect(
+                  row.length,
+                  trial.startBoard.length,
+                  reason: '${trial.id} board is not square',
+                );
               }
-              expect(trial.rules.gridSize, trial.gridSize,
-                  reason: '${trial.id} ruleset grid size disagrees with board');
+              expect(
+                trial.rules.gridSize,
+                trial.gridSize,
+                reason: '${trial.id} ruleset grid size disagrees with board',
+              );
             });
 
             test('every cell is empty, blocked, or a power of two', () {
@@ -40,15 +46,21 @@ void main() {
                 for (final cell in row) {
                   final valid =
                       cell == 0 || cell == blockedCell || _isPowerOfTwo(cell);
-                  expect(valid, isTrue,
-                      reason: '${trial.id} has invalid cell value $cell');
+                  expect(
+                    valid,
+                    isTrue,
+                    reason: '${trial.id} has invalid cell value $cell',
+                  );
                 }
               }
             });
 
             test('starts from a playable position', () {
-              expect(hasMoves(trial.freshBoard()), isTrue,
-                  reason: '${trial.id} starts jammed');
+              expect(
+                hasMoves(trial.freshBoard()),
+                isTrue,
+                reason: '${trial.id} starts jammed',
+              );
             });
 
             test('does not start already solved', () {
@@ -57,14 +69,20 @@ void main() {
                 score: 0,
                 movesUsed: 0,
               );
-              expect(solved, isFalse,
-                  reason: '${trial.id} is already won on move zero');
+              expect(
+                solved,
+                isFalse,
+                reason: '${trial.id} is already won on move zero',
+              );
             });
 
             test('leaves room to breathe', () {
               final empties = emptyCells(trial.freshBoard()).length;
-              expect(empties, greaterThanOrEqualTo(2),
-                  reason: '${trial.id} has almost no empty space');
+              expect(
+                empties,
+                greaterThanOrEqualTo(2),
+                reason: '${trial.id} has almost no empty space',
+              );
             });
 
             test('constraints are sane', () {
@@ -76,8 +94,11 @@ void main() {
 
             test('has a short human summary', () {
               expect(trial.summary, isNotEmpty);
-              expect(trial.summary.length, lessThan(60),
-                  reason: 'summaries must be a line, not a paragraph');
+              expect(
+                trial.summary.length,
+                lessThan(60),
+                reason: 'summaries must be a line, not a paragraph',
+              );
             });
           });
         }
@@ -90,26 +111,32 @@ void main() {
         final n = b.length;
         final corners = [b[0][0], b[0][n - 1], b[n - 1][0], b[n - 1][n - 1]];
         final blockedCorners = corners.where((c) => c == blockedCell).length;
-        expect(blockedCorners, lessThan(4),
-            reason: '${trial.id} blocks every corner');
+        expect(
+          blockedCorners,
+          lessThan(4),
+          reason: '${trial.id} blocks every corner',
+        );
       }
     });
 
     test('the deterministic puzzle (Trial XII) is actually solvable', () {
       final trial = trialById('proving-6')!;
-      expect(trial.rules.spawnPerMove, 0,
-          reason: 'a fixed-position puzzle must not spawn tiles');
+      expect(
+        trial.rules.spawnPerMove,
+        0,
+        reason: 'a fixed-position puzzle must not spawn tiles',
+      );
 
       // Known solution: collapse left twice, then up.
       var board = trial.freshBoard();
       var moves = 0;
-      for (final direction in [
-        Direction.left,
-        Direction.left,
-        Direction.up,
-      ]) {
+      for (final direction in [Direction.left, Direction.left, Direction.up]) {
         final result = applyMove(board, direction);
-        expect(result.moved, isTrue, reason: 'solution move $moves did nothing');
+        expect(
+          result.moved,
+          isTrue,
+          reason: 'solution move $moves did nothing',
+        );
         board = result.board;
         moves++;
       }
@@ -165,24 +192,29 @@ void main() {
       expect(dailyTrialFor(DateTime(2026, 1, 5)).id, 'daily-2026-01-05');
     });
 
-    test('generated dailies obey the same integrity rules as authored ones',
-        () {
-      for (var day = 1; day <= 31; day++) {
-        final trial = dailyTrialFor(DateTime(2026, 3, day));
-        expect(hasMoves(trial.freshBoard()), isTrue,
-            reason: '${trial.id} starts jammed');
-        expect(
-          trial.objective.isMet(
-            board: trial.freshBoard(),
-            score: 0,
-            movesUsed: 0,
-          ),
-          isFalse,
-          reason: '${trial.id} starts solved',
-        );
-        expect(emptyCells(trial.freshBoard()).length, greaterThan(4));
-      }
-    });
+    test(
+      'generated dailies obey the same integrity rules as authored ones',
+      () {
+        for (var day = 1; day <= 31; day++) {
+          final trial = dailyTrialFor(DateTime(2026, 3, day));
+          expect(
+            hasMoves(trial.freshBoard()),
+            isTrue,
+            reason: '${trial.id} starts jammed',
+          );
+          expect(
+            trial.objective.isMet(
+              board: trial.freshBoard(),
+              score: 0,
+              movesUsed: 0,
+            ),
+            isFalse,
+            reason: '${trial.id} starts solved',
+          );
+          expect(emptyCells(trial.freshBoard()).length, greaterThan(4));
+        }
+      },
+    );
 
     test('never blocks a corner', () {
       for (var day = 1; day <= 31; day++) {
@@ -192,7 +224,7 @@ void main() {
           b[0][0],
           b[0][n - 1],
           b[n - 1][0],
-          b[n - 1][n - 1]
+          b[n - 1][n - 1],
         ]) {
           expect(corner, isNot(blockedCell));
         }

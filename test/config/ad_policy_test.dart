@@ -48,8 +48,11 @@ void main() {
 
       expect(await policy.registerWin(), isFalse);
       expect(await policy.registerWin(), isFalse);
-      expect(await policy.registerWin(), isTrue,
-          reason: 'third win should earn an interstitial');
+      expect(
+        await policy.registerWin(),
+        isTrue,
+        reason: 'third win should earn an interstitial',
+      );
     });
 
     test('the counter resets after firing', () async {
@@ -73,8 +76,11 @@ void main() {
 
       expect(await policy.registerWin(), isFalse);
       expect(await policy.registerWin(), isFalse);
-      expect(await policy.registerWin(), isFalse,
-          reason: 'grace period suppresses the ad');
+      expect(
+        await policy.registerWin(),
+        isFalse,
+        reason: 'grace period suppresses the ad',
+      );
       expect(policy.winsPending, 3, reason: 'but the wins are remembered');
     });
 
@@ -98,8 +104,11 @@ void main() {
       policy.markShown();
 
       now = now.add(const Duration(minutes: 1));
-      expect(policy.shouldShowAfterGameOver(), isFalse,
-          reason: 'two ads a minute apart is the thing players resent');
+      expect(
+        policy.shouldShowAfterGameOver(),
+        isFalse,
+        reason: 'two ads a minute apart is the thing players resent',
+      );
     });
 
     test('allowed again once the cooldown has passed', () async {

@@ -13,7 +13,6 @@ import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/presentation/screens/home_screen.dart';
 import 'package:yandex_mobileads/mobile_ads.dart';
 import 'core/theme/theme_provider.dart';
-import 'core/theme/app_theme.dart';
 import 'core/theme/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
@@ -49,8 +48,9 @@ void main() async {
         // handed the store rather than reaching for one itself.
         ChangeNotifierProxyProvider<ProgressStore, GameController>(
           create: (_) => GameController(),
-          update: (_, progress, controller) =>
-              (controller ?? GameController())..progressStore = progress,
+          update:
+              (_, progress, controller) =>
+                  (controller ?? GameController())..progressStore = progress,
         ),
       ],
       child: const GameApp(),

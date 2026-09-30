@@ -24,8 +24,10 @@ const double kContrastCrossover = 0.179;
 /// stops as soon as it would become unreadable rather than at a fixed alpha.
 Color titanMutedOn(Color surface, Color foreground) {
   for (var alpha = 0.65; alpha < 1.0; alpha += 0.05) {
-    final blended =
-        Color.alphaBlend(foreground.withValues(alpha: alpha), surface);
+    final blended = Color.alphaBlend(
+      foreground.withValues(alpha: alpha),
+      surface,
+    );
     if (titanContrastRatio(surface, blended) >= kMinBodyContrast) {
       return blended;
     }
@@ -74,8 +76,7 @@ AppBarTheme titanAppBar(Color background) {
 /// here, so every theme gets one settled surface and one readable foreground.
 ({Color surface, Color foreground}) titanDialogColors(BuildContext context) {
   final theme = Theme.of(context);
-  final base =
-      theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
+  final base = theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
   final surface = titanProminentSurface(base);
   return (surface: surface, foreground: titanForegroundOn(surface));
 }
@@ -117,10 +118,11 @@ Color titanProminentSurface(Color accent) {
     // Darken toward a confident, saturated version of the same hue rather than
     // desaturating it, so each theme keeps its identity.
     final hsl = HSLColor.fromColor(accent);
-    surface = hsl
-        .withLightness((hsl.lightness * 0.45).clamp(0.12, 0.34))
-        .withSaturation((hsl.saturation * 1.15).clamp(0.0, 1.0))
-        .toColor();
+    surface =
+        hsl
+            .withLightness((hsl.lightness * 0.45).clamp(0.12, 0.34))
+            .withSaturation((hsl.saturation * 1.15).clamp(0.0, 1.0))
+            .toColor();
   }
 
   // Move away from the crossover in whichever direction the text is already
@@ -206,39 +208,36 @@ class TitanText {
 
   static TextStyle display(BuildContext context) =>
       Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.6,
-                height: 1.05,
-                color: Theme.of(context).colorScheme.onSurface,
-              ) ??
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.6,
+        height: 1.05,
+        color: Theme.of(context).colorScheme.onSurface,
+      ) ??
       const TextStyle(fontSize: 28, fontWeight: FontWeight.w800);
 
   static TextStyle sectionLabel(BuildContext context) => TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.4,
-        color: _muted(context),
-      );
+    fontSize: 12,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1.4,
+    color: _muted(context),
+  );
 
   static TextStyle cardTitle(BuildContext context) => TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.w700,
-        height: 1.2,
-        color: Theme.of(context).colorScheme.onSurface,
-      );
+    fontSize: 17,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    color: Theme.of(context).colorScheme.onSurface,
+  );
 
-  static TextStyle cardBody(BuildContext context) => TextStyle(
-        fontSize: 13,
-        height: 1.3,
-        color: _muted(context),
-      );
+  static TextStyle cardBody(BuildContext context) =>
+      TextStyle(fontSize: 13, height: 1.3, color: _muted(context));
 
   static TextStyle metric(BuildContext context) => TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.w800,
-        height: 1.1,
-        color: Theme.of(context).colorScheme.onSurface,
-      );
+    fontSize: 22,
+    fontWeight: FontWeight.w800,
+    height: 1.1,
+    color: Theme.of(context).colorScheme.onSurface,
+  );
 
   static Color _muted(BuildContext context) {
     // Inside a TitanCard both of these are scoped to that card, so secondary
@@ -308,6 +307,7 @@ class TitanSectionHeader extends StatelessWidget {
 /// of these, so touch targets and corner radii cannot drift between screens.
 class TitanCard extends StatelessWidget {
   final VoidCallback? onTap;
+
   /// The card's content, built against the card's own theme.
   ///
   /// A builder rather than a widget, because a card overrides `onSurface` and
@@ -340,12 +340,13 @@ class TitanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final base = accent ?? theme.primaryColor;
-    final surface = prominent
-        ? titanProminentSurface(base)
-        : Color.alphaBlend(
-            base.withValues(alpha: 0.1),
-            theme.scaffoldBackgroundColor,
-          );
+    final surface =
+        prominent
+            ? titanProminentSurface(base)
+            : Color.alphaBlend(
+              base.withValues(alpha: 0.1),
+              theme.scaffoldBackgroundColor,
+            );
 
     // A prominent card is filled with the accent colour, so text inside it
     // must not keep resolving against the page's onSurface — on a dark theme
@@ -356,8 +357,10 @@ class TitanCard extends StatelessWidget {
     final scoped = theme.copyWith(
       // `surface` travels with `onSurface` so anything inside the card that
       // softens text can measure the fade against this fill.
-      colorScheme: theme.colorScheme
-          .copyWith(onSurface: foreground, surface: surface),
+      colorScheme: theme.colorScheme.copyWith(
+        onSurface: foreground,
+        surface: surface,
+      ),
       iconTheme: theme.iconTheme.copyWith(color: foreground),
     );
 

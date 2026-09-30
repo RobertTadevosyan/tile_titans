@@ -22,8 +22,11 @@ void main() {
     });
 
     test('rank thresholds are reachable with the points on offer', () {
-      expect(maxAchievementPoints, greaterThanOrEqualTo(ranks.last.required),
-          reason: 'Legend must be attainable');
+      expect(
+        maxAchievementPoints,
+        greaterThanOrEqualTo(ranks.last.required),
+        reason: 'Legend must be attainable',
+      );
     });
 
     test('ranks are ordered', () {
@@ -117,20 +120,26 @@ void main() {
       expect(reloaded.stats.forMode(ModeKeys.classic).isEmpty, isTrue);
     });
 
-    test('version 1 pooled data folds into Classic rather than vanishing',
-        () async {
-      SharedPreferences.setMockInitialValues({
-        'tt_stats': '{"gamesPlayed":7,"bestScore":9000,"highestTile":1024,'
-            '"totalMerges":400,"totalMoves":900,"totalScore":30000,'
-            '"longestGameMoves":300,"playTimeSeconds":1200}',
-      });
-      final store = ProgressStore();
-      await store.load();
+    test(
+      'version 1 pooled data folds into Classic rather than vanishing',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'tt_stats':
+              '{"gamesPlayed":7,"bestScore":9000,"highestTile":1024,'
+              '"totalMerges":400,"totalMoves":900,"totalScore":30000,'
+              '"longestGameMoves":300,"playTimeSeconds":1200}',
+        });
+        final store = ProgressStore();
+        await store.load();
 
-      expect(store.stats.forMode(ModeKeys.classic).bestScore, 9000);
-      expect(store.stats.gamesPlayed, 7,
-          reason: 'a player must not lose their history to the format change');
-    });
+        expect(store.stats.forMode(ModeKeys.classic).bestScore, 9000);
+        expect(
+          store.stats.gamesPlayed,
+          7,
+          reason: 'a player must not lose their history to the format change',
+        );
+      },
+    );
 
     test('accumulate across runs and keep bests', () async {
       final store = await freshStore();
@@ -265,12 +274,12 @@ void main() {
 
   group('trial records', () {
     TrialResult win(String id, int moves) => TrialResult(
-          trialId: id,
-          outcome: TrialOutcome.won,
-          movesUsed: moves,
-          score: 500,
-          highestTile: 128,
-        );
+      trialId: id,
+      outcome: TrialOutcome.won,
+      movesUsed: moves,
+      score: 500,
+      highestTile: 128,
+    );
 
     test('keep the fewest winning moves', () async {
       final store = await freshStore();

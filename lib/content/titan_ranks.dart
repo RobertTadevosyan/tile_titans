@@ -59,20 +59,90 @@ class TitanRank {
 /// The ladder, ascending. Names are deliberately short — they sit under a
 /// numeral on a small tile and must survive translation without wrapping.
 const List<TitanRank> titanRanks = [
-  TitanRank(value: 2, name: 'Whelp', emblem: Emblem.spark, tier: RankTier.common),
-  TitanRank(value: 4, name: 'Thrall', emblem: Emblem.chevron, tier: RankTier.common),
-  TitanRank(value: 8, name: 'Scout', emblem: Emblem.arrow, tier: RankTier.common),
-  TitanRank(value: 16, name: 'Raider', emblem: Emblem.axe, tier: RankTier.common),
-  TitanRank(value: 32, name: 'Shieldman', emblem: Emblem.shield, tier: RankTier.common),
-  TitanRank(value: 64, name: 'Warrior', emblem: Emblem.crossedAxes, tier: RankTier.common),
-  TitanRank(value: 128, name: 'Berserker', emblem: Emblem.fang, tier: RankTier.common),
-  TitanRank(value: 256, name: 'Huscarl', emblem: Emblem.helm, tier: RankTier.forged),
-  TitanRank(value: 512, name: 'Jarl', emblem: Emblem.crown, tier: RankTier.forged),
-  TitanRank(value: 1024, name: 'Warlord', emblem: Emblem.hammer, tier: RankTier.forged),
-  TitanRank(value: 2048, name: 'Titan', emblem: Emblem.rune, tier: RankTier.legendary),
-  TitanRank(value: 4096, name: 'World-Breaker', emblem: Emblem.sun, tier: RankTier.legendary),
-  TitanRank(value: 8192, name: 'Godslayer', emblem: Emblem.bolt, tier: RankTier.legendary),
-  TitanRank(value: 16384, name: 'Eternal', emblem: Emblem.spiral, tier: RankTier.legendary),
+  TitanRank(
+    value: 2,
+    name: 'Whelp',
+    emblem: Emblem.spark,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 4,
+    name: 'Thrall',
+    emblem: Emblem.chevron,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 8,
+    name: 'Scout',
+    emblem: Emblem.arrow,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 16,
+    name: 'Raider',
+    emblem: Emblem.axe,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 32,
+    name: 'Shieldman',
+    emblem: Emblem.shield,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 64,
+    name: 'Warrior',
+    emblem: Emblem.crossedAxes,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 128,
+    name: 'Berserker',
+    emblem: Emblem.fang,
+    tier: RankTier.common,
+  ),
+  TitanRank(
+    value: 256,
+    name: 'Huscarl',
+    emblem: Emblem.helm,
+    tier: RankTier.forged,
+  ),
+  TitanRank(
+    value: 512,
+    name: 'Jarl',
+    emblem: Emblem.crown,
+    tier: RankTier.forged,
+  ),
+  TitanRank(
+    value: 1024,
+    name: 'Warlord',
+    emblem: Emblem.hammer,
+    tier: RankTier.forged,
+  ),
+  TitanRank(
+    value: 2048,
+    name: 'Titan',
+    emblem: Emblem.rune,
+    tier: RankTier.legendary,
+  ),
+  TitanRank(
+    value: 4096,
+    name: 'World-Breaker',
+    emblem: Emblem.sun,
+    tier: RankTier.legendary,
+  ),
+  TitanRank(
+    value: 8192,
+    name: 'Godslayer',
+    emblem: Emblem.bolt,
+    tier: RankTier.legendary,
+  ),
+  TitanRank(
+    value: 16384,
+    name: 'Eternal',
+    emblem: Emblem.spiral,
+    tier: RankTier.legendary,
+  ),
 ];
 
 /// The rank for a tile value.

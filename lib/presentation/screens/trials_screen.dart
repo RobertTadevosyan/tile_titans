@@ -77,58 +77,68 @@ class _TrialTile extends StatelessWidget {
     final done = record?.completed ?? false;
 
     return TitanCard(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => TrialScreen(trial: trial)),
-      ),
-      contentBuilder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      onTap:
+          () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => TrialScreen(trial: trial)),
+          ),
+      contentBuilder:
+          (context) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                done
-                    ? Icons.check_circle_rounded
-                    : Icons.radio_button_unchecked_rounded,
-                size: 20,
-                color: done ? Theme.of(context).primaryColor : null,
+              Row(
+                children: [
+                  Icon(
+                    done
+                        ? Icons.check_circle_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                    size: 20,
+                    color: done ? Theme.of(context).primaryColor : null,
+                  ),
+                  const SizedBox(width: TitanSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      ContentStrings.trialName(l10n, trial),
+                      style: TitanText.cardTitle(context),
+                    ),
+                  ),
+                  if (done && record!.bestMoves > 0)
+                    Text(
+                      '${l10n.homeBest}: ${record!.bestMoves}',
+                      style: TitanText.cardBody(context),
+                    ),
+                ],
               ),
-              const SizedBox(width: TitanSpacing.sm),
-              Expanded(
-                child: Text(ContentStrings.trialName(l10n, trial),
-                    style: TitanText.cardTitle(context)),
+              const SizedBox(height: TitanSpacing.xs),
+              Text(
+                ContentStrings.objective(l10n, trial.objective),
+                style: TitanText.cardBody(context),
               ),
-              if (done && record!.bestMoves > 0)
-                Text(
-                  '${l10n.homeBest}: ${record!.bestMoves}',
-                  style: TitanText.cardBody(context),
-                ),
+              const SizedBox(height: TitanSpacing.sm),
+              Wrap(
+                spacing: TitanSpacing.sm,
+                runSpacing: TitanSpacing.xs,
+                children: [
+                  // Board size is stated up front, because an authored position
+                  // only works on the grid it was drawn for and that overrides the
+                  // player's own board-size setting for the duration.
+                  _Tag(label: '${trial.gridSize}×${trial.gridSize}'),
+                  if (trial.constraints.moveLimit != null)
+                    _Tag(
+                      label: l10n.trialMoveLimit(trial.constraints.moveLimit!),
+                    ),
+                  if (trial.constraints.timeLimit != null)
+                    _Tag(
+                      label: l10n.trialTimeLimit(trial.constraints.timeLimit!),
+                    ),
+                  if (!trial.constraints.allowUndo)
+                    _Tag(label: l10n.trialNoUndo),
+                  if (!trial.constraints.allowHints)
+                    _Tag(label: l10n.trialNoHints),
+                  if (trial.hasBlockedCells) _Tag(label: '⛔'),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: TitanSpacing.xs),
-          Text(
-            ContentStrings.objective(l10n, trial.objective),
-            style: TitanText.cardBody(context),
-          ),
-          const SizedBox(height: TitanSpacing.sm),
-          Wrap(
-            spacing: TitanSpacing.sm,
-            runSpacing: TitanSpacing.xs,
-            children: [
-              // Board size is stated up front, because an authored position
-              // only works on the grid it was drawn for and that overrides the
-              // player's own board-size setting for the duration.
-              _Tag(label: '${trial.gridSize}×${trial.gridSize}'),
-              if (trial.constraints.moveLimit != null)
-                _Tag(label: l10n.trialMoveLimit(trial.constraints.moveLimit!)),
-              if (trial.constraints.timeLimit != null)
-                _Tag(label: l10n.trialTimeLimit(trial.constraints.timeLimit!)),
-              if (!trial.constraints.allowUndo) _Tag(label: l10n.trialNoUndo),
-              if (!trial.constraints.allowHints) _Tag(label: l10n.trialNoHints),
-              if (trial.hasBlockedCells) _Tag(label: '⛔'),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

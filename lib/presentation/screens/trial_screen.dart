@@ -175,9 +175,7 @@ class _TrialScreenState extends State<TrialScreen> {
       // Same placement as the free-play board: the banner sits below the
       // controls with clear space above it, so an overshot swipe lands on the
       // gap rather than the ad.
-      bottomNavigationBar: ScreenBanner(
-        adUnitId: AdsConfig.getGameBannerID(),
-      ),
+      bottomNavigationBar: ScreenBanner(adUnitId: AdsConfig.getGameBannerID()),
       appBar: AppBar(title: Text(ContentStrings.trialName(l10n, trial))),
       body: SafeArea(
         child: Stack(
@@ -250,73 +248,78 @@ class _ObjectiveBanner extends StatelessWidget {
     // A survive objective has no move budget, so nothing was shown at all and
     // the player could not see how far through it they were.
     final survivalTarget =
-        trial.objective.kind == ObjectiveKind.survive ? trial.objective.target : null;
+        trial.objective.kind == ObjectiveKind.survive
+            ? trial.objective.target
+            : null;
     final timeLimit = trial.constraints.timeLimit;
     final secondsLeft =
         timeLimit == null ? null : (timeLimit - controller.secondsElapsed);
 
     // A budget running out is the one thing that should visibly alarm.
-    final urgent = (movesLeft != null && movesLeft <= 5) ||
+    final urgent =
+        (movesLeft != null && movesLeft <= 5) ||
         (secondsLeft != null && secondsLeft <= 10);
 
     return TitanCard(
-      contentBuilder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.trialObjective.toUpperCase(),
-            style: TitanText.sectionLabel(context),
-          ),
-          const SizedBox(height: TitanSpacing.xs),
-          Text(
-            ContentStrings.objective(l10n, trial.objective),
-            style: TitanText.cardTitle(context),
-          ),
-          const SizedBox(height: TitanSpacing.sm),
-          ClipRRect(
-            borderRadius: TitanRadius.small,
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 6,
-              backgroundColor:
-                  Theme.of(context).primaryColor.withValues(alpha: 0.18),
-            ),
-          ),
-          const SizedBox(height: TitanSpacing.sm),
-          Row(
+      contentBuilder:
+          (context) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (movesLeft != null)
-                _Budget(
-                  icon: Icons.swipe_rounded,
-                  label: l10n.trialMoveLimit(movesLeft),
-                  urgent: urgent,
-                )
-              else if (survivalTarget != null)
-                _Budget(
-                  icon: Icons.swipe_rounded,
-                  label: '${controller.movesUsed} / $survivalTarget',
-                  urgent: false,
+              Text(
+                l10n.trialObjective.toUpperCase(),
+                style: TitanText.sectionLabel(context),
+              ),
+              const SizedBox(height: TitanSpacing.xs),
+              Text(
+                ContentStrings.objective(l10n, trial.objective),
+                style: TitanText.cardTitle(context),
+              ),
+              const SizedBox(height: TitanSpacing.sm),
+              ClipRRect(
+                borderRadius: TitanRadius.small,
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 6,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).primaryColor.withValues(alpha: 0.18),
                 ),
-              if (secondsLeft != null)
-                _Budget(
-                  icon: Icons.timer_rounded,
-                  label: l10n.trialTimeLimit(
-                    secondsLeft < 0 ? 0 : secondsLeft,
-                  ),
-                  urgent: urgent,
-                ),
-              const Spacer(),
-              if (controller.scored)
-                Text(
-                  l10n.score(controller.score),
-                  style: TitanText.cardBody(context).copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
+              ),
+              const SizedBox(height: TitanSpacing.sm),
+              Row(
+                children: [
+                  if (movesLeft != null)
+                    _Budget(
+                      icon: Icons.swipe_rounded,
+                      label: l10n.trialMoveLimit(movesLeft),
+                      urgent: urgent,
+                    )
+                  else if (survivalTarget != null)
+                    _Budget(
+                      icon: Icons.swipe_rounded,
+                      label: '${controller.movesUsed} / $survivalTarget',
+                      urgent: false,
+                    ),
+                  if (secondsLeft != null)
+                    _Budget(
+                      icon: Icons.timer_rounded,
+                      label: l10n.trialTimeLimit(
+                        secondsLeft < 0 ? 0 : secondsLeft,
+                      ),
+                      urgent: urgent,
+                    ),
+                  const Spacer(),
+                  if (controller.scored)
+                    Text(
+                      l10n.score(controller.score),
+                      style: TitanText.cardBody(context).copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
     );
   }
 }
@@ -344,15 +347,17 @@ class _Budget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: TitanSpacing.md),
       child: Container(
-        padding: urgent
-            ? const EdgeInsets.symmetric(horizontal: 8, vertical: 2)
-            : EdgeInsets.zero,
-        decoration: urgent
-            ? BoxDecoration(
-                color: error.withValues(alpha: 0.22),
-                borderRadius: TitanRadius.small,
-              )
-            : null,
+        padding:
+            urgent
+                ? const EdgeInsets.symmetric(horizontal: 8, vertical: 2)
+                : EdgeInsets.zero,
+        decoration:
+            urgent
+                ? BoxDecoration(
+                  color: error.withValues(alpha: 0.22),
+                  borderRadius: TitanRadius.small,
+                )
+                : null,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -401,87 +406,91 @@ class _ResultOverlay extends StatelessWidget {
             children: [
               TitanCard(
                 prominent: won,
-                contentBuilder: (context) => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      won
-                          ? Icons.military_tech_rounded
-                          : Icons.shield_outlined,
-                      size: 34,
-                    ),
-                    const SizedBox(height: TitanSpacing.sm),
-                    Text(
-                      won ? l10n.trialComplete : l10n.trialFailed,
-                      style: TitanText.display(context).copyWith(fontSize: 22),
-                    ),
-                    const SizedBox(height: TitanSpacing.sm),
-                    Text(
-                      _outcomeDetail(l10n),
-                      style: TitanText.cardBody(context),
-                    ),
-                    if (unlocked.isNotEmpty) ...[
-                      const SizedBox(height: TitanSpacing.md),
-                      for (final achievement in unlocked)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.star_rounded, size: 16),
-                              const SizedBox(width: TitanSpacing.sm),
-                              Expanded(
-                                child: Text(
-                                  achievement.name,
-                                  style: TitanText.cardBody(context),
-                                ),
-                              ),
-                            ],
-                          ),
+                contentBuilder:
+                    (context) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          won
+                              ? Icons.military_tech_rounded
+                              : Icons.shield_outlined,
+                          size: 34,
                         ),
-                    ],
-                    const SizedBox(height: TitanSpacing.lg),
-                    // Buttons are styled from the card's own surface rather
-                    // than the page theme. On a win the card is filled with the
-                    // accent colour, so a default FilledButton renders
-                    // accent-on-accent and an OutlinedButton's label is the
-                    // accent too — both invisible.
-                    Builder(
-                      builder: (context) {
-                        final onCard =
-                            Theme.of(context).colorScheme.onSurface;
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: onLeave,
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: onCard,
-                                  side: BorderSide(
-                                    color: onCard.withValues(alpha: 0.5),
+                        const SizedBox(height: TitanSpacing.sm),
+                        Text(
+                          won ? l10n.trialComplete : l10n.trialFailed,
+                          style: TitanText.display(
+                            context,
+                          ).copyWith(fontSize: 22),
+                        ),
+                        const SizedBox(height: TitanSpacing.sm),
+                        Text(
+                          _outcomeDetail(l10n),
+                          style: TitanText.cardBody(context),
+                        ),
+                        if (unlocked.isNotEmpty) ...[
+                          const SizedBox(height: TitanSpacing.md),
+                          for (final achievement in unlocked)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star_rounded, size: 16),
+                                  const SizedBox(width: TitanSpacing.sm),
+                                  Expanded(
+                                    child: Text(
+                                      achievement.name,
+                                      style: TitanText.cardBody(context),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                        const SizedBox(height: TitanSpacing.lg),
+                        // Buttons are styled from the card's own surface rather
+                        // than the page theme. On a win the card is filled with the
+                        // accent colour, so a default FilledButton renders
+                        // accent-on-accent and an OutlinedButton's label is the
+                        // accent too — both invisible.
+                        Builder(
+                          builder: (context) {
+                            final onCard =
+                                Theme.of(context).colorScheme.onSurface;
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: onLeave,
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: onCard,
+                                      side: BorderSide(
+                                        color: onCard.withValues(alpha: 0.5),
+                                      ),
+                                    ),
+                                    child: Text(l10n.close),
                                   ),
                                 ),
-                                child: Text(l10n.close),
-                              ),
-                            ),
-                            const SizedBox(width: TitanSpacing.md),
-                            Expanded(
-                              child: FilledButton(
-                                onPressed: onRetry,
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: onCard,
-                                  foregroundColor:
-                                      titanForegroundOn(onCard),
+                                const SizedBox(width: TitanSpacing.md),
+                                Expanded(
+                                  child: FilledButton(
+                                    onPressed: onRetry,
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: onCard,
+                                      foregroundColor: titanForegroundOn(
+                                        onCard,
+                                      ),
+                                    ),
+                                    child: Text(l10n.restartGame),
+                                  ),
                                 ),
-                                child: Text(l10n.restartGame),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                              ],
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
               ),
             ],
           ),

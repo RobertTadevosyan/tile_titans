@@ -24,8 +24,11 @@ void main() {
       for (final seed in [0, 0x100000000, 0x200000000, 1 << 40]) {
         final random = SeededRandom(seed);
         final values = List.generate(30, (_) => random.nextInt(1000));
-        expect(values.toSet().length, greaterThan(1),
-            reason: 'seed $seed produced a constant sequence');
+        expect(
+          values.toSet().length,
+          greaterThan(1),
+          reason: 'seed $seed produced a constant sequence',
+        );
       }
     });
 

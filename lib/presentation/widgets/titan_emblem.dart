@@ -34,11 +34,7 @@ class TitanEmblem extends StatelessWidget {
       width: size,
       height: size,
       child: CustomPaint(
-        painter: _EmblemPainter(
-          emblem: emblem,
-          color: color,
-          weight: weight,
-        ),
+        painter: _EmblemPainter(emblem: emblem, color: color, weight: weight),
         // The numeral carries the meaning; the sigil is decoration, so it is
         // hidden from assistive technology rather than read out as a shape.
         isComplex: false,
@@ -61,15 +57,17 @@ class _EmblemPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final s = size.shortestSide;
-    final stroke = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = s * weight
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-    final fill = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
+    final stroke =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = s * weight
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round;
+    final fill =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.fill;
 
     // Normalised helper: p(0.5, 0.5) is the centre of the emblem.
     Offset p(double x, double y) => Offset(x * s, y * s);
@@ -108,17 +106,34 @@ class _EmblemPainter extends CustomPainter {
 
   /// 2 — Whelp. A four-pointed spark: the smallest possible mark.
   void _drawSpark(Canvas canvas, double s, Paint fill, _P p) {
-    final path = Path()
-      ..moveTo(p(0.5, 0.12).dx, p(0.5, 0.12).dy)
-      ..quadraticBezierTo(
-          p(0.56, 0.44).dx, p(0.56, 0.44).dy, p(0.88, 0.5).dx, p(0.88, 0.5).dy)
-      ..quadraticBezierTo(
-          p(0.56, 0.56).dx, p(0.56, 0.56).dy, p(0.5, 0.88).dx, p(0.5, 0.88).dy)
-      ..quadraticBezierTo(
-          p(0.44, 0.56).dx, p(0.44, 0.56).dy, p(0.12, 0.5).dx, p(0.12, 0.5).dy)
-      ..quadraticBezierTo(
-          p(0.44, 0.44).dx, p(0.44, 0.44).dy, p(0.5, 0.12).dx, p(0.5, 0.12).dy)
-      ..close();
+    final path =
+        Path()
+          ..moveTo(p(0.5, 0.12).dx, p(0.5, 0.12).dy)
+          ..quadraticBezierTo(
+            p(0.56, 0.44).dx,
+            p(0.56, 0.44).dy,
+            p(0.88, 0.5).dx,
+            p(0.88, 0.5).dy,
+          )
+          ..quadraticBezierTo(
+            p(0.56, 0.56).dx,
+            p(0.56, 0.56).dy,
+            p(0.5, 0.88).dx,
+            p(0.5, 0.88).dy,
+          )
+          ..quadraticBezierTo(
+            p(0.44, 0.56).dx,
+            p(0.44, 0.56).dy,
+            p(0.12, 0.5).dx,
+            p(0.12, 0.5).dy,
+          )
+          ..quadraticBezierTo(
+            p(0.44, 0.44).dx,
+            p(0.44, 0.44).dy,
+            p(0.5, 0.12).dx,
+            p(0.5, 0.12).dy,
+          )
+          ..close();
     canvas.drawPath(path, fill);
   }
 
@@ -162,17 +177,18 @@ class _EmblemPainter extends CustomPainter {
       stroke,
     );
     for (final side in [1.0, -1.0]) {
-      final blade = Path()
-        ..moveTo(p(0.5, 0.12).dx, p(0.5, 0.12).dy)
-        ..lineTo(p(0.5 + side * 0.2, 0.1).dx, p(0.5 + side * 0.2, 0.1).dy)
-        ..quadraticBezierTo(
-          p(0.5 + side * 0.48, 0.32).dx,
-          p(0.5 + side * 0.48, 0.32).dy,
-          p(0.5 + side * 0.2, 0.54).dx,
-          p(0.5 + side * 0.2, 0.54).dy,
-        )
-        ..lineTo(p(0.5, 0.5).dx, p(0.5, 0.5).dy)
-        ..close();
+      final blade =
+          Path()
+            ..moveTo(p(0.5, 0.12).dx, p(0.5, 0.12).dy)
+            ..lineTo(p(0.5 + side * 0.2, 0.1).dx, p(0.5 + side * 0.2, 0.1).dy)
+            ..quadraticBezierTo(
+              p(0.5 + side * 0.48, 0.32).dx,
+              p(0.5 + side * 0.48, 0.32).dy,
+              p(0.5 + side * 0.2, 0.54).dx,
+              p(0.5 + side * 0.2, 0.54).dy,
+            )
+            ..lineTo(p(0.5, 0.5).dx, p(0.5, 0.5).dy)
+            ..close();
       canvas.drawPath(blade, fill);
     }
   }
@@ -184,9 +200,17 @@ class _EmblemPainter extends CustomPainter {
         ..moveTo(p(0.5, 0.12).dx, p(0.5, 0.12).dy)
         ..lineTo(p(0.85, 0.28).dx, p(0.85, 0.28).dy)
         ..quadraticBezierTo(
-            p(0.85, 0.7).dx, p(0.85, 0.7).dy, p(0.5, 0.9).dx, p(0.5, 0.9).dy)
+          p(0.85, 0.7).dx,
+          p(0.85, 0.7).dy,
+          p(0.5, 0.9).dx,
+          p(0.5, 0.9).dy,
+        )
         ..quadraticBezierTo(
-            p(0.15, 0.7).dx, p(0.15, 0.7).dy, p(0.15, 0.28).dx, p(0.15, 0.28).dy)
+          p(0.15, 0.7).dx,
+          p(0.15, 0.7).dy,
+          p(0.15, 0.28).dx,
+          p(0.15, 0.28).dy,
+        )
         ..close(),
       stroke,
     );
@@ -209,7 +233,11 @@ class _EmblemPainter extends CustomPainter {
         ..moveTo(p(0.66, 0.28).dx, p(0.66, 0.28).dy)
         ..lineTo(p(0.62, 0.08).dx, p(0.62, 0.08).dy)
         ..quadraticBezierTo(
-            p(0.92, 0.1).dx, p(0.92, 0.1).dy, p(0.88, 0.34).dx, p(0.88, 0.34).dy)
+          p(0.92, 0.1).dx,
+          p(0.92, 0.1).dy,
+          p(0.88, 0.34).dx,
+          p(0.88, 0.34).dy,
+        )
         ..close(),
       fill,
     );
@@ -219,7 +247,11 @@ class _EmblemPainter extends CustomPainter {
         ..moveTo(p(0.34, 0.28).dx, p(0.34, 0.28).dy)
         ..lineTo(p(0.38, 0.08).dx, p(0.38, 0.08).dy)
         ..quadraticBezierTo(
-            p(0.08, 0.1).dx, p(0.08, 0.1).dy, p(0.12, 0.34).dx, p(0.12, 0.34).dy)
+          p(0.08, 0.1).dx,
+          p(0.08, 0.1).dy,
+          p(0.12, 0.34).dx,
+          p(0.12, 0.34).dy,
+        )
         ..close(),
       fill,
     );
@@ -248,7 +280,11 @@ class _EmblemPainter extends CustomPainter {
         ..moveTo(p(0.16, 0.72).dx, p(0.16, 0.72).dy)
         ..lineTo(p(0.16, 0.46).dx, p(0.16, 0.46).dy)
         ..quadraticBezierTo(
-            p(0.5, 0.1).dx, p(0.5, 0.1).dy, p(0.84, 0.46).dx, p(0.84, 0.46).dy)
+          p(0.5, 0.1).dx,
+          p(0.5, 0.1).dy,
+          p(0.84, 0.46).dx,
+          p(0.84, 0.46).dy,
+        )
         ..lineTo(p(0.84, 0.72).dx, p(0.84, 0.72).dy)
         ..moveTo(p(0.16, 0.5).dx, p(0.16, 0.5).dy)
         ..lineTo(p(0.84, 0.5).dx, p(0.84, 0.5).dy)
@@ -279,10 +315,12 @@ class _EmblemPainter extends CustomPainter {
   void _drawHammer(Canvas canvas, Paint stroke, _P p) {
     canvas.drawPath(
       Path()
-        ..addRRect(RRect.fromRectAndRadius(
-          Rect.fromPoints(p(0.16, 0.16), p(0.84, 0.46)),
-          Radius.circular(p(0.06, 0).dx),
-        ))
+        ..addRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromPoints(p(0.16, 0.16), p(0.84, 0.46)),
+            Radius.circular(p(0.06, 0).dx),
+          ),
+        )
         ..moveTo(p(0.5, 0.46).dx, p(0.5, 0.46).dy)
         ..lineTo(p(0.5, 0.88).dx, p(0.5, 0.88).dy)
         ..moveTo(p(0.38, 0.88).dx, p(0.38, 0.88).dy)

@@ -71,29 +71,32 @@ class _BloomPainter extends CustomPainter {
     // Ring: starts tight and hot, expands and thins as it fades.
     final radius = maxRadius * Curves.easeOutQuart.transform(progress);
     final fade = (1 - progress);
-    final ring = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.shortestSide * (emphatic ? 0.075 : 0.055) * fade
-      ..color = color.withOpacity((emphatic ? 0.85 : 0.6) * fade);
+    final ring =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = size.shortestSide * (emphatic ? 0.075 : 0.055) * fade
+          ..color = color.withValues(alpha: (emphatic ? 0.85 : 0.6) * fade);
     canvas.drawCircle(centre, radius, ring);
 
     // Core flash, only in the first third — the "heat" of the strike.
     if (progress < 0.34) {
       final coreFade = 1 - (progress / 0.34);
-      final core = Paint()
-        ..color = color.withOpacity(0.5 * coreFade)
-        ..style = PaintingStyle.fill;
+      final core =
+          Paint()
+            ..color = color.withValues(alpha: 0.5 * coreFade)
+            ..style = PaintingStyle.fill;
       canvas.drawCircle(centre, size.shortestSide * 0.3 * coreFade, core);
     }
 
     // Milestone merges throw sparks along the diagonals.
     if (emphatic && progress < 0.8) {
       final sparkFade = 1 - (progress / 0.8);
-      final spark = Paint()
-        ..color = color.withOpacity(0.7 * sparkFade)
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = size.shortestSide * 0.045 * sparkFade
-        ..style = PaintingStyle.stroke;
+      final spark =
+          Paint()
+            ..color = color.withValues(alpha: 0.7 * sparkFade)
+            ..strokeCap = StrokeCap.round
+            ..strokeWidth = size.shortestSide * 0.045 * sparkFade
+            ..style = PaintingStyle.stroke;
       const diagonals = [
         Offset(0.7, 0.7),
         Offset(-0.7, 0.7),

@@ -7,8 +7,10 @@ void main() {
     test('Classic writes to the legacy flat path', () {
       // The live database holds several hundred rows at `leaderboard/<uid>`.
       // Classic must keep landing there or the existing ladder splits in two.
-      expect(leaderboardPathFor(ModeKeys.classic, 'abc123'),
-          'leaderboard/abc123');
+      expect(
+        leaderboardPathFor(ModeKeys.classic, 'abc123'),
+        'leaderboard/abc123',
+      );
     });
 
     test('other modes nest under the player, not in a top-level bucket', () {
@@ -17,15 +19,22 @@ void main() {
       // with permission denied, and the failure is swallowed so that a broken
       // leaderboard write never interrupts play — so it failed invisibly and
       // the mode boards stayed empty.
-      expect(leaderboardPathFor(ModeKeys.timeAttack, 'abc123'),
-          'leaderboard/abc123/modes/timeAttack');
-      expect(leaderboardPathFor(ModeKeys.hardcore, 'abc123'),
-          'leaderboard/abc123/modes/hardcore');
+      expect(
+        leaderboardPathFor(ModeKeys.timeAttack, 'abc123'),
+        'leaderboard/abc123/modes/timeAttack',
+      );
+      expect(
+        leaderboardPathFor(ModeKeys.hardcore, 'abc123'),
+        'leaderboard/abc123/modes/hardcore',
+      );
     });
 
     test('every write stays inside the branch the player owns', () {
       for (final mode in ModeKeys.freePlay) {
-        expect(leaderboardPathFor(mode, 'abc123'), startsWith('leaderboard/abc123'));
+        expect(
+          leaderboardPathFor(mode, 'abc123'),
+          startsWith('leaderboard/abc123'),
+        );
       }
     });
   });
@@ -98,24 +107,36 @@ void main() {
   group('the board shows the record it actually has', () {
     // The score panel read 0 for Classic while the player's Classic record was
     // 1124 — in settings, and at #120 on the ladder they were looking at.
-    int shown({required String mode, required int modeBest, required int globalHigh}) {
+    int shown({
+      required String mode,
+      required int modeBest,
+      required int globalHigh,
+    }) {
       if (modeBest > 0) return modeBest;
       return mode == ModeKeys.classic ? globalHigh : 0;
     }
 
     test('Classic falls back to the legacy global record', () {
-      expect(shown(mode: ModeKeys.classic, modeBest: 0, globalHigh: 1124), 1124);
+      expect(
+        shown(mode: ModeKeys.classic, modeBest: 0, globalHigh: 1124),
+        1124,
+      );
     });
 
     test('once Classic has its own statistics those win', () {
       expect(
-          shown(mode: ModeKeys.classic, modeBest: 5000, globalHigh: 1124), 5000);
+        shown(mode: ModeKeys.classic, modeBest: 5000, globalHigh: 1124),
+        5000,
+      );
     });
 
     test('a mode with no history of its own starts at zero', () {
       // The global figure was earned in Classic, so it is not this mode's
       // record and must not be shown as one.
-      expect(shown(mode: ModeKeys.timeAttack, modeBest: 0, globalHigh: 1124), 0);
+      expect(
+        shown(mode: ModeKeys.timeAttack, modeBest: 0, globalHigh: 1124),
+        0,
+      );
       expect(shown(mode: ModeKeys.hardcore, modeBest: 0, globalHigh: 1124), 0);
     });
   });
@@ -129,32 +150,43 @@ void main() {
       required String mode,
       required int globalHigh,
       required int modeBest,
-    }) =>
-        mode == ModeKeys.classic && modeBest == 0 ? globalHigh : modeBest;
+    }) => mode == ModeKeys.classic && modeBest == 0 ? globalHigh : modeBest;
 
     test('a first Time Attack score posts despite a huge Classic record', () {
       final bar = threshold(
-          mode: ModeKeys.timeAttack, globalHigh: 153532, modeBest: 0);
+        mode: ModeKeys.timeAttack,
+        globalHigh: 153532,
+        modeBest: 0,
+      );
       expect(800 > bar, isTrue);
     });
 
     test('a first Hardcore score posts despite a huge Classic record', () {
-      final bar =
-          threshold(mode: ModeKeys.hardcore, globalHigh: 153532, modeBest: 0);
+      final bar = threshold(
+        mode: ModeKeys.hardcore,
+        globalHigh: 153532,
+        modeBest: 0,
+      );
       expect(1200 > bar, isTrue);
     });
 
     test('a worse run on the same board does not post', () {
       final bar = threshold(
-          mode: ModeKeys.timeAttack, globalHigh: 153532, modeBest: 5000);
+        mode: ModeKeys.timeAttack,
+        globalHigh: 153532,
+        modeBest: 5000,
+      );
       expect(4200 > bar, isFalse);
     });
 
     test('Classic still measures against the legacy global figure', () {
       // Otherwise the first Classic run after updating would repost a low
       // score over a record earned before per-mode statistics existed.
-      final bar =
-          threshold(mode: ModeKeys.classic, globalHigh: 153532, modeBest: 0);
+      final bar = threshold(
+        mode: ModeKeys.classic,
+        globalHigh: 153532,
+        modeBest: 0,
+      );
       expect(500 > bar, isFalse);
       expect(160000 > bar, isTrue);
     });

@@ -6,7 +6,7 @@ import 'package:flutter_2048/l10n/app_localizations.dart';
 /// with the code behind them — neither could be started and neither worked.
 enum GameMode { normal, timed, hardcore, zen }
 
-String gameModeToString(GameMode mode,  AppLocalizations appLocales) {
+String gameModeToString(GameMode mode, AppLocalizations appLocales) {
   switch (mode) {
     case GameMode.normal:
       return appLocales.gameModeNormal;

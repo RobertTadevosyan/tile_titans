@@ -34,14 +34,19 @@ void main() {
   });
 
   group('trial content is exposed', () {
-    test('the library has content for every chapter shown on the home screen',
-        () {
-      for (final chapter in trialChapters) {
-        expect(chapter.trials, isNotEmpty,
-            reason: '${chapter.name} would render an empty progress row');
-        expect(chapter.name, isNotEmpty);
-      }
-    });
+    test(
+      'the library has content for every chapter shown on the home screen',
+      () {
+        for (final chapter in trialChapters) {
+          expect(
+            chapter.trials,
+            isNotEmpty,
+            reason: '${chapter.name} would render an empty progress row',
+          );
+          expect(chapter.name, isNotEmpty);
+        }
+      },
+    );
   });
 
   group('ProgressStore drives the masthead', () {
@@ -82,8 +87,9 @@ void main() {
 
   group('localisation covers the new screens', () {
     for (final locale in AppLocalizations.supportedLocales) {
-      testWidgets('${locale.languageCode} has every home string',
-          (tester) async {
+      testWidgets('${locale.languageCode} has every home string', (
+        tester,
+      ) async {
         late AppLocalizations l10n;
         await tester.pumpWidget(
           MaterialApp(
@@ -120,13 +126,17 @@ void main() {
         };
 
         strings.forEach((key, value) {
-          expect(value.trim(), isNotEmpty,
-              reason: '$key is empty in ${locale.languageCode}');
+          expect(
+            value.trim(),
+            isNotEmpty,
+            reason: '$key is empty in ${locale.languageCode}',
+          );
         });
       });
 
-      testWidgets('${locale.languageCode} mode descriptions stay short',
-          (tester) async {
+      testWidgets('${locale.languageCode} mode descriptions stay short', (
+        tester,
+      ) async {
         late AppLocalizations l10n;
         await tester.pumpWidget(
           MaterialApp(
@@ -150,8 +160,11 @@ void main() {
           l10n.modeTimeAttackDesc,
           l10n.modeHardcoreDesc,
         ]) {
-          expect(description.length, lessThan(46),
-              reason: '"$description" will truncate in ${locale.languageCode}');
+          expect(
+            description.length,
+            lessThan(46),
+            reason: '"$description" will truncate in ${locale.languageCode}',
+          );
         }
       });
     }

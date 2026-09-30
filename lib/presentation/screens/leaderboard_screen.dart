@@ -40,7 +40,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   var bannerHeight = 0;
   var currentUserUid = '';
   List<LeaderboardEntry> leaderboardEntries = [];
-  final GlobalKey _itemKey = GlobalKey();
 
   @override
   void initState() {

@@ -18,8 +18,11 @@ void main() {
       final move = result.moves.single;
       expect(move.fromX, 3);
       expect(move.toX, 0);
-      expect(move.travelled, isTrue,
-          reason: 'a tile crossing the whole row must report the whole path');
+      expect(
+        move.travelled,
+        isTrue,
+        reason: 'a tile crossing the whole row must report the whole path',
+      );
     });
 
     test('a tile that cannot move reports no travel', () {
@@ -136,8 +139,11 @@ void main() {
       for (var y = 0; y < 4; y++) {
         for (var x = 0; x < 4; x++) {
           if (result.board[y][x] > 0) {
-            expect(result.originOf(x, y), isNotNull,
-                reason: 'tile at ($x,$y) has no path to animate from');
+            expect(
+              result.originOf(x, y),
+              isNotNull,
+              reason: 'tile at ($x,$y) has no path to animate from',
+            );
           }
         }
       }
@@ -150,14 +156,14 @@ void main() {
         [0, 16, 0, 16],
         [2, 4, 8, 16],
       ];
-      final before = board
-          .expand((row) => row)
-          .where((v) => v > 0)
-          .length;
+      final before = board.expand((row) => row).where((v) => v > 0).length;
       final result = applyMove(board, Direction.left);
 
-      expect(result.moves, hasLength(before),
-          reason: 'every tile must be accounted for exactly once');
+      expect(
+        result.moves,
+        hasLength(before),
+        reason: 'every tile must be accounted for exactly once',
+      );
     });
   });
 }

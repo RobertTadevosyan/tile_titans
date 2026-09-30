@@ -8,8 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// a capture build can never become the shipping one by accident.
 void main() {
   test('store capture is off unless defined at build time', () {
-    expect(kStoreCapture, isFalse,
-        reason: 'a normal build must never be a capture build');
+    expect(
+      kStoreCapture,
+      isFalse,
+      reason: 'a normal build must never be a capture build',
+    );
   });
 
   test('ads are enabled in a normal build', () {

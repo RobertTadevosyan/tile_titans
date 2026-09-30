@@ -20,10 +20,13 @@ void main() {
       expect(RuleSet.timeAttack.timeLimit, 90);
     });
 
-    test('merges buy time back, which is what makes the mode its own thing', () {
-      expect(RuleSet.timeAttack.secondsPerMerge, greaterThan(0));
-      expect(RuleSet.classic.secondsPerMerge, 0);
-    });
+    test(
+      'merges buy time back, which is what makes the mode its own thing',
+      () {
+        expect(RuleSet.timeAttack.secondsPerMerge, greaterThan(0));
+        expect(RuleSet.classic.secondsPerMerge, 0);
+      },
+    );
 
     test('a timed run is scored, so it has something to rank', () {
       expect(RuleSet.timeAttack.scored, isTrue);

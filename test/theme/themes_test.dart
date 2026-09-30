@@ -12,10 +12,16 @@ void main() {
   group('theme completeness', () {
     test('every theme has ThemeData and a tile palette', () {
       for (final theme in AppTheme.values) {
-        expect(appThemeData[theme], isNotNull,
-            reason: '${theme.name} has no ThemeData');
-        expect(tileColors[theme], isNotNull,
-            reason: '${theme.name} has no tile palette');
+        expect(
+          appThemeData[theme],
+          isNotNull,
+          reason: '${theme.name} has no ThemeData',
+        );
+        expect(
+          tileColors[theme],
+          isNotNull,
+          reason: '${theme.name} has no tile palette',
+        );
       }
     });
 
@@ -23,8 +29,11 @@ void main() {
       for (final theme in AppTheme.values) {
         final palette = tileColors[theme]!;
         for (var value = 2; value <= 2048; value *= 2) {
-          expect(palette[value], isNotNull,
-              reason: '${theme.name} is missing a colour for $value');
+          expect(
+            palette[value],
+            isNotNull,
+            reason: '${theme.name} is missing a colour for $value',
+          );
         }
       }
     });
@@ -32,8 +41,11 @@ void main() {
     test('app bars are flat, not the Material default slab', () {
       for (final theme in AppTheme.values) {
         final elevation = appThemeData[theme]!.appBarTheme.elevation;
-        expect(elevation, 0,
-            reason: '${theme.name} still has a raised app bar');
+        expect(
+          elevation,
+          0,
+          reason: '${theme.name} still has a raised app bar',
+        );
       }
     });
   });
@@ -43,9 +55,10 @@ void main() {
     /// and white on dark ones, chosen from measured luminance.
     // Mirrors the derived crossover used by AnimatedTile.
     const crossover = 0.179;
-    Color numeralFor(Color tile) => tile.computeLuminance() > crossover
-        ? const Color(0xFF14181C)
-        : Colors.white;
+    Color numeralFor(Color tile) =>
+        tile.computeLuminance() > crossover
+            ? const Color(0xFF14181C)
+            : Colors.white;
 
     double contrast(Color a, Color b) {
       final la = a.computeLuminance();
@@ -63,9 +76,13 @@ void main() {
           // 4.5:1 is the WCAG AA threshold for normal text; tile numerals are
           // large and bold, so 3.5 is a fair floor and still well clear of the
           // "grey on grey" failures the audit found.
-          expect(ratio, greaterThan(3.5),
-              reason: '${theme.name} tile ${entry.key} has contrast '
-                  '${ratio.toStringAsFixed(2)}');
+          expect(
+            ratio,
+            greaterThan(3.5),
+            reason:
+                '${theme.name} tile ${entry.key} has contrast '
+                '${ratio.toStringAsFixed(2)}',
+          );
         }
       }
     });
@@ -85,23 +102,35 @@ void main() {
       // washed out. Every prominent surface must land clearly dark or clearly
       // light so its text reads as deliberate.
       for (final theme in AppTheme.values) {
-        final surface = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final surface = titanProminentSurface(
+          appThemeData[theme]!.primaryColor,
+        );
         final l = surface.computeLuminance();
         final settled = l <= 0.24 || l >= 0.70;
-        expect(settled, isTrue,
-            reason: '${theme.name} prominent surface sits at '
-                '${l.toStringAsFixed(2)}, in the muddy middle');
+        expect(
+          settled,
+          isTrue,
+          reason:
+              '${theme.name} prominent surface sits at '
+              '${l.toStringAsFixed(2)}, in the muddy middle',
+        );
       }
     });
 
     test('prominent cards clear AA for body text in every theme', () {
       // Retro's brown sat at 4.3:1 with white — readable-ish, under the floor.
       for (final theme in AppTheme.values) {
-        final surface = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final surface = titanProminentSurface(
+          appThemeData[theme]!.primaryColor,
+        );
         final ratio = titanContrastRatio(surface, titanForegroundOn(surface));
-        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
-            reason: '${theme.name} prominent card is only '
-                '${ratio.toStringAsFixed(1)}:1');
+        expect(
+          ratio,
+          greaterThanOrEqualTo(kMinBodyContrast),
+          reason:
+              '${theme.name} prominent card is only '
+              '${ratio.toStringAsFixed(1)}:1',
+        );
       }
     });
 
@@ -117,9 +146,13 @@ void main() {
         );
         final muted = titanMutedOn(surface, titanForegroundOn(surface));
         final ratio = titanContrastRatio(surface, muted);
-        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
-            reason: '${theme.name} card subtitle is only '
-                '${ratio.toStringAsFixed(2)}:1');
+        expect(
+          ratio,
+          greaterThanOrEqualTo(kMinBodyContrast),
+          reason:
+              '${theme.name} card subtitle is only '
+              '${ratio.toStringAsFixed(2)}:1',
+        );
       }
     });
 
@@ -130,9 +163,13 @@ void main() {
       for (final theme in AppTheme.values) {
         final fill = titanProminentSurface(appThemeData[theme]!.primaryColor);
         final ratio = titanContrastRatio(fill, titanForegroundOn(fill));
-        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
-            reason: '${theme.name} button label is only '
-                '${ratio.toStringAsFixed(2)}:1');
+        expect(
+          ratio,
+          greaterThanOrEqualTo(kMinBodyContrast),
+          reason:
+              '${theme.name} button label is only '
+              '${ratio.toStringAsFixed(2)}:1',
+        );
       }
     });
 
@@ -142,11 +179,17 @@ void main() {
       // 2.36:1 and Ocean's 3.32:1 — on the title at the top of every screen.
       for (final theme in AppTheme.values) {
         final bar = appThemeData[theme]!.appBarTheme;
-        final ratio =
-            titanContrastRatio(bar.backgroundColor!, bar.foregroundColor!);
-        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
-            reason: '${theme.name} app bar title is only '
-                '${ratio.toStringAsFixed(2)}:1');
+        final ratio = titanContrastRatio(
+          bar.backgroundColor!,
+          bar.foregroundColor!,
+        );
+        expect(
+          ratio,
+          greaterThanOrEqualTo(kMinBodyContrast),
+          reason:
+              '${theme.name} app bar title is only '
+              '${ratio.toStringAsFixed(2)}:1',
+        );
       }
     });
 
@@ -159,9 +202,13 @@ void main() {
         expect(base, isNotNull, reason: '${theme.name} has no app bar colour');
         final surface = titanProminentSurface(base!);
         final ratio = titanContrastRatio(surface, titanForegroundOn(surface));
-        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
-            reason: '${theme.name} dialog text is only '
-                '${ratio.toStringAsFixed(1)}:1');
+        expect(
+          ratio,
+          greaterThanOrEqualTo(kMinBodyContrast),
+          reason:
+              '${theme.name} dialog text is only '
+              '${ratio.toStringAsFixed(1)}:1',
+        );
       }
     });
 
@@ -169,12 +216,18 @@ void main() {
       // The subtitle under CONTINUE was 3.54:1: a flat 65% alpha applied to a
       // foreground that had already been chosen for a dark fill.
       for (final theme in AppTheme.values) {
-        final surface = titanProminentSurface(appThemeData[theme]!.primaryColor);
+        final surface = titanProminentSurface(
+          appThemeData[theme]!.primaryColor,
+        );
         final muted = titanMutedOn(surface, titanForegroundOn(surface));
         final ratio = titanContrastRatio(surface, muted);
-        expect(ratio, greaterThanOrEqualTo(kMinBodyContrast),
-            reason: '${theme.name} muted text is only '
-                '${ratio.toStringAsFixed(2)}:1');
+        expect(
+          ratio,
+          greaterThanOrEqualTo(kMinBodyContrast),
+          reason:
+              '${theme.name} muted text is only '
+              '${ratio.toStringAsFixed(2)}:1',
+        );
       }
     });
 
@@ -186,9 +239,13 @@ void main() {
         final accent = titanProminentSurface(appThemeData[theme]!.primaryColor);
         final foreground = titanForegroundOn(accent);
         final ratio = contrastOf(accent, foreground);
-        expect(ratio, greaterThan(3.5),
-            reason: '${theme.name} accent card contrast is '
-                '${ratio.toStringAsFixed(2)}');
+        expect(
+          ratio,
+          greaterThan(3.5),
+          reason:
+              '${theme.name} accent card contrast is '
+              '${ratio.toStringAsFixed(2)}',
+        );
       }
     });
 
@@ -199,8 +256,11 @@ void main() {
         final accent = titanProminentSurface(appThemeData[theme]!.primaryColor);
         final onCard = titanForegroundOn(accent);
         final onButton = titanForegroundOn(onCard);
-        expect(contrastOf(onCard, onButton), greaterThan(3.5),
-            reason: '${theme.name} button label is unreadable');
+        expect(
+          contrastOf(onCard, onButton),
+          greaterThan(3.5),
+          reason: '${theme.name} button label is unreadable',
+        );
       }
     });
   });
@@ -211,8 +271,11 @@ void main() {
       // and the brief calls it out explicitly.
       const clone = Color(0xFFFAF3DD);
       for (final theme in AppTheme.values) {
-        expect(appThemeData[theme]!.scaffoldBackgroundColor, isNot(clone),
-            reason: '${theme.name} still uses the 2048 cream');
+        expect(
+          appThemeData[theme]!.scaffoldBackgroundColor,
+          isNot(clone),
+          reason: '${theme.name} still uses the 2048 cream',
+        );
       }
     });
 

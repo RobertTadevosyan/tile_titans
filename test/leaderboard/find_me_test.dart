@@ -13,8 +13,11 @@ void main() {
     test('the divider counts toward the pitch', () {
       // The old code used index * 72 and drifted by a pixel per row.
       expect(target(120, 1e9), 120 * 73.0);
-      expect(target(120, 1e9) - 120 * itemHeight, 120.0,
-          reason: 'old maths was 120px — nearly two rows — short by row 120');
+      expect(
+        target(120, 1e9) - 120 * itemHeight,
+        120.0,
+        reason: 'old maths was 120px — nearly two rows — short by row 120',
+      );
     });
 
     test('the first row needs no scrolling', () {

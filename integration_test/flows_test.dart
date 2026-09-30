@@ -43,11 +43,7 @@ void main() {
   }
 
   /// Opens the screen behind [icon], checks it built, and comes back.
-  Future<void> visit(
-    WidgetTester tester,
-    IconData icon,
-    String name,
-  ) async {
+  Future<void> visit(WidgetTester tester, IconData icon, String name) async {
     final finder = find.byIcon(icon);
     expect(finder, findsWidgets, reason: '$name is not reachable from home');
 
@@ -57,8 +53,11 @@ void main() {
     // An overflow, a null-check on missing data or a failed lookup surfaces
     // here. Painting a yellow stripe is not enough to call a screen working.
     expect(tester.takeException(), isNull, reason: '$name threw when opened');
-    expect(find.byType(Scaffold), findsWidgets,
-        reason: '$name opened to nothing');
+    expect(
+      find.byType(Scaffold),
+      findsWidgets,
+      reason: '$name opened to nothing',
+    );
 
     // Pop the root navigator: the screens nest their own, and popping the
     // innermost one leaves the walk stranded on the screen it just opened.
@@ -68,8 +67,11 @@ void main() {
     );
     if (nav.canPop()) nav.pop();
     await settle(tester);
-    expect(tester.takeException(), isNull,
-        reason: '$name threw on the way back');
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: '$name threw on the way back',
+    );
   }
 
   testWidgets('the home screen builds without overflowing', (tester) async {

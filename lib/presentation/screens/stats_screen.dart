@@ -37,15 +37,15 @@ class StatsScreen extends StatelessWidget {
                   (label: l10n.statGamesPlayed, value: '${stats.gamesPlayed}'),
                   (
                     label: l10n.statTotalMerges,
-                    value: titanCompact(stats.totalMerges)
+                    value: titanCompact(stats.totalMerges),
                   ),
                   (
                     label: l10n.statPlayTime,
-                    value: titanDuration(stats.playTimeSeconds)
+                    value: titanDuration(stats.playTimeSeconds),
                   ),
                   (
                     label: l10n.statFavouriteMode,
-                    value: _modeLabel(l10n, stats.favouriteMode) ?? '—'
+                    value: _modeLabel(l10n, stats.favouriteMode) ?? '—',
                   ),
                 ],
               ),
@@ -67,20 +67,17 @@ class StatsScreen extends StatelessWidget {
                 entries: [
                   (
                     label: l10n.statsTrials,
-                    value: '${progress.trialsCompleted}/${allTrials.length}'
+                    value: '${progress.trialsCompleted}/${allTrials.length}',
                   ),
                   (
                     label: l10n.statsChapters,
                     value:
-                        '${progress.chaptersCompleted}/${trialChapters.length}'
+                        '${progress.chaptersCompleted}/${trialChapters.length}',
                   ),
-                  (
-                    label: l10n.statsDaily,
-                    value: '${progress.dailyStreak}'
-                  ),
+                  (label: l10n.statsDaily, value: '${progress.dailyStreak}'),
                   (
                     label: l10n.trialNoUndo,
-                    value: '${progress.trialsWonWithoutUndo}'
+                    value: '${progress.trialsWonWithoutUndo}',
                   ),
                 ],
               ),
@@ -140,81 +137,84 @@ class _ModeCard extends StatelessWidget {
     final scored = mode != ModeKeys.zen;
 
     return TitanCard(
-      contentBuilder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      contentBuilder:
+          (context) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(title, style: TitanText.cardTitle(context)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(title, style: TitanText.cardTitle(context)),
+                  ),
+                  Text(
+                    '${stats.gamesPlayed}',
+                    style: TitanText.cardBody(context),
+                  ),
+                ],
               ),
-              Text(
-                '${stats.gamesPlayed}',
-                style: TitanText.cardBody(context),
-              ),
+              const SizedBox(height: TitanSpacing.sm),
+              if (stats.isEmpty)
+                Text(l10n.statsNotPlayed, style: TitanText.cardBody(context))
+              else
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final metrics = <Widget>[
+                      if (scored)
+                        TitanMetric(
+                          label: l10n.statBestScore,
+                          value: titanCompact(stats.bestScore),
+                        ),
+                      TitanMetric(
+                        label: l10n.statHighestTile,
+                        value: '${stats.highestTile}',
+                      ),
+                      TitanMetric(
+                        label: l10n.statLongestGame,
+                        value: '${stats.longestGameMoves}',
+                      ),
+                      if (scored)
+                        TitanMetric(
+                          label: l10n.statAverageScore,
+                          value: titanCompact(stats.averageScore),
+                        ),
+                    ];
+
+                    // Four columns inside a card leave about 75dp each on a phone.
+                    // English fits; "Partie la plus longue" does not, and adjacent
+                    // labels ran into each other with no gap between them. Two
+                    // columns on a narrow card, four when there is room.
+                    final columns = constraints.maxWidth >= 420 ? 4 : 2;
+                    const gap = TitanSpacing.md;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (var i = 0; i < metrics.length; i += columns) ...[
+                          if (i > 0) const SizedBox(height: gap),
+                          Row(
+                            // A label that wraps to two lines is taller than its
+                            // neighbours, and a centred row hangs them at
+                            // different heights — close enough to read as
+                            // overlapping text.
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (
+                                var j = i;
+                                j < i + columns && j < metrics.length;
+                                j++
+                              ) ...[
+                                if (j > i) const SizedBox(width: gap),
+                                Expanded(child: metrics[j]),
+                              ],
+                            ],
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                ),
             ],
           ),
-          const SizedBox(height: TitanSpacing.sm),
-          if (stats.isEmpty)
-            Text(l10n.statsNotPlayed, style: TitanText.cardBody(context))
-          else
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final metrics = <Widget>[
-                  if (scored)
-                    TitanMetric(
-                      label: l10n.statBestScore,
-                      value: titanCompact(stats.bestScore),
-                    ),
-                  TitanMetric(
-                    label: l10n.statHighestTile,
-                    value: '${stats.highestTile}',
-                  ),
-                  TitanMetric(
-                    label: l10n.statLongestGame,
-                    value: '${stats.longestGameMoves}',
-                  ),
-                  if (scored)
-                    TitanMetric(
-                      label: l10n.statAverageScore,
-                      value: titanCompact(stats.averageScore),
-                    ),
-                ];
-
-                // Four columns inside a card leave about 75dp each on a phone.
-                // English fits; "Partie la plus longue" does not, and adjacent
-                // labels ran into each other with no gap between them. Two
-                // columns on a narrow card, four when there is room.
-                final columns = constraints.maxWidth >= 420 ? 4 : 2;
-                const gap = TitanSpacing.md;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (var i = 0; i < metrics.length; i += columns) ...[
-                      if (i > 0) const SizedBox(height: gap),
-                      Row(
-                        // A label that wraps to two lines is taller than its
-                        // neighbours, and a centred row hangs them at
-                        // different heights — close enough to read as
-                        // overlapping text.
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var j = i;
-                              j < i + columns && j < metrics.length;
-                              j++) ...[
-                            if (j > i) const SizedBox(width: gap),
-                            Expanded(child: metrics[j]),
-                          ],
-                        ],
-                      ),
-                    ],
-                  ],
-                );
-              },
-            ),
-        ],
-      ),
     );
   }
 }
@@ -235,37 +235,38 @@ class _RankCard extends StatelessWidget {
 
     return TitanCard(
       prominent: true,
-      contentBuilder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.pathOfTitans.toUpperCase(),
-            style: TitanText.sectionLabel(context),
+      contentBuilder:
+          (context) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.pathOfTitans.toUpperCase(),
+                style: TitanText.sectionLabel(context),
+              ),
+              const SizedBox(height: TitanSpacing.xs),
+              Text(
+                ContentStrings.rank(l10n, rank),
+                style: TitanText.display(context).copyWith(fontSize: 26),
+              ),
+              const SizedBox(height: TitanSpacing.sm),
+              ClipRRect(
+                borderRadius: TitanRadius.small,
+                child: LinearProgressIndicator(
+                  value: fraction,
+                  minHeight: 6,
+                  backgroundColor: Colors.black.withValues(alpha: 0.15),
+                ),
+              ),
+              const SizedBox(height: TitanSpacing.xs),
+              Text(
+                next == null
+                    ? '${progress.points} / $maxAchievementPoints'
+                    : '${progress.points} / ${next.required} → '
+                        '${ContentStrings.rank(l10n, next)}',
+                style: TitanText.cardBody(context),
+              ),
+            ],
           ),
-          const SizedBox(height: TitanSpacing.xs),
-          Text(
-            ContentStrings.rank(l10n, rank),
-            style: TitanText.display(context).copyWith(fontSize: 26),
-          ),
-          const SizedBox(height: TitanSpacing.sm),
-          ClipRRect(
-            borderRadius: TitanRadius.small,
-            child: LinearProgressIndicator(
-              value: fraction,
-              minHeight: 6,
-              backgroundColor: Colors.black.withValues(alpha: 0.15),
-            ),
-          ),
-          const SizedBox(height: TitanSpacing.xs),
-          Text(
-            next == null
-                ? '${progress.points} / $maxAchievementPoints'
-                : '${progress.points} / ${next.required} → '
-                    '${ContentStrings.rank(l10n, next)}',
-            style: TitanText.cardBody(context),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -291,9 +292,13 @@ class _MetricGrid extends StatelessWidget {
             for (final entry in entries)
               TitanCard(
                 padding: const EdgeInsets.all(TitanSpacing.md),
-                contentBuilder: (context) => Center(
-                  child: TitanMetric(label: entry.label, value: entry.value),
-                ),
+                contentBuilder:
+                    (context) => Center(
+                      child: TitanMetric(
+                        label: entry.label,
+                        value: entry.value,
+                      ),
+                    ),
               ),
           ],
         );
@@ -318,44 +323,49 @@ class _AchievementRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return TitanCard(
       padding: const EdgeInsets.all(TitanSpacing.md),
-      contentBuilder: (context) => Row(
-        children: [
-          Icon(
-            unlocked ? Icons.military_tech_rounded : Icons.lock_outline_rounded,
-            size: 22,
-            color: unlocked ? Theme.of(context).primaryColor : null,
-          ),
-          const SizedBox(width: TitanSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(ContentStrings.achievementName(l10n, achievement.id),
-                    style: TitanText.cardTitle(context)),
-                Text(
-                  ContentStrings.achievementDescription(l10n, achievement),
-                  style: TitanText.cardBody(context),
-                ),
-                if (!unlocked) ...[
-                  const SizedBox(height: TitanSpacing.sm),
-                  ClipRRect(
-                    borderRadius: TitanRadius.small,
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      minHeight: 4,
-                      backgroundColor: Theme.of(context)
-                          .primaryColor
-                          .withValues(alpha: 0.18),
+      contentBuilder:
+          (context) => Row(
+            children: [
+              Icon(
+                unlocked
+                    ? Icons.military_tech_rounded
+                    : Icons.lock_outline_rounded,
+                size: 22,
+                color: unlocked ? Theme.of(context).primaryColor : null,
+              ),
+              const SizedBox(width: TitanSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      ContentStrings.achievementName(l10n, achievement.id),
+                      style: TitanText.cardTitle(context),
                     ),
-                  ),
-                ],
-              ],
-            ),
+                    Text(
+                      ContentStrings.achievementDescription(l10n, achievement),
+                      style: TitanText.cardBody(context),
+                    ),
+                    if (!unlocked) ...[
+                      const SizedBox(height: TitanSpacing.sm),
+                      ClipRRect(
+                        borderRadius: TitanRadius.small,
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 4,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).primaryColor.withValues(alpha: 0.18),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: TitanSpacing.sm),
+              Text('${achievement.points}', style: TitanText.cardBody(context)),
+            ],
           ),
-          const SizedBox(width: TitanSpacing.sm),
-          Text('${achievement.points}', style: TitanText.cardBody(context)),
-        ],
-      ),
     );
   }
 }

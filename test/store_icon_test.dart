@@ -72,8 +72,13 @@ Widget _icon(Emblem emblem, {required double size}) {
   );
 }
 
-Future<void> _write(WidgetTester tester, Widget child, String path,
-    double logical, double scale) async {
+Future<void> _write(
+  WidgetTester tester,
+  Widget child,
+  String path,
+  double logical,
+  double scale,
+) async {
   final key = GlobalKey();
   tester.view.physicalSize = Size(logical * scale, logical * scale);
   tester.view.devicePixelRatio = scale;
@@ -138,7 +143,10 @@ Widget _iconHot(Emblem emblem, {required double size}) {
               end: Alignment.bottomRight,
               colors: [Color(0xFF4C5764), Color(0xFF2C333C)],
             ),
-            border: Border.all(color: const Color(0xFFFF8A4C), width: size * 0.028),
+            border: Border.all(
+              color: const Color(0xFFFF8A4C),
+              width: size * 0.028,
+            ),
           ),
         ),
         TitanEmblem(
@@ -162,21 +170,41 @@ void main() {
       Emblem.hammer,
       Emblem.rune,
     ]) {
-      await _write(tester, _icon(e, size: 512), '$out/candidate_${e.name}.png',
-          512, 2.0);
+      await _write(
+        tester,
+        _icon(e, size: 512),
+        '$out/candidate_${e.name}.png',
+        512,
+        2.0,
+      );
     }
-    await _write(tester, _iconHot(Emblem.crossedAxes, size: 512),
-        '$out/candidate_hot.png', 512, 2.0);
+    await _write(
+      tester,
+      _iconHot(Emblem.crossedAxes, size: 512),
+      '$out/candidate_hot.png',
+      512,
+      2.0,
+    );
   });
 
   testWidgets('render the shipping icon', (tester) async {
     // The master the launcher-icon generator slices from.
-    await _write(tester, _iconHot(Emblem.crossedAxes, size: 512),
-        'assets/icons/app_icon.png', 512, 2.0);
+    await _write(
+      tester,
+      _iconHot(Emblem.crossedAxes, size: 512),
+      'assets/icons/app_icon.png',
+      512,
+      2.0,
+    );
 
     // Play's listing icon.
-    await _write(tester, _iconHot(Emblem.crossedAxes, size: 512),
-        '$out/icon_512.png', 512, 1.0);
+    await _write(
+      tester,
+      _iconHot(Emblem.crossedAxes, size: 512),
+      '$out/icon_512.png',
+      512,
+      1.0,
+    );
 
     // Adaptive foreground: Android masks the outer third, so the plate sits
     // inside the inner safe zone on transparency and the background colour is
@@ -201,7 +229,9 @@ void main() {
                     colors: [Color(0xFF4C5764), Color(0xFF2C333C)],
                   ),
                   border: Border.all(
-                      color: const Color(0xFFFF8A4C), width: 512 * 0.017),
+                    color: const Color(0xFFFF8A4C),
+                    width: 512 * 0.017,
+                  ),
                 ),
               ),
               const TitanEmblem(

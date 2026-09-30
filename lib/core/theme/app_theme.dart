@@ -1,3 +1,10 @@
+// ignore_for_file: constant_identifier_names
+//
+// These names are persisted, not just written: ThemeProvider saves
+// `theme.name` to preferences and matches on it at launch. Renaming them to
+// lowerCamelCase would leave every existing player's saved theme unmatched,
+// silently resetting them to the default. The lint is correct in general and
+// wrong here.
 import 'package:flutter_2048/l10n/app_localizations.dart';
 
 enum AppTheme { Classic, Dark, Ocean, Retro, Neon, Forge }

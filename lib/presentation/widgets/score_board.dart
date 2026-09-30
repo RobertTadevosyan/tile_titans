@@ -54,22 +54,23 @@ class ScoreBoard extends StatelessWidget {
         vertical: compact ? TitanSpacing.sm : TitanSpacing.md,
       ),
       // In phone landscape the board needs the width, so the tiles stack.
-      child: compact
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                tiles[0],
-                const SizedBox(height: TitanSpacing.sm),
-                tiles[1],
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(child: tiles[0]),
-                const SizedBox(width: TitanSpacing.md),
-                Expanded(child: tiles[1]),
-              ],
-            ),
+      child:
+          compact
+              ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  tiles[0],
+                  const SizedBox(height: TitanSpacing.sm),
+                  tiles[1],
+                ],
+              )
+              : Row(
+                children: [
+                  Expanded(child: tiles[0]),
+                  const SizedBox(width: TitanSpacing.md),
+                  Expanded(child: tiles[1]),
+                ],
+              ),
     );
   }
 }
@@ -117,9 +118,9 @@ class _ScoreTile extends StatelessWidget {
             label.toUpperCase(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TitanText.sectionLabel(context).copyWith(
-              fontSize: compact ? 10 : 11,
-            ),
+            style: TitanText.sectionLabel(
+              context,
+            ).copyWith(fontSize: compact ? 10 : 11),
           ),
           const SizedBox(height: 2),
           // Counting the score up makes a big merge legible as a change rather
@@ -148,6 +149,5 @@ class _ScoreTile extends StatelessWidget {
 
   /// Seven-figure scores are real in this game, so the tile must not be sized
   /// by the digits it happens to hold today.
-  String _format(int value) =>
-      value >= 100000 ? titanCompact(value) : '$value';
+  String _format(int value) => value >= 100000 ? titanCompact(value) : '$value';
 }

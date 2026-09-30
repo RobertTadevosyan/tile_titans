@@ -31,8 +31,11 @@ void main() {
           rules.timeLimit,
           rules.secondsPerMerge,
         ].join('|');
-        expect(signatures.add(signature), isTrue,
-            reason: '$name is mechanically identical to another mode');
+        expect(
+          signatures.add(signature),
+          isTrue,
+          reason: '$name is mechanically identical to another mode',
+        );
       });
     });
 
@@ -43,14 +46,19 @@ void main() {
 
     test('Time Attack pays seconds for merges', () {
       expect(RuleSet.timeAttack.timeLimit, isNotNull);
-      expect(RuleSet.timeAttack.secondsPerMerge, greaterThan(0),
-          reason: 'without this it is just a countdown, not a strategy');
+      expect(
+        RuleSet.timeAttack.secondsPerMerge,
+        greaterThan(0),
+        reason: 'without this it is just a countdown, not a strategy',
+      );
     });
 
     test('Hardcore is spawn pressure, not a hidden button', () {
       expect(RuleSet.hardcore.gridSize, greaterThan(RuleSet.classic.gridSize));
-      expect(RuleSet.hardcore.spawnPerMove,
-          greaterThan(RuleSet.classic.spawnPerMove));
+      expect(
+        RuleSet.hardcore.spawnPerMove,
+        greaterThan(RuleSet.classic.spawnPerMove),
+      );
       expect(RuleSet.hardcore.allowUndo, isFalse);
       expect(RuleSet.hardcore.allowHints, isFalse);
 
@@ -83,8 +91,11 @@ void main() {
 
     test('every authored trial pins its grid', () {
       for (final trial in allTrials) {
-        expect(trial.rules.respectsPlayerGrid, isFalse,
-            reason: '${trial.id} would be re-tuned by the player\'s setting');
+        expect(
+          trial.rules.respectsPlayerGrid,
+          isFalse,
+          reason: '${trial.id} would be re-tuned by the player\'s setting',
+        );
       }
     });
   });
@@ -111,8 +122,10 @@ void main() {
     test('only ever spawns values the rule set declares', () {
       final random = SeededRandom(7);
       for (var i = 0; i < 300; i++) {
-        expect(RuleSet.classic.spawnWeights.keys,
-            contains(RuleSet.classic.rollSpawnValue(random)));
+        expect(
+          RuleSet.classic.spawnWeights.keys,
+          contains(RuleSet.classic.rollSpawnValue(random)),
+        );
       }
     });
   });
@@ -129,8 +142,7 @@ void main() {
 
       final result = dissolveLowestTiles(board);
       expect(result.dissolved, greaterThan(0));
-      expect(hasMoves(result.board), isTrue,
-          reason: 'Zen must never dead-end');
+      expect(hasMoves(result.board), isTrue, reason: 'Zen must never dead-end');
       expect(maxTile(result.board), 4, reason: 'only the 2s should go');
     });
 

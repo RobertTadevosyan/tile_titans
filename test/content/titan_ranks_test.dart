@@ -6,8 +6,11 @@ void main() {
     test('covers the whole playable tile range in ascending order', () {
       expect(titanRanks.first.value, 2);
       for (var i = 1; i < titanRanks.length; i++) {
-        expect(titanRanks[i].value, titanRanks[i - 1].value * 2,
-            reason: 'the ladder must not skip a doubling');
+        expect(
+          titanRanks[i].value,
+          titanRanks[i - 1].value * 2,
+          reason: 'the ladder must not skip a doubling',
+        );
       }
     });
 
@@ -20,8 +23,11 @@ void main() {
 
     test('names stay short enough to sit under a numeral', () {
       for (final rank in titanRanks) {
-        expect(rank.name.length, lessThanOrEqualTo(14),
-            reason: '${rank.name} will not fit on a tile once translated');
+        expect(
+          rank.name.length,
+          lessThanOrEqualTo(14),
+          reason: '${rank.name} will not fit on a tile once translated',
+        );
       }
     });
 
@@ -45,16 +51,22 @@ void main() {
     test('tiers escalate and never regress as values climb', () {
       var seen = RankTier.common;
       for (final rank in titanRanks) {
-        expect(rank.tier.index, greaterThanOrEqualTo(seen.index),
-            reason: '${rank.name} drops back down a tier');
+        expect(
+          rank.tier.index,
+          greaterThanOrEqualTo(seen.index),
+          reason: '${rank.name} drops back down a tier',
+        );
         seen = rank.tier;
       }
     });
 
     test('the milestones called out in the brief are all significant', () {
       for (final value in [256, 512, 1024, 2048, 4096]) {
-        expect(isMilestoneValue(value), isTrue,
-            reason: '$value should feel like an achievement');
+        expect(
+          isMilestoneValue(value),
+          isTrue,
+          reason: '$value should feel like an achievement',
+        );
       }
       // Early tiles must stay quiet so the board does not shout.
       for (final value in [2, 4, 8, 16, 32, 64, 128]) {

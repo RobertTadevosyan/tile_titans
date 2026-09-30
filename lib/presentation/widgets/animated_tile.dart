@@ -88,7 +88,7 @@ class _AnimatedTileState extends State<AnimatedTile>
     final tileSize = widget.tileSize;
     final themeProvider = Provider.of<ThemeProvider>(context);
     final palette = tileColors[themeProvider.currentTheme];
-    final defaultColor = Theme.of(context).primaryColor.withOpacity(0.85);
+    final defaultColor = Theme.of(context).primaryColor.withValues(alpha: 0.85);
     final tileColor = palette?[tile.value] ?? defaultColor;
 
     // Where the merge colour tween starts. Null for tiles that did not merge.
@@ -123,28 +123,28 @@ class _AnimatedTileState extends State<AnimatedTile>
       width: tileSize,
       height: tileSize,
       child: ScaleTransition(
-          scale: _scaleAnimation,
-          child: TweenAnimationBuilder<Color?>(
-            tween: ColorTween(
-              begin: mergedFromColor ?? tileColor,
-              end: tileColor,
-            ),
-            duration: Duration(
-              milliseconds: reduceMotion ? 0 : (tile.justMerged ? 300 : 200),
-            ),
-            curve: Curves.easeOutCubic,
-            builder: (context, animatedColor, _) {
-              return _buildSurface(
-                surfaceColor: animatedColor ?? tileColor,
-                finalColor: tileColor,
-                tile: tile,
-                tileSize: tileSize,
-                rank: rank,
-                reduceMotion: reduceMotion,
-              );
-            },
+        scale: _scaleAnimation,
+        child: TweenAnimationBuilder<Color?>(
+          tween: ColorTween(
+            begin: mergedFromColor ?? tileColor,
+            end: tileColor,
           ),
+          duration: Duration(
+            milliseconds: reduceMotion ? 0 : (tile.justMerged ? 300 : 200),
+          ),
+          curve: Curves.easeOutCubic,
+          builder: (context, animatedColor, _) {
+            return _buildSurface(
+              surfaceColor: animatedColor ?? tileColor,
+              finalColor: tileColor,
+              tile: tile,
+              tileSize: tileSize,
+              rank: rank,
+              reduceMotion: reduceMotion,
+            );
+          },
         ),
+      ),
     );
   }
 
@@ -159,9 +159,10 @@ class _AnimatedTileState extends State<AnimatedTile>
     // Contrast is measured from the colour actually on screen, so the numeral
     // stays readable mid-merge and across every theme. The old rule keyed off
     // the tile's value and guessed wrong on the dark palettes.
-    final numeralColor = surfaceColor.computeLuminance() > kContrastCrossover
-        ? const Color(0xFF14181C)
-        : Colors.white;
+    final numeralColor =
+        surfaceColor.computeLuminance() > kContrastCrossover
+            ? const Color(0xFF14181C)
+            : Colors.white;
     final showEmblem = tileSize >= 44;
 
     return Container(
@@ -170,19 +171,19 @@ class _AnimatedTileState extends State<AnimatedTile>
         color: surfaceColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: Colors.white.withOpacity(0.5),
+          color: Colors.white.withValues(alpha: 0.5),
           width: 1.5,
         ),
         boxShadow: [
           // Glow picks up the tile's own colour, so it strengthens naturally
           // as values climb and the palette deepens.
           BoxShadow(
-            color: surfaceColor.withOpacity(0.6),
+            color: surfaceColor.withValues(alpha: 0.6),
             blurRadius: 14,
             spreadRadius: 0.5,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 8,
             offset: const Offset(2, 3),
           ),
@@ -203,7 +204,9 @@ class _AnimatedTileState extends State<AnimatedTile>
               alignment: const Alignment(0, -0.2),
               child: TitanEmblem(
                 emblem: rank.emblem,
-                color: numeralColor.withOpacity(rank.isMilestone ? 0.98 : 0.88),
+                color: numeralColor.withValues(
+                  alpha: rank.isMilestone ? 0.98 : 0.88,
+                ),
                 size: tileSize * (rank.isMilestone ? 0.58 : 0.54),
                 weight: rank.isMilestone ? 0.12 : 0.105,
               ),
@@ -218,7 +221,7 @@ class _AnimatedTileState extends State<AnimatedTile>
                   fontWeight: FontWeight.w700,
                   height: 1,
                   letterSpacing: 0.2,
-                  color: numeralColor.withOpacity(0.92),
+                  color: numeralColor.withValues(alpha: 0.92),
                 ),
               ),
             ),

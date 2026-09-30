@@ -24,8 +24,10 @@ class _MergeScoreTextState extends State<MergeScoreText>
     );
 
     _opacity = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
-    _offset = Tween<Offset>(begin: Offset.zero, end: const Offset(0, -1.2))
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _offset = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0, -1.2),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }

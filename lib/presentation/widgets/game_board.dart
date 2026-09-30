@@ -32,11 +32,12 @@ class GameBoard extends StatelessWidget {
         // because a 343-wide board was asked for on a screen that had less
         // than that left over. Height is only considered when it is bounded —
         // inside a scrolling parent it is not.
-        final available = constraints.maxHeight.isFinite
-            ? (constraints.maxWidth < constraints.maxHeight
-                ? constraints.maxWidth
-                : constraints.maxHeight)
-            : constraints.maxWidth;
+        final available =
+            constraints.maxHeight.isFinite
+                ? (constraints.maxWidth < constraints.maxHeight
+                    ? constraints.maxWidth
+                    : constraints.maxHeight)
+                : constraints.maxWidth;
         final boardSize = available.clamp(minSize, maxSize);
         final tileSize = boardSize / gridSize;
 
@@ -62,7 +63,8 @@ class GameBoard extends StatelessWidget {
                         // A blocked cell must look solid rather than empty,
                         // otherwise a trial's shape is invisible and the player
                         // cannot tell why a tile will not slide there.
-                        blocked: y < board.length &&
+                        blocked:
+                            y < board.length &&
                             x < board[y].length &&
                             board[y][x] == blockedCell,
                       ),
@@ -108,21 +110,23 @@ class _BackgroundCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: blocked ? onSurface.withValues(alpha: 0.55) : empty,
         borderRadius: BorderRadius.circular(8),
-        border: blocked
-            ? Border.all(color: onSurface.withValues(alpha: 0.75), width: 2)
-            : null,
+        border:
+            blocked
+                ? Border.all(color: onSurface.withValues(alpha: 0.75), width: 2)
+                : null,
       ),
-      child: blocked
-          ? Center(
-              child: Icon(
-                Icons.close_rounded,
-                size: 18,
-                // Blocked state is carried by shape as well as colour, so it
-                // does not rely on colour vision alone.
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            )
-          : null,
+      child:
+          blocked
+              ? Center(
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 18,
+                  // Blocked state is carried by shape as well as colour, so it
+                  // does not rely on colour vision alone.
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              )
+              : null,
     );
   }
 }

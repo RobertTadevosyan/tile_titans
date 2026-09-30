@@ -26,18 +26,15 @@ void main() {
     });
 
     test('does not merge across a blocked cell', () {
-      expect(collapseLine([2, blockedCell, 2, 0]),
-          [2, blockedCell, 2, 0]);
+      expect(collapseLine([2, blockedCell, 2, 0]), [2, blockedCell, 2, 0]);
     });
 
     test('merges within a segment bounded by a blocked cell', () {
-      expect(collapseLine([2, 2, blockedCell, 0]),
-          [4, 0, blockedCell, 0]);
+      expect(collapseLine([2, 2, blockedCell, 0]), [4, 0, blockedCell, 0]);
     });
 
     test('keeps blocked cells in place while tiles slide around them', () {
-      expect(collapseLine([0, 4, blockedCell, 2]),
-          [4, 0, blockedCell, 2]);
+      expect(collapseLine([0, 4, blockedCell, 2]), [4, 0, blockedCell, 2]);
     });
 
     test('handles a line that is entirely blocked', () {

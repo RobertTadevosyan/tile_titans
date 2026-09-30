@@ -55,9 +55,7 @@ final Map<AppTheme, ThemeData> appThemeData = {
       surface: Color(0xFF15181C),
       onSurface: Color(0xFFF2EDE7),
     ),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Color(0xFFF2EDE7)),
-    ),
+    textTheme: const TextTheme(bodyLarge: TextStyle(color: Color(0xFFF2EDE7))),
     appBarTheme: titanAppBar(const Color(0xFF15181C)),
   ),
 };

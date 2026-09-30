@@ -100,8 +100,8 @@ Direction? _chooseMove(
     final result = applyMove(board, direction);
     if (!result.moved) continue;
 
-    final value = result.gained * 1.5 +
-        _search(result.board, objective, 2, random);
+    final value =
+        result.gained * 1.5 + _search(result.board, objective, 2, random);
     if (value > bestValue) {
       bestValue = value;
       best = direction;
@@ -230,7 +230,8 @@ void main() {
           expect(
             failures.length,
             lessThan(5),
-            reason: '${trial.id} could not be won on any seed:\n'
+            reason:
+                '${trial.id} could not be won on any seed:\n'
                 '${failures.join('\n')}',
           );
         });
@@ -254,8 +255,11 @@ void main() {
       }
 
       // A daily nobody can finish is worse than no daily at all.
-      expect(unbeatable, isEmpty,
-          reason: 'unbeatable dailies: ${unbeatable.join(", ")}');
+      expect(
+        unbeatable,
+        isEmpty,
+        reason: 'unbeatable dailies: ${unbeatable.join(", ")}',
+      );
     });
   });
 }

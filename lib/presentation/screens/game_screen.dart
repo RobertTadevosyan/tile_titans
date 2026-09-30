@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/domain/direction.dart';
-import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
 import 'package:flutter_2048/presentation/screens/settings_screen.dart';
 import 'package:flutter_2048/utils/helper.dart';
@@ -53,8 +52,11 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    final isLandscape =
-        WidgetsBinding.instance.window.physicalSize.aspectRatio > 1;
+    // initState runs before the first build, so there is no context to read a
+    // view from; the binding's implicit view is the supported replacement for
+    // the deprecated `window`.
+    final view = WidgetsBinding.instance.platformDispatcher.implicitView;
+    final isLandscape = view != null && view.physicalSize.aspectRatio > 1;
     if (isLandscape) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
@@ -266,7 +268,6 @@ class _GameScreenState extends State<GameScreen> {
     BuildContext context, {
     required bool isTablet,
   }) {
-    final theme = Theme.of(context);
     final textSize = isTablet ? 34.0 : 16.0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -355,7 +356,6 @@ class _GameScreenState extends State<GameScreen> {
     if (kIsWeb) {
       return buildWebActionButtons(appLocales, controller, context);
     }
-    final theme = Theme.of(context);
     return Column(
       children: [
         Row(
@@ -426,7 +426,6 @@ class _GameScreenState extends State<GameScreen> {
     GameController controller,
     BuildContext context,
   ) {
-    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -694,7 +693,7 @@ class _GameScreenState extends State<GameScreen> {
     BuildContext context,
   ) {
     final isLandscape =
-        WidgetsBinding.instance.window.physicalSize.aspectRatio > 1;
+        MediaQuery.orientationOf(context) == Orientation.landscape;
     return Scaffold(
       appBar: AppBar(
         title: Text(appLocales.appTitle, style: TextStyle(fontSize: 28)),

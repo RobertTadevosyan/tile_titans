@@ -33,10 +33,11 @@ class LanguageSelector extends StatelessWidget {
 
     // Only offer languages the app actually ships translations for, so the
     // list cannot drift out of step with the .arb files.
-    final available = AppLocalizations.supportedLocales
-        .map((l) => l.languageCode)
-        .where(supportedLanguageNames.containsKey)
-        .toList();
+    final available =
+        AppLocalizations.supportedLocales
+            .map((l) => l.languageCode)
+            .where(supportedLanguageNames.containsKey)
+            .toList();
 
     final style = TextStyle(
       fontWeight: FontWeight.w700,

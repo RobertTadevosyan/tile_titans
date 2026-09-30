@@ -10,10 +10,18 @@ Future<Map<String, dynamic>> getDeviceInfo() async {
   final deviceInfo = DeviceInfoPlugin();
   if (Platform.isAndroid) {
     final info = await deviceInfo.androidInfo;
-    return {'device': info.model, 'os': 'Android ${info.version.release}', 'platform': getPlatform()};
+    return {
+      'device': info.model,
+      'os': 'Android ${info.version.release}',
+      'platform': getPlatform(),
+    };
   } else if (Platform.isIOS) {
     final info = await deviceInfo.iosInfo;
-    return {'device': info.utsname.machine, 'os': 'iOS ${info.systemVersion}', 'platform': getPlatform()};
+    return {
+      'device': info.utsname.machine,
+      'os': 'iOS ${info.systemVersion}',
+      'platform': getPlatform(),
+    };
   } else {
     return {'device': 'Unknown', 'os': getPlatform()};
   }

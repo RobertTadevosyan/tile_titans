@@ -136,15 +136,15 @@ Trial dailyTrialFor(DateTime date) {
   // move contributes about 2.2. The original budgets were under half of that
   // and left most dailies mathematically unwinnable.
   final moveLimit = switch (chosen.objective.kind) {
-    ObjectiveKind.reachTile =>
-      chosen.objective.target >= 512 ? 450 : 230,
+    ObjectiveKind.reachTile => chosen.objective.target >= 512 ? 450 : 230,
     ObjectiveKind.reachScore => 400,
     ObjectiveKind.createTiles => 200,
     ObjectiveKind.survive => null,
     ObjectiveKind.clearBoard => 120,
   };
 
-  final stamp = '${day.year}-'
+  final stamp =
+      '${day.year}-'
       '${day.month.toString().padLeft(2, '0')}-'
       '${day.day.toString().padLeft(2, '0')}';
 

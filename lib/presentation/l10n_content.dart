@@ -72,9 +72,7 @@ class ContentStrings {
 
   /// Roman numerals for 1..18, which is every trial there is.
   static String _roman(int value) {
-    const numerals = <int, String>{
-      10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I',
-    };
+    const numerals = <int, String>{10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I'};
     final out = StringBuffer();
     var left = value;
     for (final entry in numerals.entries) {

@@ -24,7 +24,10 @@ String leaderboardPathFor(String mode, String userId) =>
 /// Pulls one mode's row out of a player's leaderboard node.
 ///
 /// Returns null when that player has not posted a score on this board.
-Map<dynamic, dynamic>? leaderboardRowFor(String mode, Map<dynamic, dynamic> node) {
+Map<dynamic, dynamic>? leaderboardRowFor(
+  String mode,
+  Map<dynamic, dynamic> node,
+) {
   if (mode == ModeKeys.classic) {
     return node.containsKey('high_score') ? node : null;
   }

@@ -18,7 +18,7 @@ import 'package:flutter_2048/domain/game_mode.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/presentation/controllers/tile.dart';
-import 'package:flutter_2048/utils/deviceInfo.dart';
+import 'package:flutter_2048/utils/device_info.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
 
 class GameController extends ChangeNotifier {
@@ -243,7 +243,6 @@ class GameController extends ChangeNotifier {
     return copy;
   }
 
-
   /// Signs in anonymously so scores can be attributed to a stable id.
   ///
   /// Both callers fire this without awaiting it, so a throw here became an
@@ -324,6 +323,7 @@ class GameController extends ChangeNotifier {
   }
 
   Timer? _updateTimer;
+
   /// Highest value waiting to be published, captured at call time.
   ///
   /// This must not be read from [score] when the debounce fires: the field
@@ -417,7 +417,6 @@ class GameController extends ChangeNotifier {
     }
   }
 
-
   /// Rules that have to run after a move rather than being described by data.
   ///
   /// Only the clock is left. Zen's scoring and Hardcore's lack of undo are
@@ -487,7 +486,6 @@ class GameController extends ChangeNotifier {
       }
     });
   }
-
 
   // ---------------------------------------------------------------------------
   // Session
@@ -593,8 +591,7 @@ class GameController extends ChangeNotifier {
     _stopTimers();
     activeTrial = null;
     rules = ruleSet;
-    gridSize =
-        ruleSet.respectsPlayerGrid ? playerGridSize : ruleSet.gridSize;
+    gridSize = ruleSet.respectsPlayerGrid ? playerGridSize : ruleSet.gridSize;
     _resetSessionCounters();
     resetGame();
   }
@@ -705,11 +702,13 @@ class GameController extends ChangeNotifier {
     sessionResolved = true;
     return TrialResult(
       trialId: trial.id,
-      outcome: jammed
-          ? TrialOutcome.boardJammed
-          : (constraints.moveLimit != null && movesUsed >= constraints.moveLimit!
-              ? TrialOutcome.outOfMoves
-              : TrialOutcome.outOfTime),
+      outcome:
+          jammed
+              ? TrialOutcome.boardJammed
+              : (constraints.moveLimit != null &&
+                      movesUsed >= constraints.moveLimit!
+                  ? TrialOutcome.outOfMoves
+                  : TrialOutcome.outOfTime),
       movesUsed: movesUsed,
       score: score,
       highestTile: maxTile(board),
@@ -722,7 +721,6 @@ class GameController extends ChangeNotifier {
   /// two adjacent blocked cells (-1 == -1) looked like an available merge and
   /// the game would never end on a board containing them.
   bool isGameOver() => !hasMoves(board);
-
 
   void _endTimedGame(BuildContext context, AppLocalizations appLocales) {
     if (dialogShown) return;
@@ -936,7 +934,6 @@ class GameController extends ChangeNotifier {
     }
   }
 
-
   List<Tile> getTiles() => tiles;
 
   void _updateTileList() {
@@ -995,24 +992,6 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHistory(BuildContext context, AppLocalizations appLocales) async {
-    _boardHistory.add(board.map((row) => List<int>.from(row)).toList());
-    _tileHistory.add(getOldTiles()); // use clone
-    _scoreHistory.add(score);
-    totalMoves++;
-    await prefs.saveGame(score, gridSize, board);
-    _applyModeRules(context, appLocales);
-    if (isGameOver()) {
-      if (soundEnabled) {
-        _audioPlayer.play(gameOverSound);
-      }
-      logGameOver();
-      _showGameOverDialog(context, appLocales);
-      gameOver.value = true;
-    }
-    notifyListeners();
-  }
-
   bool dialogShown = false;
   void _showGameOverDialog(BuildContext context, AppLocalizations appLocales) {
     if (dialogShown) return;
@@ -1066,6 +1045,8 @@ class GameController extends ChangeNotifier {
                   setGameMode(GameMode.normal);
                   resetGame();
                   dialogShown = false;
+                  // The save is awaited, so the route may already be gone.
+                  if (!context.mounted) return;
                   Navigator.of(context).pop();
                 },
                 child: Text(
@@ -1080,7 +1061,6 @@ class GameController extends ChangeNotifier {
       transitionDuration: const Duration(milliseconds: 500),
     );
   }
-
 
   // ---------------------------------------------------------------------------
   // Movement
@@ -1193,7 +1173,9 @@ class GameController extends ChangeNotifier {
         final origin = result.originOf(x, y);
         final merged = result.merges.any((m) => m.x == x && m.y == y);
         final source =
-            origin == null ? null : previousById['${origin.fromX},${origin.fromY}'];
+            origin == null
+                ? null
+                : previousById['${origin.fromX},${origin.fromY}'];
 
         rebuilt.add(
           Tile(
