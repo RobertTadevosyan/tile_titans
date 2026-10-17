@@ -94,7 +94,7 @@ class _GameAppState extends State<GameApp> {
       await AdRouter.resolve();
       switch (AdRouter.network) {
         case AdNetwork.yandex:
-          await yandex.MobileAds.initialize();
+          await yandex.YandexAds.initialize();
         case AdNetwork.admob:
           await AdConsent.gather();
           await admob.MobileAds.instance.initialize();

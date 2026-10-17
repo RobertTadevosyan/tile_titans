@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
@@ -15,6 +16,10 @@ class AdRouter {
   static AdNetwork _network = AdNetwork.admob;
   static AdNetwork get network => _network;
 
+  /// True once [resolve] has picked this launch's network. Banners built
+  /// earlier (the home screen) wait for it instead of taking the default.
+  static final ValueNotifier<bool> resolved = ValueNotifier(false);
+
   /// What the routing saw, for the log line only.
   static String? _timeZone;
   static String? _locale;
@@ -28,18 +33,23 @@ class AdRouter {
   static const String _forced = String.fromEnvironment('AD_NETWORK');
 
   static Future<void> resolve() async {
-    _timeZone = await _detectTimeZone();
-    _locale = localeCountry();
-    _network = switch (_forced) {
-      'admob' => AdNetwork.admob,
-      'yandex' => AdNetwork.yandex,
-      _ => chooseAdNetwork(timeZone: _timeZone, localeCountry: _locale),
-    };
-    log(
-      'Ads: ${_network.name} (zone ${_timeZone ?? '—'}, '
-      'region ${_locale ?? '—'})',
-      name: 'ads',
-    );
+    try {
+      _timeZone = await _detectTimeZone();
+      _locale = localeCountry();
+      _network = switch (_forced) {
+        'admob' => AdNetwork.admob,
+        'yandex' => AdNetwork.yandex,
+        _ => chooseAdNetwork(timeZone: _timeZone, localeCountry: _locale),
+      };
+      log(
+        'Ads: ${_network.name} (zone ${_timeZone ?? '—'}, '
+        'region ${_locale ?? '—'})',
+        name: 'ads',
+      );
+    } finally {
+      // Even when detection fails, banners go ahead with the default network.
+      resolved.value = true;
+    }
   }
 
   /// Test seam: forces the network without touching platform channels.

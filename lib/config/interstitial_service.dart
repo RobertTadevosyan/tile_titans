@@ -21,6 +21,7 @@ class InterstitialService {
 
   final AdPolicy policy;
 
+  yandex.InterstitialAdLoader? _yandexLoader;
   yandex.InterstitialAd? _yandexAd;
   admob.InterstitialAd? _admobAd;
   bool _loading = false;
@@ -47,22 +48,19 @@ class InterstitialService {
   }
 
   Future<void> _preloadYandex() async {
-    final loader = await yandex.InterstitialAdLoader.create(
-      onAdLoaded: (ad) {
-        _yandexAd = ad;
-        _loading = false;
-      },
-      onAdFailedToLoad: (_) {
-        // Deliberately not retrying here: requesting again from the failure
-        // callback is discouraged and can spiral into a request loop.
-        _loading = false;
-      },
-    );
-    await loader.loadAd(
-      adRequestConfiguration: yandex.AdRequestConfiguration(
-        adUnitId: AdsConfig.interstitialId(AdNetwork.yandex),
-      ),
-    );
+    try {
+      _yandexAd = await (_yandexLoader ??= yandex.InterstitialAdLoader())
+          .loadAd(
+            adRequest: yandex.AdRequest(
+              adUnitId: AdsConfig.interstitialId(AdNetwork.yandex),
+            ),
+          );
+    } catch (_) {
+      // Deliberately not retrying here: requesting again right after a
+      // failure is discouraged and can spiral into a request loop.
+    } finally {
+      _loading = false;
+    }
   }
 
   Future<void> _preloadAdMob() async {
@@ -119,7 +117,7 @@ class InterstitialService {
   }
 
   Future<void> _showYandex(yandex.InterstitialAd ad) async {
-    ad.setAdEventListener(
+    await ad.setAdEventListener(
       eventListener: yandex.InterstitialAdEventListener(
         onAdShown: () {},
         onAdFailedToShow: (_) => _disposeAndReload(),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/config/ad_region.dart';
@@ -35,10 +37,16 @@ class ScreenBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!adsEnabled()) return const SizedBox.shrink();
-    return switch (AdRouter.network) {
-      AdNetwork.yandex => _YandexBanner(gap: gap),
-      AdNetwork.admob => _AdMobBanner(gap: gap),
-    };
+    return ValueListenableBuilder<bool>(
+      valueListenable: AdRouter.resolved,
+      builder: (context, resolved, _) {
+        if (!resolved) return const SizedBox.shrink();
+        return switch (AdRouter.network) {
+          AdNetwork.yandex => _YandexBanner(gap: gap),
+          AdNetwork.admob => _AdMobBanner(gap: gap),
+        };
+      },
+    );
   }
 }
 
@@ -78,11 +86,15 @@ class _YandexBanner extends StatefulWidget {
 }
 
 class _YandexBannerState extends State<_YandexBanner> {
-  static const _request = yandex.AdRequest(
-    contextQuery: 'puzzle, games, mobile apps, games',
+  static yandex.AdRequest get _request => yandex.AdRequest(
+    adUnitId: AdsConfig.bannerId(AdNetwork.yandex),
+    targeting: const yandex.AdTargeting(
+      contextQuery: 'puzzle, games, mobile apps, games',
+    ),
   );
 
   yandex.BannerAd? _ad;
+  bool _attached = false;
   int _height = 0;
   int _loadedWidth = 0;
   bool _loading = false;
@@ -103,6 +115,7 @@ class _YandexBannerState extends State<_YandexBanner> {
     final old = _ad;
     setState(() {
       _ad = null;
+      _attached = false;
       _height = 0;
     });
     // Destroy once the AdWidget is out of the tree; destroying one that is
@@ -116,28 +129,27 @@ class _YandexBannerState extends State<_YandexBanner> {
   Future<void> _load(int width) async {
     _loading = true;
     try {
-      // This SDK registers a banner's platform channel only when its AdWidget
-      // mounts, so loadAd() must not be called first — it throws
-      // MissingPluginException. Size the slot from the calculated size and let
-      // mounting drive the request.
+      // Size the slot from the calculated size. load() creates the platform
+      // view and sends the request once the AdWidget has mounted it.
       final size = yandex.BannerAdSize.sticky(width: width);
       final calculated = await size.getCalculatedBannerAdSize();
       if (!mounted) return;
 
-      final ad = yandex.BannerAd(
-        adUnitId: AdsConfig.bannerId(AdNetwork.yandex),
-        adSize: size,
-        adRequest: _request,
-        onAdLoaded: () {},
-        onAdFailedToLoad: (_) {
-          if (!mounted) return;
-          setState(() => _height = 0);
-        },
-        onAdClicked: () {},
-        onLeftApplication: () {},
-        onReturnedToApplication: () {},
-        onImpression: (_) {},
-      );
+      final ad = yandex.BannerAd(adSize: size);
+      void hide() {
+        if (mounted && identical(_ad, ad)) setState(() => _height = 0);
+      }
+
+      ad.loadStateStream.listen((state) {
+        if (state is yandex.BannerAdLoadStateLoading) {
+          // The platform view exists from here on; mounting the AdWidget
+          // before this point leaves it empty and the request never goes out.
+          if (mounted && identical(_ad, ad)) setState(() => _attached = true);
+        } else if (state is yandex.BannerAdLoadStateError) {
+          hide();
+        }
+      });
+      unawaited(ad.load(_request).catchError((Object _) => hide()));
 
       setState(() {
         _ad = ad;
@@ -163,10 +175,13 @@ class _YandexBannerState extends State<_YandexBanner> {
   Widget build(BuildContext context) {
     final ad = _ad;
     if (ad == null || _height == 0) return const SizedBox.shrink();
+    // The slot keeps its height from the start, so nothing moves when the
+    // creative arrives.
     return _BannerFrame(
       height: _height.toDouble(),
       gap: widget.gap,
-      child: yandex.AdWidget(bannerAd: ad),
+      child:
+          _attached ? yandex.AdWidget(bannerAd: ad) : const SizedBox.expand(),
     );
   }
 }
