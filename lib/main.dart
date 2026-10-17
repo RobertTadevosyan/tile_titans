@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -11,7 +12,11 @@ import 'package:flutter_2048/firebase_options.dart';
 import 'package:flutter_2048/presentation/controllers/game_controller.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/presentation/screens/home_screen.dart';
-import 'package:yandex_mobileads/mobile_ads.dart';
+import 'package:flutter_2048/config/ad_consent.dart';
+import 'package:flutter_2048/config/ad_region.dart';
+import 'package:flutter_2048/config/ad_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart' as admob;
+import 'package:yandex_mobileads/mobile_ads.dart' as yandex;
 import 'core/theme/theme_provider.dart';
 import 'core/theme/themes.dart';
 import 'package:provider/provider.dart';
@@ -75,8 +80,28 @@ class _GameAppState extends State<GameApp> {
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      // Initialize Yandex Ads only on mobile
-      MobileAds.initialize();
+      unawaited(_initAds());
+    }
+  }
+
+  /// Picks the network for this launch and starts only that SDK.
+  ///
+  /// Starting both would make requests from a network that cannot serve here,
+  /// and the AdMob SDK in particular reports an app as active the moment it
+  /// initialises. Consent is gathered before the first request, never after.
+  Future<void> _initAds() async {
+    try {
+      await AdRouter.resolve();
+      switch (AdRouter.network) {
+        case AdNetwork.yandex:
+          await yandex.MobileAds.initialize();
+        case AdNetwork.admob:
+          await AdConsent.gather();
+          await admob.MobileAds.instance.initialize();
+      }
+    } catch (error, stack) {
+      // Ads must never stop the game from starting.
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: false);
     }
   }
 

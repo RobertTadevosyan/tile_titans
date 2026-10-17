@@ -460,4 +460,32 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get findMeNoEntry => 'Bu sıralamada henüz puanın yok';
+
+  @override
+  String get moreGames => 'Daha fazla oyun';
+
+  @override
+  String get moreGamesSubtitle => 'Aynı yapımcının diğer oyunları';
+
+  @override
+  String get moreGamesRate => 'Puan ver';
+
+  @override
+  String moreGamesEnjoying(String appName) {
+    return '$appName hoşuna gitti mi?';
+  }
+
+  @override
+  String get moreGamesRateBody =>
+      'Puan vermek bir an sürer ve diğer oyuncuların oyunu bulmasına yardım eder.';
+
+  @override
+  String get moreGamesEmpty =>
+      'Henüz gösterilecek bir şey yok. Yakında tekrar bak.';
+
+  @override
+  String get moreGamesOpenInStore => 'Mağazada aç';
+
+  @override
+  String get moreGamesOpenFailed => 'Mağaza açılamadı.';
 }

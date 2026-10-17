@@ -911,6 +911,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have no score on this board yet'**
   String get findMeNoEntry;
+
+  /// No description provided for @moreGames.
+  ///
+  /// In en, this message translates to:
+  /// **'More games'**
+  String get moreGames;
+
+  /// No description provided for @moreGamesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Other games by the same maker'**
+  String get moreGamesSubtitle;
+
+  /// No description provided for @moreGamesRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get moreGamesRate;
+
+  /// Rate-card heading
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying {appName}?'**
+  String moreGamesEnjoying(String appName);
+
+  /// No description provided for @moreGamesRateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A rating takes a moment and helps other players find the game.'**
+  String get moreGamesRateBody;
+
+  /// No description provided for @moreGamesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to show yet. Check back soon.'**
+  String get moreGamesEmpty;
+
+  /// No description provided for @moreGamesOpenInStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in store'**
+  String get moreGamesOpenInStore;
+
+  /// No description provided for @moreGamesOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the store.'**
+  String get moreGamesOpenFailed;
 }
 
 class _AppLocalizationsDelegate

@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Tägliche Titanenprüfung",
-  "findMeNoEntry": "Du hast noch keinen Eintrag in dieser Rangliste"
+  "findMeNoEntry": "Du hast noch keinen Eintrag in dieser Rangliste",
+  "moreGames": "Mehr Spiele",
+  "moreGamesSubtitle": "Weitere Spiele desselben Entwicklers",
+  "moreGamesRate": "Bewerten",
+  "moreGamesEnjoying": "Gefällt dir {appName}?",
+  "moreGamesRateBody": "Eine Bewertung dauert nur einen Moment und hilft anderen, das Spiel zu finden.",
+  "moreGamesEmpty": "Noch nichts zu zeigen. Schau bald wieder vorbei.",
+  "moreGamesOpenInStore": "Im Store öffnen",
+  "moreGamesOpenFailed": "Store konnte nicht geöffnet werden."
 }

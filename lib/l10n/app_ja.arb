@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "デイリータイタン試練",
-  "findMeNoEntry": "このランキングにはまだスコアがありません"
+  "findMeNoEntry": "このランキングにはまだスコアがありません",
+  "moreGames": "他のゲーム",
+  "moreGamesSubtitle": "同じ制作者による他のゲーム",
+  "moreGamesRate": "評価する",
+  "moreGamesEnjoying": "{appName}は楽しいですか？",
+  "moreGamesRateBody": "評価はすぐに終わり、他のプレイヤーがゲームを見つける助けになります。",
+  "moreGamesEmpty": "まだ表示できるものがありません。しばらくしてからもう一度ご覧ください。",
+  "moreGamesOpenInStore": "ストアで開く",
+  "moreGamesOpenFailed": "ストアを開けませんでした。"
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter_2048/domain/engine/objective.dart';
@@ -175,7 +174,7 @@ class _TrialScreenState extends State<TrialScreen> {
       // Same placement as the free-play board: the banner sits below the
       // controls with clear space above it, so an overshot swipe lands on the
       // gap rather than the ad.
-      bottomNavigationBar: ScreenBanner(adUnitId: AdsConfig.getGameBannerID()),
+      bottomNavigationBar: const ScreenBanner(),
       appBar: AppBar(title: Text(ContentStrings.trialName(l10n, trial))),
       body: SafeArea(
         child: Stack(

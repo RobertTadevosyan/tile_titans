@@ -10,6 +10,11 @@
         android:isGame="true"
         android:label="Tile Titans"
         tools:ignore="UnusedAttribute">
+        <!-- Required by the Google Mobile Ads SDK; it throws at startup if
+             this is missing. "Tile Titans: Merge Puzzle" in AdMob. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7455708815499849~7738003760" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

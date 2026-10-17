@@ -508,4 +508,31 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get findMeNoEntry => 'У вас пока нет результата в этой таблице';
+
+  @override
+  String get moreGames => 'Другие игры';
+
+  @override
+  String get moreGamesSubtitle => 'Другие игры этого разработчика';
+
+  @override
+  String get moreGamesRate => 'Оценить';
+
+  @override
+  String moreGamesEnjoying(String appName) {
+    return 'Нравится $appName?';
+  }
+
+  @override
+  String get moreGamesRateBody =>
+      'Оценка займёт минуту и поможет другим игрокам найти игру.';
+
+  @override
+  String get moreGamesEmpty => 'Пока нечего показать. Загляните позже.';
+
+  @override
+  String get moreGamesOpenInStore => 'Открыть в магазине';
+
+  @override
+  String get moreGamesOpenFailed => 'Не удалось открыть магазин.';
 }

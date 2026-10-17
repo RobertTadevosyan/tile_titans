@@ -251,5 +251,21 @@
     }
   },
   "dailyTrialTitle": "Daily Titan Trial",
-  "findMeNoEntry": "You have no score on this board yet"
+  "findMeNoEntry": "You have no score on this board yet",
+  "moreGames": "More games",
+  "moreGamesSubtitle": "Other games by the same maker",
+  "moreGamesRate": "Rate",
+  "moreGamesEnjoying": "Enjoying {appName}?",
+  "@moreGamesEnjoying": {
+    "description": "Rate-card heading",
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "moreGamesRateBody": "A rating takes a moment and helps other players find the game.",
+  "moreGamesEmpty": "Nothing to show yet. Check back soon.",
+  "moreGamesOpenInStore": "Open in store",
+  "moreGamesOpenFailed": "Could not open the store."
 }

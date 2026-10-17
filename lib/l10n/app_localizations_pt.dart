@@ -496,4 +496,32 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get findMeNoEntry => 'Ainda não tens pontuação nesta tabela';
+
+  @override
+  String get moreGames => 'Mais jogos';
+
+  @override
+  String get moreGamesSubtitle => 'Outros jogos do mesmo criador';
+
+  @override
+  String get moreGamesRate => 'Avaliar';
+
+  @override
+  String moreGamesEnjoying(String appName) {
+    return 'Gostando de $appName?';
+  }
+
+  @override
+  String get moreGamesRateBody =>
+      'Avaliar leva um momento e ajuda outros jogadores a encontrar o jogo.';
+
+  @override
+  String get moreGamesEmpty =>
+      'Ainda não há nada para mostrar. Volte em breve.';
+
+  @override
+  String get moreGamesOpenInStore => 'Abrir na loja';
+
+  @override
+  String get moreGamesOpenFailed => 'Não foi possível abrir a loja.';
 }

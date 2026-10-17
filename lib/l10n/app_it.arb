@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Prova Quotidiana dei Titani",
-  "findMeNoEntry": "Non hai ancora un punteggio in questa classifica"
+  "findMeNoEntry": "Non hai ancora un punteggio in questa classifica",
+  "moreGames": "Altri giochi",
+  "moreGamesSubtitle": "Altri giochi dello stesso autore",
+  "moreGamesRate": "Valuta",
+  "moreGamesEnjoying": "Ti piace {appName}?",
+  "moreGamesRateBody": "Una valutazione richiede un attimo e aiuta altri giocatori a trovare il gioco.",
+  "moreGamesEmpty": "Ancora nulla da mostrare. Torna presto.",
+  "moreGamesOpenInStore": "Apri nello store",
+  "moreGamesOpenFailed": "Impossibile aprire lo store."
 }

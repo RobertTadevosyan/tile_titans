@@ -7,6 +7,7 @@ import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:flutter_2048/presentation/screens/trial_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
 
 /// The authored trial library, grouped into chapters.
 ///
@@ -22,6 +23,7 @@ class TrialsScreen extends StatelessWidget {
     final progress = context.watch<ProgressStore>();
 
     return Scaffold(
+      bottomNavigationBar: const ScreenBanner(),
       appBar: AppBar(title: Text(l10n.homeTitanTrials)),
       body: SafeArea(
         child: TitanPage(

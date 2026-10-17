@@ -497,4 +497,32 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get findMeNoEntry =>
       'Vous n\'avez pas encore de score dans ce classement';
+
+  @override
+  String get moreGames => 'Plus de jeux';
+
+  @override
+  String get moreGamesSubtitle => 'Autres jeux du même créateur';
+
+  @override
+  String get moreGamesRate => 'Noter';
+
+  @override
+  String moreGamesEnjoying(String appName) {
+    return 'Vous aimez $appName ?';
+  }
+
+  @override
+  String get moreGamesRateBody =>
+      'Une note prend un instant et aide d\'autres joueurs à trouver le jeu.';
+
+  @override
+  String get moreGamesEmpty =>
+      'Rien à afficher pour l\'instant. Revenez bientôt.';
+
+  @override
+  String get moreGamesOpenInStore => 'Ouvrir dans la boutique';
+
+  @override
+  String get moreGamesOpenFailed => 'Impossible d\'ouvrir la boutique.';
 }

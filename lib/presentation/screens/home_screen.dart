@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_2048/config/ads_config.dart';
-import 'package:flutter_2048/utils/helper.dart';
-import 'package:yandex_mobileads/mobile_ads.dart';
 import 'package:flutter_2048/content/titan_ranks.dart';
 import 'package:flutter_2048/content/trials.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
@@ -13,10 +10,12 @@ import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:flutter_2048/presentation/screens/game_screen.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
+import 'package:flutter_2048/presentation/screens/more_games_screen.dart';
 import 'package:flutter_2048/presentation/screens/settings_screen.dart';
 import 'package:flutter_2048/presentation/screens/stats_screen.dart';
 import 'package:flutter_2048/presentation/screens/trial_screen.dart';
 import 'package:flutter_2048/presentation/screens/trials_screen.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
 import 'package:flutter_2048/presentation/widgets/titan_emblem.dart';
 import 'package:provider/provider.dart';
 
@@ -28,95 +27,28 @@ import 'package:provider/provider.dart';
 /// that distinguishes Tile Titans is now one tap from launch, in the order a
 /// player (or a reviewer) would want it.
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.today});
+
+  /// The day the daily trial is generated from. Production leaves this null
+  /// and the screen reads the clock; goldens pin it, because the card's text
+  /// changes every midnight and an unpinned golden fails the next morning.
+  final DateTime? today;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const _adRequest = AdRequest(
-    contextQuery: 'puzzle, games, mobile apps, games',
-  );
-
-  BannerAd? _banner;
-  int _bannerHeight = 0;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_banner == null && adsEnabled()) {
-      _loadBanner();
-    }
-  }
-
-  /// The home screen is browsed rather than played, so a banner here cannot
-  /// cause a mis-tap mid-swipe the way one under the board could.
-  Future<void> _loadBanner() async {
-    try {
-      // The ad SDK is a platform channel: this throws when the SDK is
-      // unavailable or the request fails, and every caller fires it from
-      // didChangeDependencies without awaiting it, so the throw had nobody
-      // to catch it. A banner is the least important thing on any of these
-      // screens; without one they simply show no banner.
-
-      final width = MediaQuery.sizeOf(context).width.toInt();
-      final size = BannerAdSize.sticky(width: width);
-      final calculated = await size.getCalculatedBannerAdSize();
-      if (!mounted) return;
-
-      final ad = BannerAd(
-        adUnitId: AdsConfig.getHomeBannerID(),
-        adSize: size,
-        adRequest: _adRequest,
-        onAdLoaded: () {},
-        // Collapse the slot if nothing fills, so the page never shows a gap.
-        onAdFailedToLoad: (_) {
-          if (!mounted) return;
-          setState(() => _bannerHeight = 0);
-        },
-        onAdClicked: () {},
-        onLeftApplication: () {},
-        onReturnedToApplication: () {},
-        onImpression: (_) {},
-      );
-
-      // Do not call loadAd() here. This SDK registers the banner's platform
-      // channel only when its AdWidget is mounted, so loading first throws
-      // MissingPluginException — and because the slot was sized from onAdLoaded,
-      // the widget never mounted and the ad could never load. Size the slot from
-      // the calculated size and let mounting drive the request.
-      setState(() {
-        _banner = ad;
-        _bannerHeight = calculated.height;
-      });
-    } catch (_) {
-      // No banner.
-    }
-  }
-
-  @override
-  void dispose() {
-    _banner?.destroy();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final progress = context.watch<ProgressStore>();
-    final daily = dailyTrialFor(DateTime.now());
+    final daily = dailyTrialFor(widget.today ?? DateTime.now());
 
     return Scaffold(
-      bottomNavigationBar:
-          _bannerHeight > 0 && _banner != null
-              ? SafeArea(
-                child: SizedBox(
-                  height: _bannerHeight.toDouble(),
-                  child: AdWidget(bannerAd: _banner!),
-                ),
-              )
-              : null,
+      // As bottomNavigationBar rather than an overlay: the Scaffold insets the
+      // body by the ad's height, so nothing is ever covered.
+      bottomNavigationBar: const ScreenBanner(),
       body: SafeArea(
         child: TitanPage(
           child: CustomScrollView(
@@ -142,6 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     _TrialsCard(l10n: l10n, progress: progress),
                     const SizedBox(height: TitanSpacing.md),
                     _SecondaryRow(l10n: l10n),
+                    const SizedBox(height: TitanSpacing.md),
+                    _MoreGamesCard(l10n: l10n),
                     const SizedBox(height: TitanSpacing.xl),
                   ],
                 ),
@@ -594,6 +528,43 @@ class _SecondaryRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Cross-promotion for the developer's other games.
+///
+/// Its own row rather than a fourth tile in [_SecondaryRow]: that row is
+/// already three wide and a fourth target would fall below the 48dp minimum
+/// on a small phone.
+class _MoreGamesCard extends StatelessWidget {
+  final AppLocalizations l10n;
+
+  const _MoreGamesCard({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return TitanCard(
+      padding: const EdgeInsets.symmetric(
+        vertical: TitanSpacing.md,
+        horizontal: TitanSpacing.md,
+      ),
+      onTap:
+          () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const MoreGamesScreen()),
+          ),
+      contentBuilder:
+          (context) => Row(
+            children: [
+              Expanded(
+                child: _IconLabel(
+                  icon: Icons.apps_rounded,
+                  label: l10n.moreGames,
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
     );
   }
 }

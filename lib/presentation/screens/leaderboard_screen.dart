@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/presentation/models/leaderboard_entry.dart';
-import 'package:flutter_2048/utils/helper.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
-import 'package:yandex_mobileads/mobile_ads.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
+import 'package:flutter_2048/core/theme/titan_design.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -31,13 +30,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   /// spinner. The read is only 20 KB but takes about half a second, and it was
   /// being paid several times per visit.
   Future<List<LeaderboardEntry>>? _board;
-  late BannerAd banner;
-  var adRequest = const AdRequest(
-    contextQuery: 'puzzle, games, mobile apps, games',
-  );
-  var isLoading = false;
-  var isBannerAlreadyCreated = false;
-  var bannerHeight = 0;
   var currentUserUid = '';
   List<LeaderboardEntry> leaderboardEntries = [];
 
@@ -119,77 +111,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   /// way whenever the config node was missing. Ads are the least important
   /// thing on the screen: if the config cannot be read, they stay off and the
   /// screen works.
-  Future<void> _checkAdConfigAndLoadAd() async {
-    if (!adsEnabled()) return;
-    try {
-      final snapshot =
-          await FirebaseDatabase.instance.ref().child('config').get();
-      final config = snapshot.value;
-      if (config is! Map) return;
-      final enabled = config['leaderboard_screen_ads_enabled'];
-      if (enabled != true && enabled != 'true') return;
-      if (!mounted) return;
-
-      adRequest = const AdRequest(
-        contextQuery: 'puzzle, games, mobile apps, games',
-      );
-      await _loadBanner();
-    } catch (_) {
-      // No banner, and nothing else changes.
-    }
-  }
-
-  Future<void> _loadBanner() async {
-    if (!adsEnabled()) return;
-    final windowSize = MediaQuery.of(context).size;
-    setState(() => isLoading = true);
-    if (isBannerAlreadyCreated) {
-      banner.loadAd(adRequest: adRequest);
-    } else {
-      final adSize = BannerAdSize.sticky(width: windowSize.width.toInt());
-      var calculatedBannerSize = await adSize.getCalculatedBannerAdSize();
-      banner = _createBanner(adSize);
-      setState(() {
-        bannerHeight = calculatedBannerSize.height;
-        isBannerAlreadyCreated = true;
-      });
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!isBannerAlreadyCreated) {
-      _checkAdConfigAndLoadAd(); // ✅ Now it's safe to use MediaQuery
-    }
-  }
-
-  _createBanner(BannerAdSize adSize) {
-    return BannerAd(
-      adUnitId: AdsConfig.getLeaderboardBannerID(),
-      adSize: adSize,
-      adRequest: adRequest,
-      onAdLoaded: () {
-        setState(() {
-          isLoading = false;
-        });
-        if (!mounted) {
-          banner.destroy();
-          return;
-        }
-      },
-      onAdFailedToLoad: (error) {
-        setState(() {
-          isLoading = false;
-        });
-      },
-      onAdClicked: () {},
-      onLeftApplication: () {},
-      onReturnedToApplication: () {},
-      onImpression: (impressionData) {},
-    );
-  }
-
   /// Which board is being shown. Scores are ranked per mode.
   String boardMode = ModeKeys.classic;
 
@@ -217,21 +138,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
     final isTablet = shortestSide > 600;
-    return Stack(
-      children: [
-        // This will stretch to fill space *above the banner*
-        Positioned.fill(
-          bottom: adsEnabled() ? bannerHeight.toDouble() : 0,
-          child: createContent(context, isTablet),
-        ),
-        SafeArea(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: isBannerAlreadyCreated ? AdWidget(bannerAd: banner) : null,
-          ),
-        ),
-      ],
-    );
+    return createContent(context, isTablet);
   }
 
   Widget createContent(BuildContext context, bool isTablet) {
@@ -240,6 +147,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return Scaffold(
+      bottomNavigationBar: const ScreenBanner(),
       appBar: AppBar(
         title: Text(
           appLocales.leaderboard,
@@ -263,11 +171,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildBoardSelector(appLocales),
-          Expanded(child: _buildBoard(appLocales, isTablet)),
-        ],
+      body: TitanPage(
+        child: Column(
+          children: [
+            _buildBoardSelector(appLocales),
+            Expanded(child: _buildBoard(appLocales, isTablet)),
+          ],
+        ),
       ),
     );
   }

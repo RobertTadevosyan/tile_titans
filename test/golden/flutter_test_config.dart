@@ -26,7 +26,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   }
 
   // The app's own faces, plus the icon font, from the Flutter cache.
-  final cache = '${File(Platform.resolvedExecutable).parent.path}';
+  final cache = File(Platform.resolvedExecutable).parent.path;
   final material = [
     '$cache/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
     '${Platform.environment['FLUTTER_ROOT'] ?? ''}'

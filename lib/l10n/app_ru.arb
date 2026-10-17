@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Ежедневное испытание титанов",
-  "findMeNoEntry": "У вас пока нет результата в этой таблице"
+  "findMeNoEntry": "У вас пока нет результата в этой таблице",
+  "moreGames": "Другие игры",
+  "moreGamesSubtitle": "Другие игры этого разработчика",
+  "moreGamesRate": "Оценить",
+  "moreGamesEnjoying": "Нравится {appName}?",
+  "moreGamesRateBody": "Оценка займёт минуту и поможет другим игрокам найти игру.",
+  "moreGamesEmpty": "Пока нечего показать. Загляните позже.",
+  "moreGamesOpenInStore": "Открыть в магазине",
+  "moreGamesOpenFailed": "Не удалось открыть магазин."
 }

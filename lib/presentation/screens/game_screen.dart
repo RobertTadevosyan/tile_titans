@@ -2,18 +2,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/config/interstitial_service.dart';
 import 'package:flutter_2048/domain/direction.dart';
 import 'package:flutter_2048/presentation/screens/leaderboard_screen.dart';
 import 'package:flutter_2048/presentation/screens/settings_screen.dart';
 import 'package:flutter_2048/utils/helper.dart';
 import 'package:provider/provider.dart';
-import 'package:yandex_mobileads/mobile_ads.dart';
 import '../controllers/game_controller.dart';
 import '../widgets/score_board.dart';
 import '../widgets/game_board.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -25,17 +24,8 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool isMoving = false;
 
-  late BannerAd banner;
-  var adRequest = const AdRequest(
-    contextQuery: 'puzzle, games, mobile apps, games',
-  );
-  var isLoading = false;
-  var isBannerAlreadyCreated = false;
-  var bannerHeight = 0;
-
   /// Captured while the element is still live; see didChangeDependencies.
   GameController? _controller;
-  BannerAd? _banner;
 
   /// Guards against showing more than one interstitial per game over.
   ///
@@ -71,59 +61,7 @@ class _GameScreenState extends State<GameScreen> {
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     _controller?.cancelTimers();
-    // Release the native banner view; leaving it attached leaks a platform
-    // view every time the board is opened and closed.
-    _banner?.destroy();
     super.dispose();
-  }
-
-  /// Loads the board banner.
-  ///
-  /// Mirrors the home screen: the slot is sized from the calculated ad size and
-  /// the AdWidget mounting drives the request. Calling loadAd() first throws
-  /// MissingPluginException, because this SDK only registers a banner's
-  /// platform channel once its widget is in the tree.
-  Future<void> _loadGameBanner() async {
-    try {
-      // The ad SDK is a platform channel: this throws when the SDK is
-      // unavailable or the request fails, and every caller fires it from
-      // didChangeDependencies without awaiting it, so the throw had nobody
-      // to catch it. A banner is the least important thing on any of these
-      // screens; without one they simply show no banner.
-
-      if (!adsEnabled() || _banner != null) return;
-
-      final width = MediaQuery.sizeOf(context).width.toInt();
-      final size = BannerAdSize.sticky(width: width);
-      final calculated = await size.getCalculatedBannerAdSize();
-      if (!mounted) return;
-
-      final ad = BannerAd(
-        adUnitId: AdsConfig.getGameBannerID(),
-        adSize: size,
-        adRequest: adRequest,
-        onAdLoaded: () {},
-        onAdFailedToLoad: (_) {
-          if (!mounted) return;
-          setState(() {
-            bannerHeight = 0;
-            isBannerAlreadyCreated = false;
-          });
-        },
-        onAdClicked: () {},
-        onLeftApplication: () {},
-        onReturnedToApplication: () {},
-        onImpression: (_) {},
-      );
-
-      setState(() {
-        _banner = ad;
-        bannerHeight = calculated.height;
-        isBannerAlreadyCreated = true;
-      });
-    } catch (_) {
-      // No banner.
-    }
   }
 
   @override
@@ -135,10 +73,6 @@ class _GameScreenState extends State<GameScreen> {
     // timed game's clock ticking after the screen was gone, and skipping the
     // flush of the debounced leaderboard write.
     _controller = context.read<GameController>();
-    _loadGameBanner();
-    // No banner is requested here any more. The board carries no ad, so
-    // loading one would request inventory that is never rendered — a wasted
-    // fill and an impression nobody can see.
   }
 
   void _handleSwipe(
@@ -174,6 +108,9 @@ class _GameScreenState extends State<GameScreen> {
   /// the board does not land on the banner.
   static const double _bannerGap = 12;
 
+  /// The ad slot every layout branch shares.
+  Widget get _banner => ScreenBanner(gap: _bannerGap);
+
   @override
   Widget build(BuildContext context) {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
@@ -199,39 +136,12 @@ class _GameScreenState extends State<GameScreen> {
             }
             return child!;
           },
-          child: Stack(
-            children: [
-              // Content is inset by the banner's height plus a gap, so the ad
-              // never sits directly beneath the controls. The board is a
-              // swiping surface, and an ad flush against it invites mis-taps —
-              // the separation is what keeps the placement safe.
-              Positioned.fill(
-                bottom:
-                    isBannerAlreadyCreated
-                        ? bannerHeight.toDouble() + _bannerGap
-                        : 0,
-                child: screenContent(
-                  appLocales,
-                  controller,
-                  context,
-                  isTablet,
-                  shortestSide,
-                ),
-              ),
-              if (isBannerAlreadyCreated && _banner != null)
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: SafeArea(
-                    top: false,
-                    child: SizedBox(
-                      height: bannerHeight.toDouble(),
-                      child: AdWidget(bannerAd: _banner!),
-                    ),
-                  ),
-                ),
-            ],
+          child: screenContent(
+            appLocales,
+            controller,
+            context,
+            isTablet,
+            shortestSide,
           ),
         );
       },
@@ -248,15 +158,13 @@ class _GameScreenState extends State<GameScreen> {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
-    if (isTablet) {
+    // Landscape is the same two-column shape on phones and tablets: controls
+    // on the left, board on the right. A tablet only gets more room, not a
+    // different idea of where things are.
+    if (isLandscape) {
+      return buildLandscapeUI(appLocales, controller, context, isTablet);
+    } else if (isTablet) {
       return buildTabletUI(appLocales, controller, context);
-    } else if (isLandscape) {
-      return buildPhoneLandscapeUI(
-        appLocales,
-        controller,
-        context,
-        shortestSize,
-      );
     } else {
       return buildPhonePortraitUI(appLocales, controller, context);
     }
@@ -491,6 +399,7 @@ class _GameScreenState extends State<GameScreen> {
     BuildContext context,
   ) {
     return Scaffold(
+      bottomNavigationBar: _banner,
       appBar: AppBar(
         title: const Text('Tile Titans'),
         actions: buildAppBarActions(appLocales, context, controller, false),
@@ -553,83 +462,108 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  Widget buildPhoneLandscapeUI(
+  /// Landscape, phone and tablet: controls left, board right.
+  ///
+  /// There is no AppBar here on purpose. A phone in landscape has about 390dp
+  /// of height, and a bar would spend 56 of them on a title nobody needs while
+  /// playing; the actions sit in the left column instead, next to a back
+  /// button so the screen is still escapable without the system gesture.
+  Widget buildLandscapeUI(
     AppLocalizations appLocales,
     GameController controller,
     BuildContext context,
-    double shortestSize,
+    bool isTablet,
   ) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: null, // Optional
+      bottomNavigationBar: _banner,
       body: SafeArea(
-        // 🛡️ avoids notch/overlay
         child: GestureDetector(
           onPanUpdate:
               (details) => _handleSwipe(details.delta, controller, appLocales),
           child: Row(
             children: [
               Expanded(
+                flex: isTablet ? 3 : 4,
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: buildAppBarActions(
-                          appLocales,
-                          context,
-                          controller,
-                          false,
-                        ),
-                      ),
-                      if (kIsWeb) SizedBox(height: 100),
-                      if (controller.scored)
-                        ScoreBoard(
-                          score: controller.score,
-                          highestScore: controller.sessionBestScore,
-                          isTablet: false,
-                          isLandscape: true,
-                        ),
-                      if (controller.isTimed)
-                        buildTimer(appLocales, controller, context, false),
-                      const SizedBox(height: 8),
-                      buildActionButtonsPhoneLandscape(
-                        appLocales,
-                        controller,
-                        context,
-                      ),
-                      if (kIsWeb) SizedBox(height: 100),
-                      if (!kIsWeb) const SizedBox(height: 6),
-                      if (controller.rules.allowHints)
-                        Card(
-                          child: SwitchListTile(
-                            title: Text(
-                              appLocales.autoPlay,
-                              style: TextStyle(fontSize: 14),
+                  // Scrolls only when it must: a short phone in landscape runs
+                  // out of height once the scoreboard, timer and buttons are
+                  // stacked, and the column used to overflow instead.
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back),
+                              iconSize: isTablet ? 32 : 25,
+                              tooltip:
+                                  MaterialLocalizations.of(
+                                    context,
+                                  ).backButtonTooltip,
+                              onPressed: () => Navigator.of(context).maybePop(),
                             ),
-                            value: controller.autoPlay,
-                            onChanged:
-                                (_) => controller.toggleAutoPlay(
-                                  context,
-                                  appLocales,
-                                ),
-                          ),
+                            ...buildAppBarActions(
+                              appLocales,
+                              context,
+                              controller,
+                              isTablet,
+                            ),
+                          ],
                         ),
-                    ],
+                        if (kIsWeb) SizedBox(height: 100),
+                        if (controller.scored)
+                          ScoreBoard(
+                            score: controller.score,
+                            highestScore: controller.sessionBestScore,
+                            isTablet: false,
+                            isLandscape: true,
+                          ),
+                        if (controller.isTimed)
+                          buildTimer(appLocales, controller, context, false),
+                        const SizedBox(height: 8),
+                        buildActionButtonsPhoneLandscape(
+                          appLocales,
+                          controller,
+                          context,
+                        ),
+                        if (kIsWeb) SizedBox(height: 100),
+                        if (!kIsWeb) const SizedBox(height: 6),
+                        if (controller.rules.allowHints)
+                          Card(
+                            child: SwitchListTile(
+                              title: Text(
+                                appLocales.autoPlay,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              value: controller.autoPlay,
+                              onChanged:
+                                  (_) => controller.toggleAutoPlay(
+                                    context,
+                                    appLocales,
+                                  ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: isTablet ? 4 : 5,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 8, right: 8),
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                  // A fixed size here (shortestSide - 80) ignored the space the
+                  // banner and the left column actually take, which is how the
+                  // board came to overflow. Let it fit what is left: the floor
+                  // is only there so it never collapses to nothing.
                   child: GameBoard(
-                    maxSize: shortestSize - 80,
-                    minSize: shortestSize - 80,
-                    isTablet: false,
+                    maxSize: 900,
+                    minSize: 120,
+                    isTablet: isTablet,
                     isLandscape: true,
                   ),
                 ),
@@ -695,6 +629,7 @@ class _GameScreenState extends State<GameScreen> {
     final isLandscape =
         MediaQuery.orientationOf(context) == Orientation.landscape;
     return Scaffold(
+      bottomNavigationBar: _banner,
       appBar: AppBar(
         title: Text(appLocales.appTitle, style: TextStyle(fontSize: 28)),
         actions: buildAppBarActions(appLocales, context, controller, true),

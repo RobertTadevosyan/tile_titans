@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Épreuve du Jour des Titans",
-  "findMeNoEntry": "Vous n'avez pas encore de score dans ce classement"
+  "findMeNoEntry": "Vous n'avez pas encore de score dans ce classement",
+  "moreGames": "Plus de jeux",
+  "moreGamesSubtitle": "Autres jeux du même créateur",
+  "moreGamesRate": "Noter",
+  "moreGamesEnjoying": "Vous aimez {appName} ?",
+  "moreGamesRateBody": "Une note prend un instant et aide d'autres joueurs à trouver le jeu.",
+  "moreGamesEmpty": "Rien à afficher pour l'instant. Revenez bientôt.",
+  "moreGamesOpenInStore": "Ouvrir dans la boutique",
+  "moreGamesOpenFailed": "Impossible d'ouvrir la boutique."
 }

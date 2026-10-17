@@ -460,4 +460,30 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get findMeNoEntry => 'このランキングにはまだスコアがありません';
+
+  @override
+  String get moreGames => '他のゲーム';
+
+  @override
+  String get moreGamesSubtitle => '同じ制作者による他のゲーム';
+
+  @override
+  String get moreGamesRate => '評価する';
+
+  @override
+  String moreGamesEnjoying(String appName) {
+    return '$appNameは楽しいですか？';
+  }
+
+  @override
+  String get moreGamesRateBody => '評価はすぐに終わり、他のプレイヤーがゲームを見つける助けになります。';
+
+  @override
+  String get moreGamesEmpty => 'まだ表示できるものがありません。しばらくしてからもう一度ご覧ください。';
+
+  @override
+  String get moreGamesOpenInStore => 'ストアで開く';
+
+  @override
+  String get moreGamesOpenFailed => 'ストアを開けませんでした。';
 }

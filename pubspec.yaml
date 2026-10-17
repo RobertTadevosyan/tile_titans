@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 
 # Android
-version: 4.1.0+3010
+version: 4.2.0+3011
 
 # iOS
 # version: 1.0.2+3  
@@ -43,6 +43,8 @@ dependencies:
   audioplayers: ^5.1.0
   shared_preferences: ^2.2.2
   yandex_mobileads: ^7.12.1
+  google_mobile_ads: ^5.2.0
+  url_launcher: ^6.3.0
   firebase_core: ^3.13.0
   firebase_auth: ^5.5.2
   firebase_database: ^11.3.5

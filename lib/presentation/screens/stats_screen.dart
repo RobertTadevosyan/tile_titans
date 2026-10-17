@@ -6,6 +6,7 @@ import 'package:flutter_2048/domain/progress/progress_store.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
 import 'package:flutter_2048/presentation/l10n_content.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
 
 /// Statistics, achievements and the Path of the Titans.
 ///
@@ -24,6 +25,7 @@ class StatsScreen extends StatelessWidget {
     final stats = progress.stats;
 
     return Scaffold(
+      bottomNavigationBar: const ScreenBanner(),
       appBar: AppBar(title: Text(l10n.statistics)),
       body: SafeArea(
         child: TitanPage(

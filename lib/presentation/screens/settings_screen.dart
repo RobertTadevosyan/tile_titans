@@ -1,17 +1,14 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_2048/core/theme/titan_design.dart';
-import 'package:flutter_2048/config/ads_config.dart';
 import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
 import 'package:flutter_2048/domain/ai_difficultt.dart';
 import 'package:flutter_2048/domain/prefs.dart';
 import 'package:flutter_2048/presentation/widgets/language_selector.dart';
-import 'package:flutter_2048/utils/helper.dart';
 import 'package:provider/provider.dart';
-import 'package:yandex_mobileads/mobile_ads.dart';
 import '../controllers/game_controller.dart';
 import 'package:flutter_2048/l10n/app_localizations.dart';
+import 'package:flutter_2048/presentation/widgets/screen_banner.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -24,94 +21,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late int _selectedSize = 0;
   AppTheme currentTheme = kDefaultTheme;
   final prefs = Prefs();
-
-  late BannerAd banner;
-  var adRequest = const AdRequest(
-    contextQuery: 'puzzle, games, mobile apps, games',
-  );
-  var isLoading = false;
-  var isBannerAlreadyCreated = false;
-  var bannerHeight = 0;
-
-  /// Turns the banner on only if the remote config says so.
-  ///
-  /// Both the read and the cast could throw, and this is fired from
-  /// didChangeDependencies without an await or a catch, so on a device that
-  /// cannot reach the database — offline, or simply slow — opening this screen
-  /// raised an unhandled async error. `snapshot.value as Map` threw the same
-  /// way whenever the config node was missing. Ads are the least important
-  /// thing on the screen: if the config cannot be read, they stay off and the
-  /// screen works.
-  Future<void> _checkAdConfigAndLoadAd() async {
-    if (!adsEnabled()) return;
-    try {
-      final snapshot =
-          await FirebaseDatabase.instance.ref().child('config').get();
-      final config = snapshot.value;
-      if (config is! Map) return;
-      final enabled = config['settings_screen_ads_enabled'];
-      if (enabled != true && enabled != 'true') return;
-      if (!mounted) return;
-
-      adRequest = const AdRequest(
-        contextQuery: 'puzzle, games, mobile apps, games',
-      );
-      await _loadBanner();
-    } catch (_) {
-      // No banner, and nothing else changes.
-    }
-  }
-
-  Future<void> _loadBanner() async {
-    final windowSize = MediaQuery.of(context).size;
-    setState(() => isLoading = true);
-    if (isBannerAlreadyCreated) {
-      banner.loadAd(adRequest: adRequest);
-    } else {
-      final adSize = BannerAdSize.sticky(width: windowSize.width.toInt());
-      var calculatedBannerSize = await adSize.getCalculatedBannerAdSize();
-      banner = _createBanner(adSize);
-      setState(() {
-        bannerHeight = calculatedBannerSize.height;
-        isBannerAlreadyCreated = true;
-      });
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    init();
-    if (!isBannerAlreadyCreated) {
-      _checkAdConfigAndLoadAd(); // ✅ Now it's safe to use MediaQuery
-    }
-  }
-
-  _createBanner(BannerAdSize adSize) {
-    return BannerAd(
-      adUnitId: AdsConfig.getSettingsBannerID(),
-      adSize: adSize,
-      adRequest: adRequest,
-      onAdLoaded: () {
-        setState(() {
-          isLoading = false;
-        });
-        if (!mounted) {
-          banner.destroy();
-          return;
-        }
-      },
-      onAdFailedToLoad: (error) {
-        setState(() {
-          isLoading = false;
-        });
-      },
-      onAdClicked: () {},
-      onLeftApplication: () {},
-      onReturnedToApplication: () {},
-      onImpression: (impressionData) {},
-    );
-  }
 
   void init() async {
     final size = await prefs.getGameBoardSize();
@@ -142,21 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
     final isTablet = shortestSide > 600;
 
-    return Stack(
-      children: [
-        // This will stretch to fill space *above the banner*
-        Positioned.fill(
-          bottom: adsEnabled() ? bannerHeight.toDouble() : 0,
-          child: createContent(appLocales, controller, themeProvider, isTablet),
-        ),
-        SafeArea(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: isBannerAlreadyCreated ? AdWidget(bannerAd: banner) : null,
-          ),
-        ),
-      ],
-    );
+    return createContent(appLocales, controller, themeProvider, isTablet);
   }
 
   Widget createContent(
@@ -363,21 +258,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     // ✅ Wrap for max width on tablets
     return Scaffold(
+      bottomNavigationBar: const ScreenBanner(),
       appBar: AppBar(
         title: Text(
           appLocales.settings,
           style: TextStyle(fontSize: isTablet ? 28 : 18),
         ),
       ),
-      body:
-          isTablet
-              ? Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: isTablet ? 700 : 600),
-                  child: content,
-                ),
-              )
-              : content,
+      // Capped by width, not by device class: a phone in landscape is ~850dp
+      // wide and is not a "tablet", so settings rows used to stretch the whole
+      // way across and the labels drifted far from their switches.
+      body: TitanPage(child: content),
     );
   }
 }

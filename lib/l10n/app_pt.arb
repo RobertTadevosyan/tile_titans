@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Prova Diária dos Titãs",
-  "findMeNoEntry": "Ainda não tens pontuação nesta tabela"
+  "findMeNoEntry": "Ainda não tens pontuação nesta tabela",
+  "moreGames": "Mais jogos",
+  "moreGamesSubtitle": "Outros jogos do mesmo criador",
+  "moreGamesRate": "Avaliar",
+  "moreGamesEnjoying": "Gostando de {appName}?",
+  "moreGamesRateBody": "Avaliar leva um momento e ajuda outros jogadores a encontrar o jogo.",
+  "moreGamesEmpty": "Ainda não há nada para mostrar. Volte em breve.",
+  "moreGamesOpenInStore": "Abrir na loja",
+  "moreGamesOpenFailed": "Não foi possível abrir a loja."
 }

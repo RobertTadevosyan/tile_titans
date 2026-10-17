@@ -460,4 +460,31 @@ class AppLocalizationsHy extends AppLocalizations {
 
   @override
   String get findMeNoEntry => 'Այս աղյուսակում դեռ արդյունք չունեք';
+
+  @override
+  String get moreGames => 'Այլ խաղեր';
+
+  @override
+  String get moreGamesSubtitle => 'Նույն հեղինակի այլ խաղերը';
+
+  @override
+  String get moreGamesRate => 'Գնահատել';
+
+  @override
+  String moreGamesEnjoying(String appName) {
+    return 'Դուր է գալի՞ս $appName-ը';
+  }
+
+  @override
+  String get moreGamesRateBody =>
+      'Գնահատականը մեկ պահ է տևում և օգնում է այլ խաղացողներին գտնել խաղը։';
+
+  @override
+  String get moreGamesEmpty => 'Դեռ ցուցադրելու բան չկա։ Այցելեք մի փոքր ուշ։';
+
+  @override
+  String get moreGamesOpenInStore => 'Բացել խանութում';
+
+  @override
+  String get moreGamesOpenFailed => 'Չհաջողվեց բացել խանութը։';
 }

@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Günlük Titan Sınavı",
-  "findMeNoEntry": "Bu sıralamada henüz puanın yok"
+  "findMeNoEntry": "Bu sıralamada henüz puanın yok",
+  "moreGames": "Daha fazla oyun",
+  "moreGamesSubtitle": "Aynı yapımcının diğer oyunları",
+  "moreGamesRate": "Puan ver",
+  "moreGamesEnjoying": "{appName} hoşuna gitti mi?",
+  "moreGamesRateBody": "Puan vermek bir an sürer ve diğer oyuncuların oyunu bulmasına yardım eder.",
+  "moreGamesEmpty": "Henüz gösterilecek bir şey yok. Yakında tekrar bak.",
+  "moreGamesOpenInStore": "Mağazada aç",
+  "moreGamesOpenFailed": "Mağaza açılamadı."
 }

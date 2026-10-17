@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Տիտանների օրական փորձություն",
-  "findMeNoEntry": "Այս աղյուսակում դեռ արդյունք չունեք"
+  "findMeNoEntry": "Այս աղյուսակում դեռ արդյունք չունեք",
+  "moreGames": "Այլ խաղեր",
+  "moreGamesSubtitle": "Նույն հեղինակի այլ խաղերը",
+  "moreGamesRate": "Գնահատել",
+  "moreGamesEnjoying": "Դուր է գալի՞ս {appName}-ը",
+  "moreGamesRateBody": "Գնահատականը մեկ պահ է տևում և օգնում է այլ խաղացողներին գտնել խաղը։",
+  "moreGamesEmpty": "Դեռ ցուցադրելու բան չկա։ Այցելեք մի փոքր ուշ։",
+  "moreGamesOpenInStore": "Բացել խանութում",
+  "moreGamesOpenFailed": "Չհաջողվեց բացել խանութը։"
 }

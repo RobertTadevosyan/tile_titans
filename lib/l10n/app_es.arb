@@ -181,5 +181,13 @@
     }
   },
   "dailyTrialTitle": "Prueba Diaria de Titanes",
-  "findMeNoEntry": "Aún no tienes puntuación en esta tabla"
+  "findMeNoEntry": "Aún no tienes puntuación en esta tabla",
+  "moreGames": "Más juegos",
+  "moreGamesSubtitle": "Otros juegos del mismo creador",
+  "moreGamesRate": "Valorar",
+  "moreGamesEnjoying": "¿Te gusta {appName}?",
+  "moreGamesRateBody": "Valorar lleva un momento y ayuda a otros jugadores a encontrar el juego.",
+  "moreGamesEmpty": "Aún no hay nada que mostrar. Vuelve pronto.",
+  "moreGamesOpenInStore": "Abrir en la tienda",
+  "moreGamesOpenFailed": "No se pudo abrir la tienda."
 }

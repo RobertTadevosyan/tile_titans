@@ -2,7 +2,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_2048/core/theme/app_theme.dart';
 import 'package:flutter_2048/core/theme/theme_provider.dart';
 import 'package:flutter_2048/core/theme/themes.dart';
 import 'package:flutter_2048/domain/progress/progress_store.dart';
@@ -47,7 +46,9 @@ Future<void> _pump(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         theme: appThemeData[kDefaultTheme],
-        home: const HomeScreen(),
+        // Pinned: the daily trial card is generated from the date, so an
+        // unpinned golden fails the next morning.
+        home: HomeScreen(today: DateTime(2026, 9, 30)),
       ),
     ),
   );
